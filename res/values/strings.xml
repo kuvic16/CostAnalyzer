@@ -12,12 +12,20 @@
     <string name="test">This is just test</string>
     <string name="title_activity_category">CategoryActivity</string>
     <string name="hello_world">Hello world!</string>
-    
+    <string name="error">error: %s</string>
     
     <!-- Category screen -->
+    <string name="cost_category">Cost Category</string>
     <string name="category_name">Category Name</string>
     <string name="category_type">Category Type</string>
     <string name="save_category">Save new category</string>
 	<string name="productive">Productive</string>
 	<string name="wastage">Wastage</string>
+	<string name="category_name_missing">Please write category name</string>
+	<string name="save_category_success">\"%s\" category added</string>
+	<string name="save_category_failed">Failed to save category. Please try again</string>
+	<string name="category_status">All category listed below. Total category: %s</string>
+	
+	
+	
 </resources>

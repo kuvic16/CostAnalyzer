@@ -65,7 +65,23 @@
         android:layout_below="@+id/radioGroup_category_type"
         android:layout_marginTop="20dp"
         android:text="@string/save_category" />
-
     
+    <TextView
+        android:id="@+id/textView_category_status"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/button_add_category"
+        android:background="#82CAFF"
+        android:padding="5dp"
+        android:paddingTop="0dp"
+        android:text="@string/category_status"
+        android:textSize="12sp" />
+    
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/textView_category_status" />
 
 </RelativeLayout>
