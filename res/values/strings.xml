@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">CostAnalyzer</string>
+    <string name="title_section1">Cost category</string>
+    <string name="title_section2">Cost history</string>
+    <string name="title_section3">Users log</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+    <string name="test">This is just test</string>
+    <string name="title_activity_category">CategoryActivity</string>
+    <string name="hello_world">Hello world!</string>
+    
+    
+    <!-- Category screen -->
+    <string name="category_name">Category Name</string>
+    <string name="category_type">Category Type</string>
+    <string name="save_category">Save new category</string>
+	<string name="productive">Productive</string>
+	<string name="wastage">Wastage</string>
+</resources>
