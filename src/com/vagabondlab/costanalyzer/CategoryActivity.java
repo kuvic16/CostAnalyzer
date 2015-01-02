@@ -42,7 +42,6 @@ public class CategoryActivity extends ActionBarActivity {
 	private EditText mCategoryName;
 	private RadioButton mProductive;
 	private RadioButton mWastage;
-	private Button mCategorySaveButton;
 	private TextView mCategoryStatus;
 	
 	private List<Map<String, String>> mCategoryListdata = new ArrayList<Map<String, String>>();
@@ -77,6 +76,7 @@ public class CategoryActivity extends ActionBarActivity {
 	        return adapter;
 	    }
 	}
+	// end listview activity
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,17 +86,9 @@ public class CategoryActivity extends ActionBarActivity {
 		
 		try {
 			categoryService = new CategoryService(getHelper().getCategoryDao());
-			//mCategorySaveButton = (Button) findViewById(R.id.button_add_category);
-			//mCategorySaveButton.setOnClickListener(mSaveCategoryButtonListener);
-			
-			mCategoryName = (EditText)findViewById(R.id.editText_category_name);
-			mProductive = (RadioButton)findViewById(R.id.radio_productive);
-			mWastage = (RadioButton)findViewById(R.id.radio_wastage);
 			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
-			
 			loadCategoryList();
-			
-		    mTitle = getTitle();
+			mTitle = getTitle();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -146,11 +138,16 @@ public class CategoryActivity extends ActionBarActivity {
 	
 	private void addNewCategoryDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
-		final View textEntryView = factory.inflate(R.layout.category_form, null);		
+		final View categoryFormView = factory.inflate(R.layout.category_form, null);
+		mCategoryName = (EditText)categoryFormView.findViewById(R.id.editText_category_name);
+		mProductive = (RadioButton)categoryFormView.findViewById(R.id.radio_productive);
+		mWastage = (RadioButton)categoryFormView.findViewById(R.id.radio_wastage);
+		
+		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.add)
 		     .setTitle(R.string.add_new_category)
-		     .setView(textEntryView)
+		     .setView(categoryFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
 		     .setNegativeButton(R.string.cancel, saveCancelListener);
 		alert.show();
@@ -161,43 +158,43 @@ public class CategoryActivity extends ActionBarActivity {
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
-				ViewUtil.showMessage(getApplicationContext(), "positive button");
-				break;
+				if(saveCategory()==1){
+					break;
+				}
 			case DialogInterface.BUTTON_NEGATIVE: 
 				break;
 			}
 		}
 	};
 	
-	public Button.OnClickListener mSaveCategoryButtonListener = new Button.OnClickListener() {
-	    public void onClick(View v) {
-	    	if(IUtil.isNotBlank(mCategoryName.getText())){
-	    		String categoryName = mCategoryName.getText().toString().toLowerCase();
-	    		String categoryType = getString(R.string.productive);
-	    		if(mWastage.isChecked()){
-	    			categoryType = getString(R.string.wastage);
-	    		}else if(mProductive.isChecked()){
-	    			categoryType = getString(R.string.productive);
-	    		}
-	    		
-	    		Category category= new Category();
-	    		category.setName(categoryName);
-	    		category.setType(categoryType);
-	    		category.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-	    		category.setCreated_by_name("");
-	    		int sucess = categoryService.createCategory(category);
-	    		if(sucess > 0){
-	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_success, categoryName));
-	    			loadCategoryList();
-	    		}else{
-	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_failed));
-	    		}
-	    	}else{
-	    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.category_name_missing));
-	    	}
-	    }
-	};
-	
+	private int saveCategory(){
+		if(IUtil.isNotBlank(mCategoryName.getText())){
+    		String categoryName = mCategoryName.getText().toString().toLowerCase();
+    		String categoryType = getString(R.string.productive);
+    		if(mWastage.isChecked()){
+    			categoryType = getString(R.string.wastage);
+    		}else if(mProductive.isChecked()){
+    			categoryType = getString(R.string.productive);
+    		}
+    		
+    		Category category= new Category();
+    		category.setName(categoryName);
+    		category.setType(categoryType);
+    		category.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+    		category.setCreated_by_name("");
+    		int sucess = categoryService.createCategory(category);
+    		if(sucess > 0){
+    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_success, categoryName));
+    			loadCategoryList();
+    			return 1;
+    		}else{
+    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_failed));
+    		}
+    	}else{
+    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.category_name_missing));
+    	}
+		return 0;
+	}
 	
 	private void loadCategoryList(){
 		try {
