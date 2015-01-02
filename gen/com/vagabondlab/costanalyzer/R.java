@@ -1638,9 +1638,10 @@ containing a value of this type.
         public static final int abc_textfield_search_activated_mtrl_alpha=0x7f020030;
         public static final int abc_textfield_search_default_mtrl_alpha=0x7f020031;
         public static final int abc_textfield_search_material=0x7f020032;
-        public static final int drawer_shadow=0x7f020033;
-        public static final int ic_drawer=0x7f020034;
-        public static final int ic_launcher=0x7f020035;
+        public static final int add=0x7f020033;
+        public static final int drawer_shadow=0x7f020034;
+        public static final int ic_drawer=0x7f020035;
+        public static final int ic_launcher=0x7f020036;
     }
     public static final class id {
         public static final int action_bar=0x7f060031;
@@ -1659,20 +1660,20 @@ containing a value of this type.
         public static final int action_mode_close_button=0x7f060020;
         public static final int action_settings=0x7f06004f;
         public static final int activity_chooser_view_content=0x7f060021;
+        public static final int add_category=0x7f06004e;
         public static final int always=0x7f06000d;
         public static final int beginning=0x7f060012;
-        public static final int beneficiary_header_status_textview=0x7f060049;
-        public static final int button_add_category=0x7f060045;
+        public static final int beneficiary_header_status_textview=0x7f060042;
         public static final int checkbox=0x7f060029;
         public static final int collapseActionView=0x7f06000f;
-        public static final int container=0x7f060048;
+        public static final int container=0x7f060041;
         public static final int decor_content_parent=0x7f06002f;
         public static final int default_activity_button=0x7f060024;
         public static final int dialog=0x7f060010;
         public static final int disableHome=0x7f06000a;
-        public static final int drawer_layout=0x7f060047;
+        public static final int drawer_layout=0x7f060040;
         public static final int dropdown=0x7f060011;
-        public static final int editText_category_name=0x7f060040;
+        public static final int editText_category_name=0x7f060045;
         public static final int edit_query=0x7f060033;
         public static final int end=0x7f060014;
         public static final int expand_activities_button=0x7f060022;
@@ -1685,16 +1686,16 @@ containing a value of this type.
         public static final int listMode=0x7f060002;
         public static final int list_item=0x7f060025;
         public static final int middle=0x7f060013;
-        public static final int navigation_drawer=0x7f06004a;
+        public static final int navigation_drawer=0x7f060043;
         public static final int never=0x7f06000b;
         public static final int none=0x7f060004;
         public static final int normal=0x7f060001;
         public static final int progress_circular=0x7f06001c;
         public static final int progress_horizontal=0x7f06001d;
         public static final int radio=0x7f06002b;
-        public static final int radioGroup_category_type=0x7f060041;
-        public static final int radio_productive=0x7f060043;
-        public static final int radio_wastage=0x7f060044;
+        public static final int radioGroup_category_type=0x7f060046;
+        public static final int radio_productive=0x7f060048;
+        public static final int radio_wastage=0x7f060049;
         public static final int search_badge=0x7f060035;
         public static final int search_bar=0x7f060034;
         public static final int search_button=0x7f060036;
@@ -1705,7 +1706,7 @@ containing a value of this type.
         public static final int search_plate=0x7f060039;
         public static final int search_src_text=0x7f06003a;
         public static final int search_voice_btn=0x7f06003e;
-        public static final int section_label=0x7f06004b;
+        public static final int section_label=0x7f06004a;
         public static final int shortcut=0x7f06002a;
         public static final int showCustom=0x7f060009;
         public static final int showHome=0x7f060006;
@@ -1713,12 +1714,12 @@ containing a value of this type.
         public static final int split_action_bar=0x7f060019;
         public static final int submit_area=0x7f06003c;
         public static final int tabMode=0x7f060003;
-        public static final int text1=0x7f06004c;
-        public static final int text2=0x7f06004e;
-        public static final int text3=0x7f06004d;
-        public static final int textView_category_name=0x7f06003f;
-        public static final int textView_category_status=0x7f060046;
-        public static final int textView_category_type=0x7f060042;
+        public static final int text1=0x7f06004b;
+        public static final int text2=0x7f06004d;
+        public static final int text3=0x7f06004c;
+        public static final int textView_category_name=0x7f060044;
+        public static final int textView_category_status=0x7f06003f;
+        public static final int textView_category_type=0x7f060047;
         public static final int title=0x7f060027;
         public static final int up=0x7f060016;
         public static final int useLogo=0x7f060005;
@@ -1776,10 +1777,11 @@ containing a value of this type.
         public static final int abc_simple_dropdown_hint=0x7f030016;
         public static final int activity_category=0x7f030017;
         public static final int activity_home=0x7f030018;
-        public static final int fragment_home=0x7f030019;
-        public static final int fragment_navigation_drawer=0x7f03001a;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001b;
-        public static final int two_item=0x7f03001c;
+        public static final int category_form=0x7f030019;
+        public static final int fragment_home=0x7f03001a;
+        public static final int fragment_navigation_drawer=0x7f03001b;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001c;
+        public static final int two_item=0x7f03001d;
     }
     public static final class menu {
         public static final int category=0x7f0d0000;
@@ -1848,10 +1850,12 @@ containing a value of this type.
         public static final int abc_toolbar_collapse_description=0x7f0b0004;
         public static final int action_example=0x7f0b0016;
         public static final int action_settings=0x7f0b0017;
+        public static final int add_new_category=0x7f0b0022;
         public static final int app_name=0x7f0b0010;
+        public static final int cancel=0x7f0b0021;
         public static final int category_name=0x7f0b001d;
-        public static final int category_name_missing=0x7f0b0022;
-        public static final int category_status=0x7f0b0025;
+        public static final int category_name_missing=0x7f0b0025;
+        public static final int category_status=0x7f0b0028;
         public static final int category_type=0x7f0b001e;
         /**  Category screen 
          */
@@ -1860,16 +1864,17 @@ containing a value of this type.
         public static final int hello_world=0x7f0b001a;
         public static final int navigation_drawer_close=0x7f0b0015;
         public static final int navigation_drawer_open=0x7f0b0014;
-        public static final int productive=0x7f0b0020;
-        public static final int save_category=0x7f0b001f;
-        public static final int save_category_failed=0x7f0b0024;
-        public static final int save_category_success=0x7f0b0023;
+        public static final int new_category=0x7f0b001f;
+        public static final int productive=0x7f0b0023;
+        public static final int save=0x7f0b0020;
+        public static final int save_category_failed=0x7f0b0027;
+        public static final int save_category_success=0x7f0b0026;
         public static final int test=0x7f0b0018;
         public static final int title_activity_category=0x7f0b0019;
         public static final int title_section1=0x7f0b0011;
         public static final int title_section2=0x7f0b0012;
         public static final int title_section3=0x7f0b0013;
-        public static final int wastage=0x7f0b0021;
+        public static final int wastage=0x7f0b0024;
     }
     public static final class style {
         /** 

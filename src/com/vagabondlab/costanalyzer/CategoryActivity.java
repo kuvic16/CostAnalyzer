@@ -7,11 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.app.ListActivity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.internal.widget.AdapterViewCompat;
-import android.support.v7.internal.widget.AdapterViewCompat.OnItemClickListener;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +46,7 @@ public class CategoryActivity extends ActionBarActivity {
 	private TextView mCategoryStatus;
 	
 	private List<Map<String, String>> mCategoryListdata = new ArrayList<Map<String, String>>();
+	private CharSequence mTitle;
 	
 	// for listview activity
 	private ListView mListView;
@@ -84,8 +86,8 @@ public class CategoryActivity extends ActionBarActivity {
 		
 		try {
 			categoryService = new CategoryService(getHelper().getCategoryDao());
-			mCategorySaveButton = (Button) findViewById(R.id.button_add_category);
-			mCategorySaveButton.setOnClickListener(mSaveCategoryButtonListener);
+			//mCategorySaveButton = (Button) findViewById(R.id.button_add_category);
+			//mCategorySaveButton.setOnClickListener(mSaveCategoryButtonListener);
 			
 			mCategoryName = (EditText)findViewById(R.id.editText_category_name);
 			mProductive = (RadioButton)findViewById(R.id.radio_productive);
@@ -93,6 +95,8 @@ public class CategoryActivity extends ActionBarActivity {
 			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
 			
 			loadCategoryList();
+			
+		    mTitle = getTitle();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -118,20 +122,52 @@ public class CategoryActivity extends ActionBarActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.category, menu);
+		restoreActionBar();
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		if (id == R.id.add_category) {
+			addNewCategoryDialougeBox();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	public void restoreActionBar() {
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+		actionBar.setDisplayShowTitleEnabled(true);
+		actionBar.setTitle(mTitle);
+	}
+	
+	
+	private void addNewCategoryDialougeBox(){
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View textEntryView = factory.inflate(R.layout.category_form, null);		
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setIcon(R.drawable.add)
+		     .setTitle(R.string.add_new_category)
+		     .setView(textEntryView)
+		     .setPositiveButton(R.string.save, saveCancelListener)
+		     .setNegativeButton(R.string.cancel, saveCancelListener);
+		alert.show();
+	}
+	
+	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				ViewUtil.showMessage(getApplicationContext(), "positive button");
+				break;
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
 	
 	public Button.OnClickListener mSaveCategoryButtonListener = new Button.OnClickListener() {
 	    public void onClick(View v) {

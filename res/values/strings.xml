@@ -18,7 +18,10 @@
     <string name="cost_category">Cost Category</string>
     <string name="category_name">Category Name</string>
     <string name="category_type">Category Type</string>
-    <string name="save_category">Save new category</string>
+    <string name="new_category">new category</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_new_category">Add New Category</string>
 	<string name="productive">Productive</string>
 	<string name="wastage">Wastage</string>
 	<string name="category_name_missing">Please write category name</string>

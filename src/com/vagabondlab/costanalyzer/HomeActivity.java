@@ -1,5 +1,7 @@
 package com.vagabondlab.costanalyzer;
 
+import com.vagabondlab.costanalyzer.utilities.ViewUtil;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,31 +36,35 @@ public class HomeActivity extends ActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
-		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager()
-				.findFragmentById(R.id.navigation_drawer);
+		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
-
 		// Set up the drawer.
-		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
-				(DrawerLayout) findViewById(R.id.drawer_layout));
+		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
 	}
 
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		// update the main content by replacing fragments
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager
-				.beginTransaction()
-				.replace(R.id.container,
-						PlaceholderFragment.newInstance(position + 1)).commit();
+		fragmentManager.beginTransaction().replace(R.id.container,PlaceholderFragment.newInstance(position + 1)).commit();
+		
+		ViewUtil.showMessage(getApplicationContext(), String.valueOf(position));
+		switch (position) {
+		case 0:
+			Intent i = new Intent(getApplicationContext(),CategoryActivity.class);
+			startActivity(i);
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		}
 	}
 
 	public void onSectionAttached(int number) {
 		switch (number) {
 		case 1:
 			mTitle = getString(R.string.title_section1);
-			Intent i = new Intent(getApplicationContext(),CategoryActivity.class);
-			startActivity(i);
 			break;
 		case 2:
 			mTitle = getString(R.string.title_section2);
