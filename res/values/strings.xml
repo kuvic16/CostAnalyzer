@@ -24,12 +24,18 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="add_new_category">Add New Category</string>
+    <string name="edit_category">Edit Category</string>
+    <string name="delete_category">Delete Category</string>
+    <string name="delete_category_are_u_sure">Are you sure to delete \"%s\" category</string>
 	<string name="productive">Productive</string>
 	<string name="wastage">Wastage</string>
 	<string name="category_name_missing">Please write category name</string>
-	<string name="save_category_success">\"%s\" category added</string>
+	<string name="save_category_success">\"%s\" category saved</string>
 	<string name="save_category_failed">Failed to save category. Please try again</string>
 	<string name="category_status">All category listed below. Total category: %s</string>
+	<string name="not_found_category">Category not found</string>
+	<string name="delete_category_success">\"%s\" category deleted</string>
+	<string name="delete_category_failed">Failed to delete category. Please try again</string>
 	
 	
 	

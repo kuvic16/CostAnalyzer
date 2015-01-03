@@ -144,12 +144,13 @@ public class CategoryService{
 		return 0;
 	}
 	
-	public void deleteCategoryById(int id){
+	public int deleteCategoryById(int id){
 		try {
-			em.deleteById(id);			
+			return em.deleteById(id);			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return 0;
 	}
 	
 //	public void deleteRegisteredBeneficiary(){

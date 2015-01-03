@@ -32,6 +32,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.vagabondlab.costanalyzer.database.DatabaseHelper;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
+import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
@@ -54,6 +55,7 @@ public class CategoryActivity extends ActionBarActivity {
 	
 	private final int CONTEXT_MENU_EDIT = 1;
 	private final int CONTEXT_MENU_ARCHIVE = 2;
+	private int action = 0;
 
 	
 	
@@ -151,12 +153,13 @@ public class CategoryActivity extends ActionBarActivity {
 	public boolean onContextItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case CONTEXT_MENU_EDIT: {
-			ViewUtil.showMessage(getApplicationContext(), "edit");
-
+			action = IConstant.ACTION_EDIT;
+			editCategoryDialougeBox();
 		}
 			break;
 		case CONTEXT_MENU_ARCHIVE: {
-			ViewUtil.showMessage(getApplicationContext(), "delete");
+			action = IConstant.ACTION_DELETE;
+			deleteCategoryDialougeBox();
 		}
 			break;
 		}
@@ -168,7 +171,7 @@ public class CategoryActivity extends ActionBarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.add_category) {
-			
+			action = IConstant.ACTION_ADD;
 			addNewCategoryDialougeBox();
 			return true;
 		}
@@ -202,12 +205,67 @@ public class CategoryActivity extends ActionBarActivity {
 		alert.show();
 	}
 	
+	@SuppressLint("InflateParams")
+	private void editCategoryDialougeBox(){
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View categoryFormView = factory.inflate(R.layout.category_form, null);
+		mCategoryName = (EditText)categoryFormView.findViewById(R.id.editText_category_name);
+		mProductive = (RadioButton)categoryFormView.findViewById(R.id.radio_productive);
+		mWastage = (RadioButton)categoryFormView.findViewById(R.id.radio_wastage);
+		
+		Category category = categoryService.getCategoryById(selectedCategoryId);
+		if(category == null){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_category));
+			return;
+		}
+		
+		mCategoryName.setText(category.getName());
+		if(category.getType().equalsIgnoreCase(getString(R.string.productive))){
+			mProductive.setChecked(true);
+		}else if(category.getType().equalsIgnoreCase(getString(R.string.wastage))){
+			mWastage.setChecked(true);
+		}
+		
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setIcon(R.drawable.edit)
+		     .setTitle(R.string.edit_category)
+		     .setView(categoryFormView)
+		     .setPositiveButton(R.string.save, saveCancelListener)
+		     .setNegativeButton(R.string.cancel, saveCancelListener);
+		alert.show();
+	}
+	
+	private void deleteCategoryDialougeBox(){
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setIcon(R.drawable.delete)
+		     .setTitle(R.string.delete_category)
+		     .setMessage(getString(R.string.delete_category_are_u_sure, selectedCategoryName))
+		     .setPositiveButton(R.string.delete, deleteCancelListener)
+		     .setNegativeButton(R.string.cancel, deleteCancelListener);
+		alert.show();
+	}
+	
+	
 	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
 		@Override
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
 				if(saveCategory()==1){
+					break;
+				}
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
+	DialogInterface.OnClickListener deleteCancelListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				if(deleteCategory()==1){
 					break;
 				}
 			case DialogInterface.BUTTON_NEGATIVE: 
@@ -227,11 +285,21 @@ public class CategoryActivity extends ActionBarActivity {
     		}
     		
     		Category category= new Category();
+    		if(action == IConstant.ACTION_EDIT){
+    			category= categoryService.getCategoryById(selectedCategoryId);
+    		}
     		category.setName(categoryName);
     		category.setType(categoryType);
     		category.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
     		category.setCreated_by_name("");
-    		int sucess = categoryService.createCategory(category);
+    		
+    		int sucess = 0;
+    		if(action == IConstant.ACTION_ADD){
+    			sucess = categoryService.createCategory(category);
+    		}else if(action == IConstant.ACTION_EDIT){
+    			sucess = categoryService.updateCategory(category);
+    		} 
+    		
     		if(sucess > 0){
     			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_success, categoryName));
     			loadCategoryList();
@@ -243,6 +311,22 @@ public class CategoryActivity extends ActionBarActivity {
     		ViewUtil.showMessage(getApplicationContext(), getString(R.string.category_name_missing));
     	}
 		return 0;
+	}
+	
+	private int deleteCategory(){
+		int sucess = 0;
+		if(action == IConstant.ACTION_DELETE){
+			sucess = categoryService.deleteCategoryById(selectedCategoryId);
+		} 
+		
+		if(sucess > 0){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_category_success, selectedCategoryName));
+			loadCategoryList();
+			return 1;
+		}else{
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_category_failed));
+		}
+    	return 0;
 	}
 	
 	private void loadCategoryList(){

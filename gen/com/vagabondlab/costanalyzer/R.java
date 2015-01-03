@@ -1639,9 +1639,11 @@ containing a value of this type.
         public static final int abc_textfield_search_default_mtrl_alpha=0x7f020031;
         public static final int abc_textfield_search_material=0x7f020032;
         public static final int add=0x7f020033;
-        public static final int drawer_shadow=0x7f020034;
-        public static final int ic_drawer=0x7f020035;
-        public static final int ic_launcher=0x7f020036;
+        public static final int delete=0x7f020034;
+        public static final int drawer_shadow=0x7f020035;
+        public static final int edit=0x7f020036;
+        public static final int ic_drawer=0x7f020037;
+        public static final int ic_launcher=0x7f020038;
     }
     public static final class id {
         public static final int action_bar=0x7f060031;
@@ -1854,29 +1856,35 @@ containing a value of this type.
         public static final int app_name=0x7f0b0010;
         public static final int cancel=0x7f0b0023;
         public static final int category_name=0x7f0b001f;
-        public static final int category_name_missing=0x7f0b0027;
-        public static final int category_status=0x7f0b002a;
+        public static final int category_name_missing=0x7f0b002a;
+        public static final int category_status=0x7f0b002d;
         public static final int category_type=0x7f0b0020;
         /**  Category screen 
          */
         public static final int cost_category=0x7f0b001e;
         public static final int delete=0x7f0b001d;
+        public static final int delete_category=0x7f0b0026;
+        public static final int delete_category_are_u_sure=0x7f0b0027;
+        public static final int delete_category_failed=0x7f0b0030;
+        public static final int delete_category_success=0x7f0b002f;
         public static final int edit=0x7f0b001c;
+        public static final int edit_category=0x7f0b0025;
         public static final int error=0x7f0b001b;
         public static final int hello_world=0x7f0b001a;
         public static final int navigation_drawer_close=0x7f0b0015;
         public static final int navigation_drawer_open=0x7f0b0014;
         public static final int new_category=0x7f0b0021;
-        public static final int productive=0x7f0b0025;
+        public static final int not_found_category=0x7f0b002e;
+        public static final int productive=0x7f0b0028;
         public static final int save=0x7f0b0022;
-        public static final int save_category_failed=0x7f0b0029;
-        public static final int save_category_success=0x7f0b0028;
+        public static final int save_category_failed=0x7f0b002c;
+        public static final int save_category_success=0x7f0b002b;
         public static final int test=0x7f0b0018;
         public static final int title_activity_category=0x7f0b0019;
         public static final int title_section1=0x7f0b0011;
         public static final int title_section2=0x7f0b0012;
         public static final int title_section3=0x7f0b0013;
-        public static final int wastage=0x7f0b0026;
+        public static final int wastage=0x7f0b0029;
     }
     public static final class style {
         /** 
