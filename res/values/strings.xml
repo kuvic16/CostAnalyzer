@@ -13,6 +13,8 @@
     <string name="title_activity_category">CategoryActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="error">error: %s</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
     
     <!-- Category screen -->
     <string name="cost_category">Cost Category</string>

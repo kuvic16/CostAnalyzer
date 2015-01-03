@@ -7,18 +7,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
@@ -34,6 +35,7 @@ import com.vagabondlab.costanalyzer.database.service.CategoryService;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
+@SuppressLint("DefaultLocale")
 public class CategoryActivity extends ActionBarActivity {
 	
 	private DatabaseHelper databaseHelper = null;
@@ -47,6 +49,14 @@ public class CategoryActivity extends ActionBarActivity {
 	private List<Map<String, String>> mCategoryListdata = new ArrayList<Map<String, String>>();
 	private CharSequence mTitle;
 	
+	private int selectedCategoryId;
+	private String selectedCategoryName;
+	
+	private final int CONTEXT_MENU_EDIT = 1;
+	private final int CONTEXT_MENU_ARCHIVE = 2;
+
+	
+	
 	// for listview activity
 	private ListView mListView;
 	protected ListView getListView() {
@@ -55,11 +65,22 @@ public class CategoryActivity extends ActionBarActivity {
 	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
 				@Override
 				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
-					View idChild = ((ViewGroup) v).getChildAt(1);
-					String idChildValue = ((TextView) idChild).getText().toString();
-					ViewUtil.showMessage(getApplicationContext(), idChildValue);
+					try{
+						View idChild = ((ViewGroup) v).getChildAt(1);
+						selectedCategoryId = Integer.valueOf(((TextView) idChild).getText().toString());
+						
+						View nameChild = ((ViewGroup) v).getChildAt(0);
+						selectedCategoryName = ((TextView) nameChild).getText().toString();
+						
+						registerForContextMenu(mListView);
+	                    openContextMenu(mListView);
+					}catch(Throwable t){
+						
+					}
 				}
 			});
+	        
+	        
 	    }
 	    return mListView;
 	}
@@ -117,17 +138,44 @@ public class CategoryActivity extends ActionBarActivity {
 		restoreActionBar();
 		return true;
 	}
+	
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		// Context menu
+		menu.setHeaderTitle(selectedCategoryName);
+		menu.add(Menu.NONE, CONTEXT_MENU_EDIT, Menu.NONE, R.string.edit);
+		menu.add(Menu.NONE, CONTEXT_MENU_ARCHIVE, Menu.NONE, R.string.delete);
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case CONTEXT_MENU_EDIT: {
+			ViewUtil.showMessage(getApplicationContext(), "edit");
+
+		}
+			break;
+		case CONTEXT_MENU_ARCHIVE: {
+			ViewUtil.showMessage(getApplicationContext(), "delete");
+		}
+			break;
+		}
+
+		return super.onContextItemSelected(item);
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.add_category) {
+			
 			addNewCategoryDialougeBox();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public void restoreActionBar() {
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -136,6 +184,7 @@ public class CategoryActivity extends ActionBarActivity {
 	}
 	
 	
+	@SuppressLint("InflateParams")
 	private void addNewCategoryDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View categoryFormView = factory.inflate(R.layout.category_form, null);
