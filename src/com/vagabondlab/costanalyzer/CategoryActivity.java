@@ -8,9 +8,14 @@ import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
@@ -29,6 +34,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.vagabondlab.costanalyzer.HomeActivity.PlaceholderFragment;
 import com.vagabondlab.costanalyzer.database.DatabaseHelper;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
@@ -37,8 +43,10 @@ import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
 @SuppressLint("DefaultLocale")
-public class CategoryActivity extends ActionBarActivity {
+public class CategoryActivity extends ActionBarActivity implements
+NavigationDrawerFragment.NavigationDrawerCallbacks{
 	
+	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private DatabaseHelper databaseHelper = null;
 	private CategoryService categoryService;
 	
@@ -103,15 +111,21 @@ public class CategoryActivity extends ActionBarActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.activity_category);
+		
+		//mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+		//mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
 		setTitle(getString(R.string.cost_category));
 		
 		try {
 			categoryService = new CategoryService(getHelper().getCategoryDao());
-			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
-			loadCategoryList();
+			//mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
+			//loadCategoryList();
 			mTitle = getTitle();
+			
+			
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -366,6 +380,67 @@ public class CategoryActivity extends ActionBarActivity {
 			getListView().setItemsCanFocus(false);
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
+		}
+	}
+
+	@Override
+	public void onNavigationDrawerItemSelected(int position) {
+		// update the main content by replacing fragments
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		fragmentManager.beginTransaction().replace(R.id.container,PlaceholderFragment.newInstance(position + 1)).commit();
+		
+		ViewUtil.showMessage(getApplicationContext(), String.valueOf(position));
+		switch (position) {
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		}
+	}
+
+	public void onSectionAttached(int number) {
+		switch (number) {
+		case 1:
+			mTitle = getString(R.string.title_section1);
+			break;
+		case 2:
+			mTitle = getString(R.string.title_section2);
+			break;
+		case 3:
+			mTitle = getString(R.string.title_section3);
+			break;
+		}
+	}
+	
+	public static class PlaceholderFragment extends Fragment {
+		private static final String ARG_SECTION_NUMBER = "section_number";
+
+		public static PlaceholderFragment newInstance(int sectionNumber) {
+			PlaceholderFragment fragment = new PlaceholderFragment();
+			Bundle args = new Bundle();
+			args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+			fragment.setArguments(args);
+			return fragment;
+		}
+
+		public PlaceholderFragment() {
+		}
+
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_home, container,
+					false);
+			return rootView;
+		}
+
+		@Override
+		public void onAttach(Activity activity) {
+			super.onAttach(activity);
+			((HomeActivity) activity).onSectionAttached(getArguments().getInt(
+					ARG_SECTION_NUMBER));
 		}
 	}
 }
