@@ -2,9 +2,9 @@
 <resources>
 
     <string name="app_name">CostAnalyzer</string>
-    <string name="title_section1">Cost category</string>
-    <string name="title_section2">Cost history</string>
-    <string name="title_section3">Users log</string>
+    <string name="main_menu1">Cost category</string>
+    <string name="main_menu2">Cost history</string>
+    <string name="main_menu3">Users log</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>

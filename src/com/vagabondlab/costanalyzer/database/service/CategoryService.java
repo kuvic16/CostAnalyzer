@@ -92,8 +92,8 @@ public class CategoryService{
 			QueryBuilder<Category, Integer> builder = em.queryBuilder();
 			builder.orderBy(IConstant.CREATED_DATE, false);
 			builder.limit(30L);
-			List<Category> beneficiaryList = em.query(builder.prepare());
-			return beneficiaryList;
+			List<Category> categoryList = em.query(builder.prepare());
+			return categoryList;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

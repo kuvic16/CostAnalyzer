@@ -1874,6 +1874,9 @@ containing a value of this type.
         public static final int edit_category=0x7f0b0025;
         public static final int error=0x7f0b001b;
         public static final int hello_world=0x7f0b001a;
+        public static final int main_menu1=0x7f0b0011;
+        public static final int main_menu2=0x7f0b0012;
+        public static final int main_menu3=0x7f0b0013;
         public static final int navigation_drawer_close=0x7f0b0015;
         public static final int navigation_drawer_open=0x7f0b0014;
         public static final int new_category=0x7f0b0021;
@@ -1884,9 +1887,6 @@ containing a value of this type.
         public static final int save_category_success=0x7f0b002b;
         public static final int test=0x7f0b0018;
         public static final int title_activity_category=0x7f0b0019;
-        public static final int title_section1=0x7f0b0011;
-        public static final int title_section2=0x7f0b0012;
-        public static final int title_section3=0x7f0b0013;
         public static final int wastage=0x7f0b0029;
     }
     public static final class style {

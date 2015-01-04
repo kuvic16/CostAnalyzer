@@ -6,43 +6,26 @@
     android:layout_height="match_parent"
     tools:context="com.vagabondlab.costanalyzer.HomeActivity" >
 
-    <!--
-         As the main content view, the view below consumes the entire
-         space available using match_parent in both dimensions.
-    -->
-
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/beneficiary_header_status_textview"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-            	android:id="@+id/beneficiary_header_status_textview"
-            	android:layout_width="fill_parent"
-            	android:layout_height="wrap_content"
-            	android:layout_alignParentTop="true"
-            	android:background="#82CAFF"
-            	android:padding="5dp"
-            	android:paddingTop="0dp"
-            	android:text="@string/test"
-            	android:textSize="14sp" />
-			
-        </LinearLayout>
-    <!--
-         android:layout_gravity="start" tells DrawerLayout to treat
-         this as a sliding drawer on the left side for left-to-right
-         languages and on the right side for right-to-left languages.
-         If you're not building against API 17 or higher, use
-         android:layout_gravity="left" instead.
-    -->
-    <!--
-         The drawer is given a fixed width in dp and extends the full height of
-         the container.
-    -->
+            android:background="#82CAFF"
+            android:padding="5dp"
+            android:paddingTop="0dp"
+            android:text="@string/test"
+            android:textSize="14sp" />
+    </LinearLayout>
 
     <fragment
         android:id="@+id/navigation_drawer"

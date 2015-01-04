@@ -11,7 +11,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,7 +33,6 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.vagabondlab.costanalyzer.HomeActivity.PlaceholderFragment;
 import com.vagabondlab.costanalyzer.database.DatabaseHelper;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
@@ -85,12 +83,10 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 						registerForContextMenu(mListView);
 	                    openContextMenu(mListView);
 					}catch(Throwable t){
-						
+						t.printStackTrace();
 					}
 				}
-			});
-	        
-	        
+			});	        
 	    }
 	    return mListView;
 	}
@@ -123,9 +119,6 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
 			loadCategoryList();
 			mTitle = getTitle();
-			
-			
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -401,15 +394,16 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	}
 
 	public void onSectionAttached(int number) {
+		ViewUtil.showMessage(getApplicationContext(), String.valueOf(number));
 		switch (number) {
 		case 1:
-			mTitle = getString(R.string.title_section1);
+			mTitle = getString(R.string.main_menu1);
 			break;
 		case 2:
-			mTitle = getString(R.string.title_section2);
+			mTitle = getString(R.string.main_menu2);
 			break;
 		case 3:
-			mTitle = getString(R.string.title_section3);
+			mTitle = getString(R.string.main_menu3);
 			break;
 		}
 	}
@@ -439,7 +433,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		@Override
 		public void onAttach(Activity activity) {
 			super.onAttach(activity);
-			((CategoryActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
+			//((CategoryActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
 		}
 	}
 }
