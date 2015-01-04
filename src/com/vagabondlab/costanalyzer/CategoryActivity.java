@@ -114,14 +114,14 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.activity_category);
 		
-		//mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-		//mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
+		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_category);
+		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_category,(DrawerLayout) findViewById(R.id.drawer_layout_category));
 		setTitle(getString(R.string.cost_category));
 		
 		try {
 			categoryService = new CategoryService(getHelper().getCategoryDao());
-			//mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
-			//loadCategoryList();
+			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
+			loadCategoryList();
 			mTitle = getTitle();
 			
 			
@@ -387,7 +387,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	public void onNavigationDrawerItemSelected(int position) {
 		// update the main content by replacing fragments
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container,PlaceholderFragment.newInstance(position + 1)).commit();
+		fragmentManager.beginTransaction().replace(R.id.container_category,PlaceholderFragment.newInstance(position + 1)).commit();
 		
 		ViewUtil.showMessage(getApplicationContext(), String.valueOf(position));
 		switch (position) {
@@ -439,8 +439,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		@Override
 		public void onAttach(Activity activity) {
 			super.onAttach(activity);
-			((HomeActivity) activity).onSectionAttached(getArguments().getInt(
-					ARG_SECTION_NUMBER));
+			((CategoryActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
 		}
 	}
 }
