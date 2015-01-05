@@ -14,22 +14,18 @@
         android:layout_height="wrap_content"
         android:text="@string/category_name" />
 
-    <EditText
-        android:id="@+id/editText_category_name"
-        android:layout_width="fill_parent"
+    <Spinner 
+        android:id="@+id/spinner_category_name"
+    	android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView_category_name"
-        android:layout_below="@+id/textView_category_name"
-        android:ems="10"
-        android:inputType="text" >
-        <requestFocus />
-    </EditText>
-
+        android:layout_below="@+id/textView_category_name"/>
+    
     <TextView
         android:id="@+id/textView_cost_amount"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/editText_category_name"
+        android:layout_below="@+id/spinner_category_name"
         android:text="@string/cost_amount" />
     
     <EditText
@@ -39,7 +35,7 @@
         android:layout_alignLeft="@+id/textView_category_name"
         android:layout_below="@+id/textView_cost_amount"
         android:ems="10"
-        android:inputType="text" >
+        android:inputType="number" >
     </EditText>
 
     <TextView
@@ -51,18 +47,12 @@
         android:text="@string/cost_date" />
     
     <DatePicker
-        android:id="@+id/date_picker"
+        android:id="@+id/datePicker_cost_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
         android:layout_alignLeft="@+id/textView_category_name"
+        android:calendarViewShown="false"
         android:layout_below="@+id/textView_cost_date"/>
-<!-- <Button 
-        android:id="@+id/button_pick_date"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content"
-	    android:layout_alignLeft="@+id/textView_category_name"
-        android:layout_below="@+id/textView_cost_date"
-	    android:text="@string/pick_date"  /> -->
     
     
 </RelativeLayout>

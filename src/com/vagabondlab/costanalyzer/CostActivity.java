@@ -27,13 +27,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
@@ -52,14 +55,14 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private DatabaseHelper databaseHelper = null;
 	private CategoryService categoryService;
 	
-	private EditText mCategoryName;
-//	private RadioButton mProductive;
-//	private RadioButton mWastage;
-	private TextView mCategoryStatus;
-	private Button mPickDateButton;
-	private TextView mCostDate;
+	private Spinner mCategoryName;
+	private EditText mCostAmount;
+	private DatePicker mCostDatePicker;
+
+	private TextView mCostStatus;
 	
 	private List<Map<String, String>> mCategoryListdata = new ArrayList<Map<String, String>>();
+	private HashMap<Integer,String> spinnerCategoryMap = new HashMap<Integer, String>();
 	
 	private int selectedCategoryId;
 	private String selectedCategoryName;
@@ -123,7 +126,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		try {
 			categoryService = new CategoryService(getHelper().getCategoryDao());
-			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
+			mCostStatus = (TextView)findViewById(R.id.textView_category_status);
 			loadCategoryList();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -203,15 +206,13 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private void addNewCategoryDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View costFormView = factory.inflate(R.layout.cost_form, null);
-		mCategoryName = (EditText)costFormView.findViewById(R.id.editText_category_name);
-//		mProductive = (RadioButton)categoryFormView.findViewById(R.id.radio_productive);
-//		mWastage = (RadioButton)categoryFormView.findViewById(R.id.radio_wastage);
 		
-		//mPickDateButton = (Button)costFormView.findViewById(R.id.button_pick_date);
-		mCostDate = (TextView)costFormView.findViewById(R.id.textView_cost_date);
+		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
+		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
+		mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);
 		
-		
-		mCostDate.setText(getString(R.string.cost_date, IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD)));
+		loadCategorySpinner(mCategoryName);
+	
 		
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -227,9 +228,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private void editCategoryDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View categoryFormView = factory.inflate(R.layout.category_form, null);
-		mCategoryName = (EditText)categoryFormView.findViewById(R.id.editText_category_name);
-//		mProductive = (RadioButton)categoryFormView.findViewById(R.id.radio_productive);
-//		mWastage = (RadioButton)categoryFormView.findViewById(R.id.radio_wastage);
+		
 		
 		Category category = categoryService.getCategoryById(selectedCategoryId);
 		if(category == null){
@@ -237,12 +236,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			return;
 		}
 		
-		mCategoryName.setText(category.getName());
-//		if(category.getType().equalsIgnoreCase(getString(R.string.productive))){
-//			mProductive.setChecked(true);
-//		}else if(category.getType().equalsIgnoreCase(getString(R.string.wastage))){
-//			mWastage.setChecked(true);
-//		}
+		
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.edit)
@@ -293,41 +287,35 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	};
 	
 	private int saveCategory(){
-		if(IUtil.isNotBlank(mCategoryName.getText())){
-    		String categoryName = mCategoryName.getText().toString().toLowerCase();
-    		String categoryType = getString(R.string.productive);
-//    		if(mWastage.isChecked()){
-//    			categoryType = getString(R.string.wastage);
-//    		}else if(mProductive.isChecked()){
-//    			categoryType = getString(R.string.productive);
+//		if(IUtil.isNotBlank(mCategoryName.getText())){
+//    		String categoryName = mCategoryName.getText().toString().toLowerCase();
+//    		String categoryType = getString(R.string.productive);
+//    		Category category= new Category();
+//    		if(action == IConstant.ACTION_EDIT){
+//    			category= categoryService.getCategoryById(selectedCategoryId);
 //    		}
+//    		category.setName(categoryName);
+//    		category.setType(categoryType);
+//    		category.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+//    		category.setCreated_by_name("");
 //    		
-    		Category category= new Category();
-    		if(action == IConstant.ACTION_EDIT){
-    			category= categoryService.getCategoryById(selectedCategoryId);
-    		}
-    		category.setName(categoryName);
-    		category.setType(categoryType);
-    		category.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-    		category.setCreated_by_name("");
-    		
-    		int sucess = 0;
-    		if(action == IConstant.ACTION_ADD){
-    			sucess = categoryService.createCategory(category);
-    		}else if(action == IConstant.ACTION_EDIT){
-    			sucess = categoryService.updateCategory(category);
-    		} 
-    		
-    		if(sucess > 0){
-    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_success, categoryName));
-    			loadCategoryList();
-    			return 1;
-    		}else{
-    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_failed));
-    		}
-    	}else{
-    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.category_name_missing));
-    	}
+//    		int sucess = 0;
+//    		if(action == IConstant.ACTION_ADD){
+//    			sucess = categoryService.createCategory(category);
+//    		}else if(action == IConstant.ACTION_EDIT){
+//    			sucess = categoryService.updateCategory(category);
+//    		} 
+//    		
+//    		if(sucess > 0){
+//    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_success, categoryName));
+//    			loadCategoryList();
+//    			return 1;
+//    		}else{
+//    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_failed));
+//    		}
+//    	}else{
+//    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.category_name_missing));
+//    	}
 		return 0;
 	}
 	
@@ -358,7 +346,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 
 	private void loadUI(List<Category> categoryList, long total) {
 		try {
-			mCategoryStatus.setText(getString(R.string.category_status, total));
+			mCostStatus.setText(getString(R.string.category_status, total));
 			mCategoryListdata = new ArrayList<Map<String,String>>();
 			for (Category category : categoryList) {
 				Map<String, String> infoMap = new HashMap<String, String>(3);
@@ -373,7 +361,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 				mCategoryListdata.add(infoMap);
 			}
 			
-			SimpleAdapter adapter = new SimpleAdapter(
+			SimpleAdapter adapter = new SimpleAdapter( 
 					this, 
 					mCategoryListdata,
 					R.layout.two_item, 
@@ -385,6 +373,26 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}
+	}
+	
+	private void loadCategorySpinner(Spinner categorySpinner){
+		try {
+			List<Category> categoryList = categoryService.getAllCategory();
+			String[] spinnerArray = new String[categoryList.size()];
+			
+			int i = 0;
+			for(Category category : categoryList){
+				spinnerCategoryMap.put(category.getId(),category.getName());
+				spinnerArray[i++] = category.getName();
+			}
+			
+			ArrayAdapter<String> adapter =new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, spinnerArray);
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			categorySpinner.setAdapter(adapter);
+		} catch (Exception ex) {
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
+		}
+		
 	}
 	
 	@Override

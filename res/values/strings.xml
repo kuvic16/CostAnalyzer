@@ -41,7 +41,7 @@
 	<string name="title_activity_cost">Cost History</string>
 	<string name="new_cost">new cost</string>
 	<string name="cost_amount">Cost Amount</string>
-	<string name="cost_date">Date: %s</string>
+	<string name="cost_date">Date</string>
 	<string name="add_new_cost">Add New Cost</string>
     <string name="edit_cost">Edit Cost</string>
     <string name="delete_cost">Delete Cost</string>
