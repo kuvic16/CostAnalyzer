@@ -1654,15 +1654,16 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f06001f;
         public static final int action_bar_title=0x7f06001e;
         public static final int action_context_bar=0x7f060032;
-        public static final int action_example=0x7f060055;
+        public static final int action_example=0x7f060058;
         public static final int action_menu_divider=0x7f06001a;
         public static final int action_menu_presenter=0x7f06001b;
         public static final int action_mode_bar=0x7f06002e;
         public static final int action_mode_bar_stub=0x7f06002d;
         public static final int action_mode_close_button=0x7f060020;
-        public static final int action_settings=0x7f060054;
+        public static final int action_settings=0x7f060057;
         public static final int activity_chooser_view_content=0x7f060021;
-        public static final int add_category=0x7f060053;
+        public static final int add_category=0x7f060055;
+        public static final int add_cost=0x7f060056;
         public static final int always=0x7f06000d;
         public static final int beginning=0x7f060012;
         public static final int beneficiary_header_status_textview=0x7f060045;
@@ -1670,6 +1671,7 @@ containing a value of this type.
         public static final int collapseActionView=0x7f06000f;
         public static final int container=0x7f060044;
         public static final int container_category=0x7f060040;
+        public static final int date_picker=0x7f060050;
         public static final int decor_content_parent=0x7f06002f;
         public static final int default_activity_button=0x7f060024;
         public static final int dialog=0x7f060010;
@@ -1712,7 +1714,7 @@ containing a value of this type.
         public static final int search_plate=0x7f060039;
         public static final int search_src_text=0x7f06003a;
         public static final int search_voice_btn=0x7f06003e;
-        public static final int section_label=0x7f06004f;
+        public static final int section_label=0x7f060051;
         public static final int shortcut=0x7f06002a;
         public static final int showCustom=0x7f060009;
         public static final int showHome=0x7f060006;
@@ -1720,13 +1722,14 @@ containing a value of this type.
         public static final int split_action_bar=0x7f060019;
         public static final int submit_area=0x7f06003c;
         public static final int tabMode=0x7f060003;
-        public static final int text1=0x7f060050;
-        public static final int text2=0x7f060052;
-        public static final int text3=0x7f060051;
+        public static final int text1=0x7f060052;
+        public static final int text2=0x7f060054;
+        public static final int text3=0x7f060053;
         public static final int textView_category_name=0x7f060047;
         public static final int textView_category_status=0x7f060041;
         public static final int textView_category_type=0x7f06004a;
         public static final int textView_cost_amount=0x7f06004d;
+        public static final int textView_cost_date=0x7f06004f;
         public static final int title=0x7f060027;
         public static final int up=0x7f060016;
         public static final int useLogo=0x7f060005;
@@ -1794,8 +1797,9 @@ containing a value of this type.
     }
     public static final class menu {
         public static final int category=0x7f0d0000;
-        public static final int global=0x7f0d0001;
-        public static final int home=0x7f0d0002;
+        public static final int cost=0x7f0d0001;
+        public static final int global=0x7f0d0002;
+        public static final int home=0x7f0d0003;
     }
     public static final class raw {
         public static final int ormlite_config=0x7f050000;
@@ -1860,23 +1864,32 @@ containing a value of this type.
         public static final int action_example=0x7f0b0016;
         public static final int action_settings=0x7f0b0017;
         public static final int add_new_category=0x7f0b0024;
+        public static final int add_new_cost=0x7f0b0035;
         public static final int app_name=0x7f0b0010;
         public static final int cancel=0x7f0b0023;
         public static final int category_name=0x7f0b001f;
         public static final int category_name_missing=0x7f0b002a;
         public static final int category_status=0x7f0b002d;
         public static final int category_type=0x7f0b0020;
-        public static final int cost_Amount=0x7f0b0032;
+        public static final int cost_amount=0x7f0b0033;
+        public static final int cost_amount_missing=0x7f0b0039;
         /**  Category screen 
          */
         public static final int cost_category=0x7f0b001e;
+        public static final int cost_date=0x7f0b0034;
+        public static final int cost_status=0x7f0b003c;
         public static final int delete=0x7f0b001d;
         public static final int delete_category=0x7f0b0026;
         public static final int delete_category_are_u_sure=0x7f0b0027;
         public static final int delete_category_failed=0x7f0b0030;
         public static final int delete_category_success=0x7f0b002f;
+        public static final int delete_cost=0x7f0b0037;
+        public static final int delete_cost_are_u_sure=0x7f0b0038;
+        public static final int delete_cost_failed=0x7f0b003f;
+        public static final int delete_cost_success=0x7f0b003e;
         public static final int edit=0x7f0b001c;
         public static final int edit_category=0x7f0b0025;
+        public static final int edit_cost=0x7f0b0036;
         public static final int error=0x7f0b001b;
         public static final int hello_world=0x7f0b001a;
         public static final int main_menu1=0x7f0b0011;
@@ -1885,11 +1898,16 @@ containing a value of this type.
         public static final int navigation_drawer_close=0x7f0b0015;
         public static final int navigation_drawer_open=0x7f0b0014;
         public static final int new_category=0x7f0b0021;
+        public static final int new_cost=0x7f0b0032;
         public static final int not_found_category=0x7f0b002e;
+        public static final int not_found_cost=0x7f0b003d;
+        public static final int pick_date=0x7f0b0040;
         public static final int productive=0x7f0b0028;
         public static final int save=0x7f0b0022;
         public static final int save_category_failed=0x7f0b002c;
         public static final int save_category_success=0x7f0b002b;
+        public static final int save_cost_failed=0x7f0b003b;
+        public static final int save_cost_success=0x7f0b003a;
         public static final int test=0x7f0b0018;
         public static final int title_activity_category=0x7f0b0019;
         /**  Cost screen 

@@ -39,5 +39,19 @@
 	
 	<!-- Cost screen -->
 	<string name="title_activity_cost">Cost History</string>
-	<string name="cost_Amount">Cost Amount</string>
+	<string name="new_cost">new cost</string>
+	<string name="cost_amount">Cost Amount</string>
+	<string name="cost_date">Date: %s</string>
+	<string name="add_new_cost">Add New Cost</string>
+    <string name="edit_cost">Edit Cost</string>
+    <string name="delete_cost">Delete Cost</string>
+    <string name="delete_cost_are_u_sure">Are you sure to delete \"%s\" cost</string>
+	<string name="cost_amount_missing">Please write cost amount</string>
+	<string name="save_cost_success">\"%s\" cost saved</string>
+	<string name="save_cost_failed">Failed to save cost. Please try again</string>
+	<string name="cost_status">All cost listed below. Total category: %s</string>
+	<string name="not_found_cost">Cost not found</string>
+	<string name="delete_cost_success">\"%s\" cost deleted</string>
+	<string name="delete_cost_failed">Failed to delete cost. Please try again</string>
+	<string name="pick_date">Pick Date</string>	
 </resources>

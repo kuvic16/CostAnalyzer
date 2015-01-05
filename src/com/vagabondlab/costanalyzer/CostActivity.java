@@ -7,11 +7,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -24,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
@@ -49,12 +53,13 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private CategoryService categoryService;
 	
 	private EditText mCategoryName;
-	private RadioButton mProductive;
-	private RadioButton mWastage;
+//	private RadioButton mProductive;
+//	private RadioButton mWastage;
 	private TextView mCategoryStatus;
+	private Button mPickDateButton;
+	private TextView mCostDate;
 	
 	private List<Map<String, String>> mCategoryListdata = new ArrayList<Map<String, String>>();
-	private CharSequence mTitle;
 	
 	private int selectedCategoryId;
 	private String selectedCategoryName;
@@ -62,6 +67,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private final int CONTEXT_MENU_EDIT = 1;
 	private final int CONTEXT_MENU_ARCHIVE = 2;
 	private int action = 0;
+	private boolean firstTime = true;
 
 	
 	
@@ -113,16 +119,15 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_category);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_category,(DrawerLayout) findViewById(R.id.drawer_layout_category));
-		setTitle(getString(R.string.title_activity_cost));
 		
-//		try {
-//			categoryService = new CategoryService(getHelper().getCategoryDao());
-//			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
-//			loadCategoryList();
-//			mTitle = getTitle();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
+		
+		try {
+			categoryService = new CategoryService(getHelper().getCategoryDao());
+			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
+			loadCategoryList();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
@@ -143,8 +148,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.category, menu);
+		getMenuInflater().inflate(R.menu.cost, menu);
 		restoreActionBar();
 		return true;
 	}
@@ -178,7 +182,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.add_category) {
+		if (id == R.id.add_cost) {
 			action = IConstant.ACTION_ADD;
 			addNewCategoryDialougeBox();
 			return true;
@@ -191,23 +195,29 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setTitle(mTitle);
+		setTitle(getString(R.string.title_activity_cost));
 	}
 	
 	
 	@SuppressLint("InflateParams")
 	private void addNewCategoryDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
-		final View categoryFormView = factory.inflate(R.layout.category_form, null);
-		mCategoryName = (EditText)categoryFormView.findViewById(R.id.editText_category_name);
-		mProductive = (RadioButton)categoryFormView.findViewById(R.id.radio_productive);
-		mWastage = (RadioButton)categoryFormView.findViewById(R.id.radio_wastage);
+		final View costFormView = factory.inflate(R.layout.cost_form, null);
+		mCategoryName = (EditText)costFormView.findViewById(R.id.editText_category_name);
+//		mProductive = (RadioButton)categoryFormView.findViewById(R.id.radio_productive);
+//		mWastage = (RadioButton)categoryFormView.findViewById(R.id.radio_wastage);
+		
+		//mPickDateButton = (Button)costFormView.findViewById(R.id.button_pick_date);
+		mCostDate = (TextView)costFormView.findViewById(R.id.textView_cost_date);
+		
+		
+		mCostDate.setText(getString(R.string.cost_date, IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD)));
 		
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.add)
-		     .setTitle(R.string.add_new_category)
-		     .setView(categoryFormView)
+		     .setTitle(R.string.add_new_cost)
+		     .setView(costFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
 		     .setNegativeButton(R.string.cancel, saveCancelListener);
 		alert.show();
@@ -218,8 +228,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View categoryFormView = factory.inflate(R.layout.category_form, null);
 		mCategoryName = (EditText)categoryFormView.findViewById(R.id.editText_category_name);
-		mProductive = (RadioButton)categoryFormView.findViewById(R.id.radio_productive);
-		mWastage = (RadioButton)categoryFormView.findViewById(R.id.radio_wastage);
+//		mProductive = (RadioButton)categoryFormView.findViewById(R.id.radio_productive);
+//		mWastage = (RadioButton)categoryFormView.findViewById(R.id.radio_wastage);
 		
 		Category category = categoryService.getCategoryById(selectedCategoryId);
 		if(category == null){
@@ -228,11 +238,11 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		}
 		
 		mCategoryName.setText(category.getName());
-		if(category.getType().equalsIgnoreCase(getString(R.string.productive))){
-			mProductive.setChecked(true);
-		}else if(category.getType().equalsIgnoreCase(getString(R.string.wastage))){
-			mWastage.setChecked(true);
-		}
+//		if(category.getType().equalsIgnoreCase(getString(R.string.productive))){
+//			mProductive.setChecked(true);
+//		}else if(category.getType().equalsIgnoreCase(getString(R.string.wastage))){
+//			mWastage.setChecked(true);
+//		}
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.edit)
@@ -286,12 +296,12 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		if(IUtil.isNotBlank(mCategoryName.getText())){
     		String categoryName = mCategoryName.getText().toString().toLowerCase();
     		String categoryType = getString(R.string.productive);
-    		if(mWastage.isChecked()){
-    			categoryType = getString(R.string.wastage);
-    		}else if(mProductive.isChecked()){
-    			categoryType = getString(R.string.productive);
-    		}
-    		
+//    		if(mWastage.isChecked()){
+//    			categoryType = getString(R.string.wastage);
+//    		}else if(mProductive.isChecked()){
+//    			categoryType = getString(R.string.productive);
+//    		}
+//    		
     		Category category= new Category();
     		if(action == IConstant.ACTION_EDIT){
     			category= categoryService.getCategoryById(selectedCategoryId);
@@ -376,65 +386,26 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}
 	}
-
+	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-		// update the main content by replacing fragments
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container_category,PlaceholderFragment.newInstance(position + 1)).commit();
+		if(firstTime){
+			firstTime = false;
+			return;
+		}
 		
-		ViewUtil.showMessage(getApplicationContext(), String.valueOf(position));
 		switch (position) {
 		case 0:
+			Intent i = new Intent(getApplicationContext(),CategoryActivity.class);
+			startActivity(i);
 			break;
 		case 1:
+			i = new Intent(getApplicationContext(),CostActivity.class);
+			startActivity(i);
 			break;
 		case 2:
 			break;
 		}
-	}
-
-	public void onSectionAttached(int number) {
-		ViewUtil.showMessage(getApplicationContext(), String.valueOf(number));
-		switch (number) {
-		case 1:
-			mTitle = getString(R.string.main_menu1);
-			break;
-		case 2:
-			mTitle = getString(R.string.main_menu2);
-			break;
-		case 3:
-			mTitle = getString(R.string.main_menu3);
-			break;
-		}
-	}
+	}	
 	
-	public static class PlaceholderFragment extends Fragment {
-		private static final String ARG_SECTION_NUMBER = "section_number";
-
-		public static PlaceholderFragment newInstance(int sectionNumber) {
-			PlaceholderFragment fragment = new PlaceholderFragment();
-			Bundle args = new Bundle();
-			args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-			fragment.setArguments(args);
-			return fragment;
-		}
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_home, container,
-					false);
-			return rootView;
-		}
-
-		@Override
-		public void onAttach(Activity activity) {
-			super.onAttach(activity);
-			//((CategoryActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
-		}
-	}
 }

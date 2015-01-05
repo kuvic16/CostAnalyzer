@@ -20,6 +20,7 @@ import android.widget.TextView;
 public final class IUtil {
 	public static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
+	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	
 	@SuppressLint("SimpleDateFormat")
 	public static String getCurrentDateTime(String format){
