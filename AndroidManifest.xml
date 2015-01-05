@@ -29,6 +29,10 @@
             android:name=".CategoryActivity"
             android:label="@string/title_activity_category" >
         </activity>
+        <activity
+            android:name=".CostActivity"
+            android:label="@string/title_activity_category" >
+        </activity>
     </application>
 
 </manifest>

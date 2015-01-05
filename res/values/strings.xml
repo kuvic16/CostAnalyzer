@@ -37,6 +37,7 @@
 	<string name="delete_category_success">\"%s\" category deleted</string>
 	<string name="delete_category_failed">Failed to delete category. Please try again</string>
 	
-	
-	
+	<!-- Cost screen -->
+	<string name="title_activity_cost">Cost History</string>
+	<string name="cost_Amount">Cost Amount</string>
 </resources>

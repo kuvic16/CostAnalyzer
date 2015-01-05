@@ -1654,15 +1654,15 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f06001f;
         public static final int action_bar_title=0x7f06001e;
         public static final int action_context_bar=0x7f060032;
-        public static final int action_example=0x7f060053;
+        public static final int action_example=0x7f060055;
         public static final int action_menu_divider=0x7f06001a;
         public static final int action_menu_presenter=0x7f06001b;
         public static final int action_mode_bar=0x7f06002e;
         public static final int action_mode_bar_stub=0x7f06002d;
         public static final int action_mode_close_button=0x7f060020;
-        public static final int action_settings=0x7f060052;
+        public static final int action_settings=0x7f060054;
         public static final int activity_chooser_view_content=0x7f060021;
-        public static final int add_category=0x7f060051;
+        public static final int add_category=0x7f060053;
         public static final int always=0x7f06000d;
         public static final int beginning=0x7f060012;
         public static final int beneficiary_header_status_textview=0x7f060045;
@@ -1678,6 +1678,7 @@ containing a value of this type.
         public static final int drawer_layout_category=0x7f06003f;
         public static final int dropdown=0x7f060011;
         public static final int editText_category_name=0x7f060048;
+        public static final int editText_cost_amount=0x7f06004e;
         public static final int edit_query=0x7f060033;
         public static final int end=0x7f060014;
         public static final int expand_activities_button=0x7f060022;
@@ -1711,7 +1712,7 @@ containing a value of this type.
         public static final int search_plate=0x7f060039;
         public static final int search_src_text=0x7f06003a;
         public static final int search_voice_btn=0x7f06003e;
-        public static final int section_label=0x7f06004d;
+        public static final int section_label=0x7f06004f;
         public static final int shortcut=0x7f06002a;
         public static final int showCustom=0x7f060009;
         public static final int showHome=0x7f060006;
@@ -1719,12 +1720,13 @@ containing a value of this type.
         public static final int split_action_bar=0x7f060019;
         public static final int submit_area=0x7f06003c;
         public static final int tabMode=0x7f060003;
-        public static final int text1=0x7f06004e;
-        public static final int text2=0x7f060050;
-        public static final int text3=0x7f06004f;
+        public static final int text1=0x7f060050;
+        public static final int text2=0x7f060052;
+        public static final int text3=0x7f060051;
         public static final int textView_category_name=0x7f060047;
         public static final int textView_category_status=0x7f060041;
         public static final int textView_category_type=0x7f06004a;
+        public static final int textView_cost_amount=0x7f06004d;
         public static final int title=0x7f060027;
         public static final int up=0x7f060016;
         public static final int useLogo=0x7f060005;
@@ -1781,12 +1783,14 @@ containing a value of this type.
         public static final int abc_search_view=0x7f030015;
         public static final int abc_simple_dropdown_hint=0x7f030016;
         public static final int activity_category=0x7f030017;
-        public static final int activity_home=0x7f030018;
-        public static final int category_form=0x7f030019;
-        public static final int fragment_home=0x7f03001a;
-        public static final int fragment_navigation_drawer=0x7f03001b;
-        public static final int support_simple_spinner_dropdown_item=0x7f03001c;
-        public static final int two_item=0x7f03001d;
+        public static final int activity_cost=0x7f030018;
+        public static final int activity_home=0x7f030019;
+        public static final int category_form=0x7f03001a;
+        public static final int cost_form=0x7f03001b;
+        public static final int fragment_home=0x7f03001c;
+        public static final int fragment_navigation_drawer=0x7f03001d;
+        public static final int support_simple_spinner_dropdown_item=0x7f03001e;
+        public static final int two_item=0x7f03001f;
     }
     public static final class menu {
         public static final int category=0x7f0d0000;
@@ -1862,6 +1866,7 @@ containing a value of this type.
         public static final int category_name_missing=0x7f0b002a;
         public static final int category_status=0x7f0b002d;
         public static final int category_type=0x7f0b0020;
+        public static final int cost_Amount=0x7f0b0032;
         /**  Category screen 
          */
         public static final int cost_category=0x7f0b001e;
@@ -1887,6 +1892,9 @@ containing a value of this type.
         public static final int save_category_success=0x7f0b002b;
         public static final int test=0x7f0b0018;
         public static final int title_activity_category=0x7f0b0019;
+        /**  Cost screen 
+         */
+        public static final int title_activity_cost=0x7f0b0031;
         public static final int wastage=0x7f0b0029;
     }
     public static final class style {

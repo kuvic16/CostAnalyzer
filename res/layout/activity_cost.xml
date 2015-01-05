@@ -4,7 +4,7 @@
     android:id="@+id/drawer_layout_category"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.vagabondlab.costanalyzer.CategoryActivity" >
+    tools:context="com.vagabondlab.costanalyzer.CostActivity" >
 
     <FrameLayout
         android:id="@+id/container_category"
@@ -34,6 +34,7 @@
             android:layout_below="@+id/textView_category_status" />
     </RelativeLayout>
     
+
     <fragment
         android:id="@+id/navigation_drawer_category"
         android:name="com.vagabondlab.costanalyzer.NavigationDrawerFragment"
