@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.vagabondlab.costanalyzer.database.entity.Cost;
 import com.vagabondlab.costanalyzer.utilities.IConstant;

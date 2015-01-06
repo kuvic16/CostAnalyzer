@@ -104,11 +104,16 @@ public final class IUtil {
 		 return pt1 + pt2;
 	 }
 	
-	public static Integer getKeyFromValue(Map<Integer, String> map, Object value) {
-		for (Object o : map.keySet()) {
-			if (map.get(o).equals(value)) {
-				return (Integer)o;
+	public static Integer getKeyFromValue(Map<Integer, String[]> map, Object value) {
+		try{
+			for (Object o : map.keySet()) {
+				String[] cnt = (String[])map.get(o);
+				if(cnt[0].equals(value)){
+					return (Integer)o;
+				}
 			}
+		}catch(Throwable t){
+			t.printStackTrace();
 		}
 		return null;
 	}

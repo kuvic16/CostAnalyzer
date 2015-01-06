@@ -2,21 +2,17 @@ package com.vagabondlab.costanalyzer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -28,13 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -65,7 +59,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private TextView mCostStatus;
 	
 	private List<Map<String, String>> mCostListdata = new ArrayList<Map<String, String>>();
-	private HashMap<Integer,String> spinnerCategoryMap = new HashMap<Integer, String>();
+	private HashMap<Integer,String[]> spinnerCategoryMap = new HashMap<Integer, String[]>();
+	private String[] spinnerArray;
 	
 	private int selectedCostId;
 	private String selectedCostName;
@@ -130,7 +125,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			categoryService = new CategoryService(getHelper().getCategoryDao());
 			costService = new CostService(getHelper().getCostDao());
 			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
-			loadCostList();
+			loadCostCategory();
+			loadCostList();			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -227,8 +223,12 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	@SuppressLint("InflateParams")
 	private void editCostDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
-		final View categoryFormView = factory.inflate(R.layout.category_form, null);
+		final View costFormView = factory.inflate(R.layout.cost_form, null);
 		
+		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
+		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
+		mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
+		loadCategorySpinner(mCategoryName);
 		
 		Cost cost = costService.getCostById(selectedCostId);
 		if(cost == null){
@@ -236,12 +236,17 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			return;
 		}
 		
+//		mCategoryName.set
+		mCostAmount.setText(String.valueOf(cost.getAmount()));
+		//Date date = IUtil.getDate(cost.getDate(), IUtil.DATE_FORMAT);
+		Calendar calender = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
+		mCostDatePicker.init(calender.get(Calendar.YEAR), calender.get(Calendar.MONTH), calender.get(Calendar.DAY_OF_MONTH), null);
 		
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.edit)
 		     .setTitle(R.string.edit_cost)
-		     .setView(categoryFormView)
+		     .setView(costFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
 		     .setNegativeButton(R.string.cancel, saveCancelListener);
 		alert.show();
@@ -298,7 +303,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		if(!IUtil.isNotBlank(mCostAmount.getText())){
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_amount_missing));
 			return 0;
-		}
+		} 
 		
 		Double costAmount = Double.valueOf(mCostAmount.getText().toString());
 		String costDate = IUtil.getDateFromDatePicker(mCostDatePicker, IUtil.DATE_FORMAT_YYYY_MM_DD);
@@ -365,11 +370,12 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			mCostListdata = new ArrayList<Map<String,String>>();
 			for (Cost cost : costList) {
 				Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("name", cost.getCategory_id() + "-" + String.valueOf(cost.getAmount()));
+				String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory_id());
+				infoMap.put("name", cnt[0] + " - " + String.valueOf(cost.getAmount()));
 				infoMap.put("id", String.valueOf(cost.getId()));
-				String info = "";
-				if(IUtil.isNotBlank(cost.getCreated_date())){
-					Date date = IUtil.getDate(cost.getDate(), IUtil.DATE_FORMAT);				
+				String info = cnt[1];
+				if(IUtil.isNotBlank(cost.getDate())){
+					Date date = IUtil.getDate(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);				
 					info += ", " + date;
 				}
 				infoMap.put("info", info);
@@ -392,19 +398,27 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	
 	private void loadCategorySpinner(Spinner categorySpinner){
 		try {
+			ArrayAdapter<String> adapter =new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, spinnerArray);
+			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			categorySpinner.setAdapter(adapter);
+		} catch (Exception ex) {
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
+		}
+	}
+	
+	private void loadCostCategory(){
+		try {
 			List<Category> categoryList = categoryService.getAllCategory();
-			String[] spinnerArray = new String[categoryList.size()+1];
+			spinnerCategoryMap = new HashMap<Integer, String[]>();
+			spinnerArray = new String[categoryList.size()+1];
 			
 			int i = 0;
 			spinnerArray[i++] = getString(R.string.select_category);
 			for(Category category : categoryList){
-				spinnerCategoryMap.put(category.getId(),category.getName());
+				String [] cnt = {category.getName(), category.getType()};
+				spinnerCategoryMap.put(category.getId(),cnt);
 				spinnerArray[i++] = category.getName();
 			}
-			
-			ArrayAdapter<String> adapter =new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, spinnerArray);
-			adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			categorySpinner.setAdapter(adapter);
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}
