@@ -5,17 +5,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
-import android.view.View;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.TextView;
+import android.widget.DatePicker;
 
 public final class IUtil {
 	public static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
@@ -61,6 +56,25 @@ public final class IUtil {
 		return calender;
 	}
 	
+	@SuppressLint("SimpleDateFormat")
+	public static String getDateFromDatePicker(DatePicker datePicker, String dateFormat){
+		try {
+			int day = datePicker.getDayOfMonth();
+			int month = datePicker.getMonth();
+			int year = datePicker.getYear();
+
+			Calendar c = Calendar.getInstance();
+			c.set(year, month, day, 0, 0);
+
+			SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+			String formatedDate = sdf.format(c.getTime());
+			return formatedDate;
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return "";
+	}
+	
 	public static int getIntValueFromIntent(Intent intent, String key){
 		int action = 0;
 		try{
@@ -83,42 +97,19 @@ public final class IUtil {
     	return (list != null && list.size()>0)? true : false; 
     }
 	
-	public static int getSeizeInDp(Context context, int size){
-		DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-		float dp = 378f;
-		float fpixels = metrics.density * dp;
-		int pixels = (int) (fpixels + 0.5f);
-		return pixels;
-	}
-	
-	public static TextView getTextView(Context context, String text){
-		TextView label = new TextView(context);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 21);
-        label.setTextColor(Color.BLACK);
-        label.setText(text);
-        return label;
-	}
-	
-	public static TextView getSmallTextView(Context context, String text){
-		TextView label = new TextView(context);
-        label.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
-        label.setTextColor(Color.BLACK);
-        label.setText(text);
-        return label;
-	}
-	
-	@SuppressWarnings("deprecation")
-	public static View getDividerView(Context context){
-		View dividerView = new View(context);
-		dividerView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 1));
-		dividerView.setBackgroundColor(Color.LTGRAY);
-        return dividerView;
-	}
-	
 	public static String generateUniqueID() {
 		 String pt1 = Long.toString((new Date()).getTime());
 		 UUID uuid = UUID.randomUUID();
 		 String pt2 = uuid.toString().substring(18);
 		 return pt1 + pt2;
 	 }
+	
+	public static Integer getKeyFromValue(Map<Integer, String> map, Object value) {
+		for (Object o : map.keySet()) {
+			if (map.get(o).equals(value)) {
+				return (Integer)o;
+			}
+		}
+		return null;
+	}
 }

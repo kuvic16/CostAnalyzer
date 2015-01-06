@@ -36,6 +36,7 @@
 	<string name="not_found_category">Category not found</string>
 	<string name="delete_category_success">\"%s\" category deleted</string>
 	<string name="delete_category_failed">Failed to delete category. Please try again</string>
+	<string name="select_category">---Select Category---</string>
 	
 	<!-- Cost screen -->
 	<string name="title_activity_cost">Cost History</string>
@@ -46,10 +47,11 @@
     <string name="edit_cost">Edit Cost</string>
     <string name="delete_cost">Delete Cost</string>
     <string name="delete_cost_are_u_sure">Are you sure to delete \"%s\" cost</string>
+    <string name="cost_category_missing">Please select cost category</string>
 	<string name="cost_amount_missing">Please write cost amount</string>
 	<string name="save_cost_success">\"%s\" cost saved</string>
 	<string name="save_cost_failed">Failed to save cost. Please try again</string>
-	<string name="cost_status">All cost listed below. Total category: %s</string>
+	<string name="cost_status">All cost listed below. Total cost: %s</string>
 	<string name="not_found_cost">Cost not found</string>
 	<string name="delete_cost_success">\"%s\" cost deleted</string>
 	<string name="delete_cost_failed">Failed to delete cost. Please try again</string>

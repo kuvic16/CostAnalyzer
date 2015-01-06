@@ -22,7 +22,7 @@ public class Cost extends AbstractEntity implements Serializable{
 	private int category_id;
 	
 	@DatabaseField(dataType =  DataType.DOUBLE)
-	private Double amount;
+	private double amount;
 	
 	@DatabaseField(index = true)
 	private String date ;
@@ -43,11 +43,11 @@ public class Cost extends AbstractEntity implements Serializable{
 		this.category_id = category_id;
 	}
 
-	public Double getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Double amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

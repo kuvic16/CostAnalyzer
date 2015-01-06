@@ -42,7 +42,9 @@ import android.widget.TextView;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.vagabondlab.costanalyzer.database.DatabaseHelper;
 import com.vagabondlab.costanalyzer.database.entity.Category;
+import com.vagabondlab.costanalyzer.database.entity.Cost;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
+import com.vagabondlab.costanalyzer.database.service.CostService;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
@@ -54,6 +56,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private DatabaseHelper databaseHelper = null;
 	private CategoryService categoryService;
+	private CostService costService;
 	
 	private Spinner mCategoryName;
 	private EditText mCostAmount;
@@ -61,11 +64,11 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 
 	private TextView mCostStatus;
 	
-	private List<Map<String, String>> mCategoryListdata = new ArrayList<Map<String, String>>();
+	private List<Map<String, String>> mCostListdata = new ArrayList<Map<String, String>>();
 	private HashMap<Integer,String> spinnerCategoryMap = new HashMap<Integer, String>();
 	
-	private int selectedCategoryId;
-	private String selectedCategoryName;
+	private int selectedCostId;
+	private String selectedCostName;
 	
 	private final int CONTEXT_MENU_EDIT = 1;
 	private final int CONTEXT_MENU_ARCHIVE = 2;
@@ -84,10 +87,10 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
 					try{
 						View idChild = ((ViewGroup) v).getChildAt(1);
-						selectedCategoryId = Integer.valueOf(((TextView) idChild).getText().toString());
+						selectedCostId = Integer.valueOf(((TextView) idChild).getText().toString());
 						
 						View nameChild = ((ViewGroup) v).getChildAt(0);
-						selectedCategoryName = ((TextView) nameChild).getText().toString();
+						selectedCostName = ((TextView) nameChild).getText().toString();
 						
 						registerForContextMenu(mListView);
 	                    openContextMenu(mListView);
@@ -120,14 +123,14 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.activity_cost);
 		
-		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_category);
-		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_category,(DrawerLayout) findViewById(R.id.drawer_layout_category));
-		
-		
-		try {
+		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_cost);
+		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_cost,(DrawerLayout) findViewById(R.id.drawer_layout_cost));
+		try { 
+			//getHelper().onUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 0, 1);
 			categoryService = new CategoryService(getHelper().getCategoryDao());
-			mCostStatus = (TextView)findViewById(R.id.textView_category_status);
-			loadCategoryList();
+			costService = new CostService(getHelper().getCostDao());
+			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
+			loadCostList();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -159,7 +162,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		// Context menu
-		menu.setHeaderTitle(selectedCategoryName);
+		menu.setHeaderTitle(selectedCostName);
 		menu.add(Menu.NONE, CONTEXT_MENU_EDIT, Menu.NONE, R.string.edit);
 		menu.add(Menu.NONE, CONTEXT_MENU_ARCHIVE, Menu.NONE, R.string.delete);
 	}
@@ -169,12 +172,12 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		switch (item.getItemId()) {
 		case CONTEXT_MENU_EDIT: {
 			action = IConstant.ACTION_EDIT;
-			editCategoryDialougeBox();
+			editCostDialougeBox();
 		}
 			break;
 		case CONTEXT_MENU_ARCHIVE: {
 			action = IConstant.ACTION_DELETE;
-			deleteCategoryDialougeBox();
+			deleteCostDialougeBox();
 		}
 			break;
 		}
@@ -187,7 +190,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		int id = item.getItemId();
 		if (id == R.id.add_cost) {
 			action = IConstant.ACTION_ADD;
-			addNewCategoryDialougeBox();
+			addNewCostDialougeBox();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -203,18 +206,15 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	
 	
 	@SuppressLint("InflateParams")
-	private void addNewCategoryDialougeBox(){
+	private void addNewCostDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View costFormView = factory.inflate(R.layout.cost_form, null);
 		
 		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
 		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
-		mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);
-		
+		mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
 		loadCategorySpinner(mCategoryName);
 	
-		
-		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.add)
 		     .setTitle(R.string.add_new_cost)
@@ -225,14 +225,14 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	}
 	
 	@SuppressLint("InflateParams")
-	private void editCategoryDialougeBox(){
+	private void editCostDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View categoryFormView = factory.inflate(R.layout.category_form, null);
 		
 		
-		Category category = categoryService.getCategoryById(selectedCategoryId);
-		if(category == null){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_category));
+		Cost cost = costService.getCostById(selectedCostId);
+		if(cost == null){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_cost));
 			return;
 		}
 		
@@ -240,18 +240,18 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.edit)
-		     .setTitle(R.string.edit_category)
+		     .setTitle(R.string.edit_cost)
 		     .setView(categoryFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
 		     .setNegativeButton(R.string.cancel, saveCancelListener);
 		alert.show();
 	}
 	
-	private void deleteCategoryDialougeBox(){
+	private void deleteCostDialougeBox(){
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.delete)
-		     .setTitle(R.string.delete_category)
-		     .setMessage(getString(R.string.delete_category_are_u_sure, selectedCategoryName))
+		     .setTitle(R.string.delete_cost)
+		     .setMessage(getString(R.string.delete_cost_are_u_sure, selectedCostName))
 		     .setPositiveButton(R.string.delete, deleteCancelListener)
 		     .setNegativeButton(R.string.cancel, deleteCancelListener);
 		alert.show();
@@ -263,7 +263,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
-				if(saveCategory()==1){
+				if(saveCost()==1){
 					break;
 				}
 			case DialogInterface.BUTTON_NEGATIVE: 
@@ -277,7 +277,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
-				if(deleteCategory()==1){
+				if(deleteCost()==1){
 					break;
 				}
 			case DialogInterface.BUTTON_NEGATIVE: 
@@ -286,84 +286,99 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		}
 	};
 	
-	private int saveCategory(){
-//		if(IUtil.isNotBlank(mCategoryName.getText())){
-//    		String categoryName = mCategoryName.getText().toString().toLowerCase();
-//    		String categoryType = getString(R.string.productive);
-//    		Category category= new Category();
-//    		if(action == IConstant.ACTION_EDIT){
-//    			category= categoryService.getCategoryById(selectedCategoryId);
-//    		}
-//    		category.setName(categoryName);
-//    		category.setType(categoryType);
-//    		category.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-//    		category.setCreated_by_name("");
-//    		
-//    		int sucess = 0;
-//    		if(action == IConstant.ACTION_ADD){
-//    			sucess = categoryService.createCategory(category);
-//    		}else if(action == IConstant.ACTION_EDIT){
-//    			sucess = categoryService.updateCategory(category);
-//    		} 
-//    		
-//    		if(sucess > 0){
-//    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_success, categoryName));
-//    			loadCategoryList();
-//    			return 1;
-//    		}else{
-//    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_failed));
-//    		}
-//    	}else{
-//    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.category_name_missing));
-//    	}
-		return 0;
-	}
-	
-	private int deleteCategory(){
+	private int saveCost(){
+		
+		String categoryName = mCategoryName.getSelectedItem().toString();
+		Integer categoryId = IUtil.getKeyFromValue(spinnerCategoryMap, categoryName);
+		if(categoryId == null){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_category_missing));
+			return 0;
+		}
+		
+		if(!IUtil.isNotBlank(mCostAmount.getText())){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_amount_missing));
+			return 0;
+		}
+		
+		Double costAmount = Double.valueOf(mCostAmount.getText().toString());
+		String costDate = IUtil.getDateFromDatePicker(mCostDatePicker, IUtil.DATE_FORMAT_YYYY_MM_DD);
+		
+		String i= categoryId + "-" + costAmount + "-" + costDate;
+		ViewUtil.showMessage(getApplicationContext(), i);
+
+		Cost cost = new Cost();
+		if(action == IConstant.ACTION_EDIT){
+			cost = costService.getCostById(selectedCostId);
+		}
+		cost.setCategory_id(categoryId);
+		cost.setAmount(costAmount);
+		cost.setDate(costDate);
+		cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+		cost.setCreated_by_name("");
+		
 		int sucess = 0;
-		if(action == IConstant.ACTION_DELETE){
-			sucess = categoryService.deleteCategoryById(selectedCategoryId);
+		if(action == IConstant.ACTION_ADD){
+			sucess = costService.createCost(cost);
+		}else if(action == IConstant.ACTION_EDIT){
+			sucess = costService.updateCost(cost);
 		} 
 		
 		if(sucess > 0){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_category_success, selectedCategoryName));
-			loadCategoryList();
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_cost_success, categoryName));
+			loadCostList();
 			return 1;
 		}else{
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_category_failed));
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_cost_failed));
+		}
+    	
+		return 0;
+	}
+	
+	private int deleteCost(){
+		int sucess = 0;
+		if(action == IConstant.ACTION_DELETE){
+			sucess = costService.deleteCostById(selectedCostId);
+		} 
+		
+		if(sucess > 0){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_cost_success, selectedCostName));
+			loadCostList();
+			return 1;
+		}else{
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_cost_failed));
 		}
     	return 0;
 	}
 	
-	private void loadCategoryList(){
+	private void loadCostList(){
 		try {
-			List<Category> categoryList = categoryService.getAllCategory();
-			loadUI(categoryList, categoryService.countCategory());
+			List<Cost> costList = costService.getAllCost();
+			loadUI(costList, costService.countCost());
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}		
 	}
 
-	private void loadUI(List<Category> categoryList, long total) {
+	private void loadUI(List<Cost> costList, long total) {
 		try {
-			mCostStatus.setText(getString(R.string.category_status, total));
-			mCategoryListdata = new ArrayList<Map<String,String>>();
-			for (Category category : categoryList) {
+			mCostStatus.setText(getString(R.string.cost_status, total));
+			mCostListdata = new ArrayList<Map<String,String>>();
+			for (Cost cost : costList) {
 				Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("name", category.getName());
-				infoMap.put("id", String.valueOf(category.getId()));
-				String info = category.getType();
-				if(IUtil.isNotBlank(category.getCreated_date())){
-					Date date = IUtil.getDate(category.getCreated_date(), IUtil.DATE_FORMAT);				
+				infoMap.put("name", cost.getCategory_id() + "-" + String.valueOf(cost.getAmount()));
+				infoMap.put("id", String.valueOf(cost.getId()));
+				String info = "";
+				if(IUtil.isNotBlank(cost.getCreated_date())){
+					Date date = IUtil.getDate(cost.getDate(), IUtil.DATE_FORMAT);				
 					info += ", " + date;
 				}
 				infoMap.put("info", info);
-				mCategoryListdata.add(infoMap);
+				mCostListdata.add(infoMap);
 			}
 			
 			SimpleAdapter adapter = new SimpleAdapter( 
 					this, 
-					mCategoryListdata,
+					mCostListdata,
 					R.layout.two_item, 
 					new String[] {"name","info", "id" }, new int[] { R.id.text1, R.id.text2,R.id.text3 
 			});
@@ -378,9 +393,10 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private void loadCategorySpinner(Spinner categorySpinner){
 		try {
 			List<Category> categoryList = categoryService.getAllCategory();
-			String[] spinnerArray = new String[categoryList.size()];
+			String[] spinnerArray = new String[categoryList.size()+1];
 			
 			int i = 0;
+			spinnerArray[i++] = getString(R.string.select_category);
 			for(Category category : categoryList){
 				spinnerCategoryMap.put(category.getId(),category.getName());
 				spinnerArray[i++] = category.getName();
@@ -392,7 +408,6 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}
-		
 	}
 	
 	@Override
