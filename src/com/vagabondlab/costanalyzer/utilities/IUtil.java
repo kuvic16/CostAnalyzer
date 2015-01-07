@@ -16,6 +16,7 @@ public final class IUtil {
 	public static final String DATE_FORMAT = "yyyy/MM/dd HH:mm:ss";
 	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
+	public static final String DATE_FORMAT_EEE_D_MMM_YYYY = "EEE, d MMM yyyy";
 	
 	@SuppressLint("SimpleDateFormat")
 	public static String getCurrentDateTime(String format){
@@ -71,6 +72,21 @@ public final class IUtil {
 			return formatedDate;
 		} catch (Throwable t) {
 			t.printStackTrace();
+		}
+		return "";
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	public static String changeDateFormat(String dateString, String oldFormat, String newFormat){
+		Date date = new Date();
+		try{
+			DateFormat dateFormat = new SimpleDateFormat(oldFormat);
+			date = dateFormat.parse(dateString);
+			
+			SimpleDateFormat sdf = new SimpleDateFormat(newFormat);
+			return sdf.format(date); 
+		}catch(Throwable t){
+			System.out.println("Error: " + t);
 		}
 		return "";
 	}

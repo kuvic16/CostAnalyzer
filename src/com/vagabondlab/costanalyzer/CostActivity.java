@@ -358,7 +358,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private void loadCostList(){
 		try {
 			List<Cost> costList = costService.getAllCost();
-			loadUI(costList, costService.countCost());
+			loadUI(costList, costService.countCost()); 
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}		
@@ -375,7 +375,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 				infoMap.put("id", String.valueOf(cost.getId()));
 				String info = cnt[1];
 				if(IUtil.isNotBlank(cost.getDate())){
-					Date date = IUtil.getDate(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);				
+					String date = IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_EEE_D_MMM_YYYY);
+					
 					info += ", " + date;
 				}
 				infoMap.put("info", info);
