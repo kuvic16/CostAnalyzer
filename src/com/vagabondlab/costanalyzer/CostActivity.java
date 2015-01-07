@@ -61,6 +61,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private List<Map<String, String>> mCostListdata = new ArrayList<Map<String, String>>();
 	private HashMap<Integer,String[]> spinnerCategoryMap = new HashMap<Integer, String[]>();
 	private String[] spinnerArray;
+	ArrayAdapter<String> spinnerAdapter;
 	
 	private int selectedCostId;
 	private String selectedCostName;
@@ -70,6 +71,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private final int CONTEXT_MENU_CANCEL = 3;
 	private int action = 0;
 	private boolean firstTime = true;
+	private CharSequence mTitle;
 
 	
 	
@@ -120,6 +122,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.activity_cost);
+		setTitle(getString(R.string.title_activity_cost));
 		
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_cost);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_cost,(DrawerLayout) findViewById(R.id.drawer_layout_cost));
@@ -129,7 +132,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			costService = new CostService(getHelper().getCostDao());
 			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
 			loadCostCategory();
-			loadCostList();			
+			loadCostList();	
+			mTitle = getTitle();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -137,11 +141,18 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	
 	@Override
 	protected void onDestroy() {
+		setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 		super.onDestroy();
 		if (databaseHelper != null) {
 			OpenHelperManager.releaseHelper();
 			databaseHelper = null;
 		}
+	}
+	
+	@Override
+	protected void onStop() {
+	    setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+	    super.onStop();
 	}
 	
 	private DatabaseHelper getHelper() {
@@ -201,7 +212,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		ActionBar actionBar = getSupportActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
 		actionBar.setDisplayShowTitleEnabled(true);
-		setTitle(getString(R.string.title_activity_cost));
+		actionBar.setTitle(mTitle);
 	}
 	
 	
@@ -240,9 +251,9 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			return;
 		}
 		
-//		mCategoryName.set
+		String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory_id());
+		mCategoryName.setSelection(spinnerAdapter.getPosition(cnt[0]));
 		mCostAmount.setText(String.valueOf(cost.getAmount()));
-		//Date date = IUtil.getDate(cost.getDate(), IUtil.DATE_FORMAT);
 		Calendar calender = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
 		mCostDatePicker.init(calender.get(Calendar.YEAR), calender.get(Calendar.MONTH), calender.get(Calendar.DAY_OF_MONTH), null);
 		
@@ -409,8 +420,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	
 	private void loadCategorySpinner(Spinner categorySpinner){
 		try {
-			ArrayAdapter<String> adapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_item, spinnerArray);
-			categorySpinner.setAdapter(adapter);
+			spinnerAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_item, spinnerArray);
+			categorySpinner.setAdapter(spinnerAdapter);
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}
@@ -443,14 +454,18 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		switch (position) {
 		case 0:
-			Intent i = new Intent(getApplicationContext(),CategoryActivity.class);
+			Intent i = new Intent(getApplicationContext(),HomeActivity.class);
 			startActivity(i);
 			break;
 		case 1:
-			i = new Intent(getApplicationContext(),CostActivity.class);
-			startActivity(i);
+			i = new Intent(getApplicationContext(),CategoryActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		case 2:
+			i = new Intent(getApplicationContext(),CostActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+			break;
+		case 3:
 			break;
 		}
 	}	

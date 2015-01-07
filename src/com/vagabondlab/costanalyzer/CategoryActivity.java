@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -61,7 +62,9 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	
 	private final int CONTEXT_MENU_EDIT = 1;
 	private final int CONTEXT_MENU_ARCHIVE = 2;
+	private final int CONTEXT_MENU_CANCEL = 3;
 	private int action = 0;
+	private boolean firstTime = true;
 
 	
 	
@@ -126,11 +129,18 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	
 	@Override
 	protected void onDestroy() {
+		setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 		super.onDestroy();
 		if (databaseHelper != null) {
 			OpenHelperManager.releaseHelper();
 			databaseHelper = null;
 		}
+	}
+	
+	@Override
+	protected void onStop() {
+	    setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+	    super.onStop();
 	}
 	
 	private DatabaseHelper getHelper() {
@@ -154,6 +164,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		menu.setHeaderTitle(selectedCategoryName);
 		menu.add(Menu.NONE, CONTEXT_MENU_EDIT, Menu.NONE, R.string.edit);
 		menu.add(Menu.NONE, CONTEXT_MENU_ARCHIVE, Menu.NONE, R.string.delete);
+		menu.add(Menu.NONE, CONTEXT_MENU_CANCEL, Menu.NONE, R.string.cancel);
 	}
 	
 	@Override
@@ -378,62 +389,26 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-		// update the main content by replacing fragments
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction().replace(R.id.container_category,PlaceholderFragment.newInstance(position + 1)).commit();
+		if(firstTime){
+			firstTime = false;
+			return;
+		}
 		
-		ViewUtil.showMessage(getApplicationContext(), String.valueOf(position));
 		switch (position) {
 		case 0:
+			Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+			startActivity(i);
 			break;
 		case 1:
+			i = new Intent(getApplicationContext(),CategoryActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		case 2:
-			break;
-		}
-	}
-
-	public void onSectionAttached(int number) {
-		ViewUtil.showMessage(getApplicationContext(), String.valueOf(number));
-		switch (number) {
-		case 1:
-			mTitle = getString(R.string.main_menu1);
-			break;
-		case 2:
-			mTitle = getString(R.string.main_menu2);
+			i = new Intent(getApplicationContext(),CostActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		case 3:
-			mTitle = getString(R.string.main_menu3);
 			break;
 		}
-	}
-	
-	public static class PlaceholderFragment extends Fragment {
-		private static final String ARG_SECTION_NUMBER = "section_number";
-
-		public static PlaceholderFragment newInstance(int sectionNumber) {
-			PlaceholderFragment fragment = new PlaceholderFragment();
-			Bundle args = new Bundle();
-			args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-			fragment.setArguments(args);
-			return fragment;
-		}
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_home, container,
-					false);
-			return rootView;
-		}
-
-		@Override
-		public void onAttach(Activity activity) {
-			super.onAttach(activity);
-			//((CategoryActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
-		}
-	}
+	}	
 }
