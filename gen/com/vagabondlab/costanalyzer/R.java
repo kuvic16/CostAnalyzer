@@ -1654,16 +1654,16 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f06001f;
         public static final int action_bar_title=0x7f06001e;
         public static final int action_context_bar=0x7f060032;
-        public static final int action_example=0x7f060063;
+        public static final int action_example=0x7f060064;
         public static final int action_menu_divider=0x7f06001a;
         public static final int action_menu_presenter=0x7f06001b;
         public static final int action_mode_bar=0x7f06002e;
         public static final int action_mode_bar_stub=0x7f06002d;
         public static final int action_mode_close_button=0x7f060020;
-        public static final int action_settings=0x7f060062;
+        public static final int action_settings=0x7f060063;
         public static final int activity_chooser_view_content=0x7f060021;
-        public static final int add_category=0x7f060060;
-        public static final int add_cost=0x7f060061;
+        public static final int add_category=0x7f060061;
+        public static final int add_cost=0x7f060062;
         public static final int always=0x7f06000d;
         public static final int beginning=0x7f060012;
         public static final int beneficiary_header_status_textview=0x7f060049;
@@ -1676,6 +1676,7 @@ containing a value of this type.
         public static final int cost_category_name=0x7f060059;
         public static final int cost_date_day=0x7f060057;
         public static final int cost_date_month=0x7f060058;
+        public static final int cost_list_row_id=0x7f06005c;
         public static final int cost_type_and_time=0x7f06005a;
         public static final int datePicker_cost_date=0x7f060055;
         public static final int decor_content_parent=0x7f06002f;
@@ -1723,7 +1724,7 @@ containing a value of this type.
         public static final int search_plate=0x7f060039;
         public static final int search_src_text=0x7f06003a;
         public static final int search_voice_btn=0x7f06003e;
-        public static final int section_label=0x7f06005c;
+        public static final int section_label=0x7f06005d;
         public static final int shortcut=0x7f06002a;
         public static final int showCustom=0x7f060009;
         public static final int showHome=0x7f060006;
@@ -1732,9 +1733,9 @@ containing a value of this type.
         public static final int split_action_bar=0x7f060019;
         public static final int submit_area=0x7f06003c;
         public static final int tabMode=0x7f060003;
-        public static final int text1=0x7f06005d;
-        public static final int text2=0x7f06005f;
-        public static final int text3=0x7f06005e;
+        public static final int text1=0x7f06005e;
+        public static final int text2=0x7f060060;
+        public static final int text3=0x7f06005f;
         public static final int textView_category_name=0x7f06004b;
         public static final int textView_category_status=0x7f060041;
         public static final int textView_category_type=0x7f06004e;
@@ -1806,8 +1807,9 @@ containing a value of this type.
         public static final int fragment_home=0x7f03001e;
         public static final int fragment_navigation_drawer=0x7f03001f;
         public static final int list_cost_amount_design=0x7f030020;
-        public static final int support_simple_spinner_dropdown_item=0x7f030021;
-        public static final int two_item=0x7f030022;
+        public static final int spinner_item=0x7f030021;
+        public static final int support_simple_spinner_dropdown_item=0x7f030022;
+        public static final int two_item=0x7f030023;
     }
     public static final class menu {
         public static final int category=0x7f0d0000;
@@ -2273,6 +2275,7 @@ containing a value of this type.
          */
         public static final int Widget_AppCompat_Toolbar=0x7f0c0034;
         public static final int Widget_AppCompat_Toolbar_Button_Navigation=0x7f0c0035;
+        public static final int spinnerItemStyle=0x7f0c00ed;
     }
     public static final class styleable {
         /**  ============================================ 

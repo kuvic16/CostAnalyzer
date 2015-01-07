@@ -19,7 +19,8 @@
     	android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView_category_name"
-        android:layout_below="@+id/textView_category_name"/>
+        android:layout_below="@+id/textView_category_name"
+        style="@style/spinnerItemStyle"/>
     
     <TextView
         android:id="@+id/textView_cost_amount"
