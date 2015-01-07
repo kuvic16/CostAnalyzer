@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:paddingRight="8dip"
+	android:paddingLeft="8dip"
+	android:paddingTop="4dip"
+	android:paddingBottom="8dip"
+	android:minHeight="?android:attr/listPreferredItemHeight">
+
+<RelativeLayout
+    android:id="@+id/relative_layout_cost_date"
+	android:layout_width="50dip"
+	android:layout_height="50dip"
+	android:background="@layout/cost_list_cost_date_design"
+	android:layout_alignParentTop="true"
+	android:layout_alignParentLeft="true">    
+    <TextView
+			android:id="@+id/cost_date_day"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:textColor="#008000"
+			android:text="7"
+			android:textSize="22sp"
+			android:textStyle="bold"
+			android:textAppearance="?android:attr/textAppearanceLarge"/>
+    
+    <TextView
+			android:id="@+id/cost_date_month"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:layout_below="@+id/cost_date_day"
+			android:layout_alignParentLeft="true"
+			android:textColor="#000000"
+			android:text="NOV"
+			android:textSize="12sp"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dip"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/relative_layout_cost_date" >
+    
+    <TextView
+			android:id="@+id/cost_category_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="10dip"
+			android:textColor="#000000"
+			android:text="Lunch"
+			android:textAppearance="?android:attr/textAppearanceLarge"/>
+    
+    <TextView
+			android:id="@+id/cost_type_and_time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:layout_below="@+id/cost_category_name"
+			android:layout_alignParentLeft="true"
+			android:layout_marginLeft="10dip"
+			android:textColor="#000000"
+			android:textSize="10dip"
+			android:text="Productive, 2014 \nadded on 08 November 2014"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+    
+    <TextView
+			android:id="@+id/cost_amount"
+			android:layout_width="50dip"
+			android:layout_height="fill_parent"
+			android:gravity="center"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentRight="true"
+			android:background="@layout/list_cost_amount_design"
+			android:textColor="#000000"
+			android:text="100000"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+    </RelativeLayout>	
+</RelativeLayout>

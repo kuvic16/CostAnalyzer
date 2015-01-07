@@ -371,23 +371,31 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			for (Cost cost : costList) {
 				Map<String, String> infoMap = new HashMap<String, String>(3);
 				String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory_id());
-				infoMap.put("name", cnt[0] + " - " + String.valueOf(cost.getAmount()));
-				infoMap.put("id", String.valueOf(cost.getId()));
-				String info = cnt[1];
-				if(IUtil.isNotBlank(cost.getDate())){
-					String date = IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_EEE_D_MMM_YYYY);
-					
-					info += ", " + date;
+				
+				Calendar costDate = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
+				infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
+				infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));
+				infoMap.put("cost_category_name", cnt[0]);
+				
+//				infoMap.put("name", cnt[0] + " - " + String.valueOf(cost.getAmount()));
+//				infoMap.put("id", String.valueOf(cost.getId()));
+				String info = cnt[1] + ", " + String.valueOf(costDate.get(Calendar.YEAR));
+				if(IUtil.isNotBlank(cost.getCreated_date())){
+					Date date = IUtil.getDate(cost.getCreated_date(), IUtil.DATE_FORMAT);
+					info += "\n" + date;
 				}
-				infoMap.put("info", info);
+//				infoMap.put("info", info);
+				infoMap.put("cost_category_type_and_time", info);
+				infoMap.put("cost_amount", String.valueOf(cost.getAmount()));
 				mCostListdata.add(infoMap);
 			}
 			
 			SimpleAdapter adapter = new SimpleAdapter( 
 					this, 
 					mCostListdata,
-					R.layout.two_item, 
-					new String[] {"name","info", "id" }, new int[] { R.id.text1, R.id.text2,R.id.text3 
+					R.layout.cost_list_view, 
+					new String[] {"cost_day","cost_month", "cost_category_name", "cost_category_type_and_time", "cost_amount" }, 
+					new int[] { R.id.cost_date_day, R.id.cost_date_month, R.id.cost_category_name, R.id.cost_type_and_time, R.id.cost_amount 
 			});
 			setListAdapter(adapter);
 			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);

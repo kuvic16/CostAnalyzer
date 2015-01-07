@@ -17,6 +17,7 @@ public final class IUtil {
 	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final String DATE_FORMAT_EEE_D_MMM_YYYY = "EEE, d MMM yyyy";
+	public static final String DATE_FORMAT_MMM = "MMM";
 	
 	@SuppressLint("SimpleDateFormat")
 	public static String getCurrentDateTime(String format){
