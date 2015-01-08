@@ -18,7 +18,7 @@
     <string name="delete">Delete</string>
     
     <!-- Category screen -->
-    <string name="cost_category">Cost Category</string>
+    <string name="cost_category">Cost category</string>
     <string name="category_name">Category Name</string>
     <string name="category_type">Category Type</string>
     <string name="new_category">new category</string>
@@ -40,7 +40,7 @@
 	<string name="select_category">Select Category</string>
 	
 	<!-- Cost screen -->
-	<string name="title_activity_cost">Cost History</string>
+	<string name="title_activity_cost">Cost history</string>
 	<string name="new_cost">new cost</string>
 	<string name="cost_amount">Cost Amount</string>
 	<string name="cost_date">Date</string>
@@ -57,4 +57,9 @@
 	<string name="delete_cost_success">\"%s\" cost deleted</string>
 	<string name="delete_cost_failed">Failed to delete cost. Please try again</string>
 	<string name="pick_date">Pick Date</string>	
+	
+	<!-- Home screen -->
+	<string name="title_home_screen">Cost anlyzer</string>
+	
+	
 </resources>

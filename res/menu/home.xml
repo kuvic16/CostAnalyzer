@@ -4,8 +4,8 @@
     tools:context="com.vagabondlab.costanalyzer.HomeActivity" >
 
     <item
-        android:id="@+id/action_example"
-        android:title="@string/action_example"
+        android:id="@+id/add_cost"
+        android:title="@string/new_cost"
         app:showAsAction="withText|ifRoom"/>
     <item
         android:id="@+id/action_settings"
