@@ -7,26 +7,33 @@
     tools:context="com.vagabondlab.costanalyzer.HomeActivity" >
 
     <FrameLayout
-        android:id="@+id/container"
+        android:id="@+id/container" 
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/beneficiary_header_status_textview"
+            android:id="@+id/textView_cost_status"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:background="#82CAFF"
             android:padding="5dp"
             android:paddingTop="0dp"
-            android:text="@string/test"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:text="@string/cost_status"
+            android:textSize="12sp" />
 
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/textView_cost_status" />
+    </RelativeLayout>
+    
     <fragment
         android:id="@+id/navigation_drawer"
         android:name="com.vagabondlab.costanalyzer.NavigationDrawerFragment"

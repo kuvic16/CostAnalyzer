@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">CostAnalyzer</string>
+    <string name="app_name">Cost Assistance</string>
     <string name="main_menu1">Home</string>
     <string name="main_menu2">Cost category</string>
     <string name="main_menu3">Cost history</string>
@@ -59,7 +59,7 @@
 	<string name="pick_date">Pick Date</string>	
 	
 	<!-- Home screen -->
-	<string name="title_home_screen">Cost anlyzer</string>
+	<string name="title_home_screen">Cost assistance</string>
 	
 	
 </resources>

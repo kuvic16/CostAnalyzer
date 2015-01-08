@@ -323,9 +323,6 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		Double costAmount = Double.valueOf(mCostAmount.getText().toString());
 		String costDate = IUtil.getDateFromDatePicker(mCostDatePicker, IUtil.DATE_FORMAT_YYYY_MM_DD);
 		
-		String i= categoryId + "-" + costAmount + "-" + costDate;
-		ViewUtil.showMessage(getApplicationContext(), i);
-
 		Cost cost = new Cost();
 		if(action == IConstant.ACTION_EDIT){
 			cost = costService.getCostById(selectedCostId);

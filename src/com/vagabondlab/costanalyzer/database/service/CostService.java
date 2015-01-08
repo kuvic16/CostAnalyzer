@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.vagabondlab.costanalyzer.database.entity.Cost;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
@@ -57,7 +56,7 @@ public class CostService{
 	public List<Cost> getAllCost(){
 		try {
 			QueryBuilder<Cost, Integer> builder = em.queryBuilder();
-			builder.orderBy(IConstant.CREATED_DATE, false);
+			builder.orderBy(IConstant.COST_DATE, false);
 			builder.limit(30L);
 			List<Cost> costList = em.query(builder.prepare());
 			return costList;
