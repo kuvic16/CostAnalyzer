@@ -15,13 +15,111 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
+        
+        <RelativeLayout
+    		android:id="@+id/relative_layout_home_short_summary"
+			android:layout_width="fill_parent"
+			android:layout_height="130dip"
+			android:background="@layout/home_short_summary_design"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true">
+            
+            <TextView
+				android:id="@+id/textView_summary_status"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_margin="2dip"
+				android:gravity="center"
+				android:layout_alignParentTop="true"
+				android:layout_alignParentLeft="true"
+				android:textColor="#000000"
+				android:text="Today 9 Jan, 2015"
+				android:textAppearance="?android:attr/textAppearanceSmall"/>
+            
+            <TextView
+				android:id="@+id/textView_summary_total_cost"
+				android:layout_width="80dip"
+				android:layout_height="80dip"
+				android:layout_margin="5dip"
+				android:layout_marginBottom="0dip"
+				android:gravity="center"
+				android:layout_alignParentLeft="true"
+				android:background="@layout/summary_total_amount_design"
+				android:textColor="#FFFFFF"
+				android:text="100000"
+				android:layout_below="@+id/textView_summary_status"
+				android:textAppearance="?android:attr/textAppearanceLarge"/>
+            
+            <TextView
+				android:id="@+id/textView_summary_total_cost_status"
+				android:layout_width="80dip"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_alignParentLeft="true"
+				android:textColor="#000000"
+				android:text="Total Cost"
+				android:layout_below="@+id/textView_summary_total_cost"
+				android:textAppearance="?android:attr/textAppearanceSmall"/>
+            
+            <TextView
+				android:id="@+id/textView_summary_effective_cost"
+				android:layout_width="80dip"
+				android:layout_height="80dip"
+				android:layout_margin="5dip"
+				android:layout_marginBottom="0dip"
+				android:gravity="center"
+				android:layout_below="@+id/textView_summary_status"
+				android:layout_toRightOf="@id/textView_summary_total_cost"
+				android:background="@layout/summary_effective_amount_design"
+				android:textColor="#000000"
+				android:text="40000"
+				android:textAppearance="?android:attr/textAppearanceLarge"/>
+            
+            <TextView
+				android:id="@+id/textView_summary_effective_cost_status"
+				android:layout_width="80dip"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:textColor="#000000"
+				android:text="Effective"
+				android:layout_below="@+id/textView_summary_effective_cost"
+				android:layout_toRightOf="@id/textView_summary_total_cost_status"
+				android:textAppearance="?android:attr/textAppearanceSmall"/>
+            
+            <TextView
+				android:id="@+id/textView_summary_wastage_cost"
+				android:layout_width="80dip"
+				android:layout_height="80dip"
+				android:layout_margin="5dip"
+				android:layout_marginBottom="0dip"
+				android:gravity="center"
+				android:layout_below="@+id/textView_summary_status"
+				android:layout_toRightOf="@id/textView_summary_effective_cost"
+				android:background="@layout/summary_wastage_amount_design"
+				android:textColor="#FFFFFF"
+				android:text="60000"
+				android:textAppearance="?android:attr/textAppearanceLarge"/>
+            
+            <TextView
+				android:id="@+id/textView_summary_effective_wastage_status"
+				android:layout_width="80dip"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:textColor="#000000"
+				android:text="Wastage"
+				android:layout_below="@+id/textView_summary_wastage_cost"
+				android:layout_toRightOf="@id/textView_summary_effective_cost_status"
+				android:textAppearance="?android:attr/textAppearanceSmall"/>
+            
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/textView_cost_status"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:background="#82CAFF"
+            android:layout_below="@+id/relative_layout_home_short_summary"
+            android:background="#FFA07A"
             android:padding="5dp"
             android:paddingTop="0dp"
             android:text="@string/cost_status"
