@@ -17,9 +17,12 @@ public class Cost extends AbstractEntity implements Serializable{
 	
 	@DatabaseField(generatedId = true)
 	int id;
+	
+	@DatabaseField(canBeNull = false, foreign = true)
+    private Category category;
 
-	@DatabaseField(index = true)
-	private int category_id;
+//	@DatabaseField(index = true)
+//	private int category_id;
 	
 	@DatabaseField(dataType =  DataType.DOUBLE)
 	private double amount;
@@ -35,13 +38,13 @@ public class Cost extends AbstractEntity implements Serializable{
 		this.id = id;
 	}
 
-	public int getCategory_id() {
-		return category_id;
-	}
-
-	public void setCategory_id(int category_id) {
-		this.category_id = category_id;
-	}
+//	public int getCategory_id() {
+//		return category_id;
+//	}
+//
+//	public void setCategory_id(int category_id) {
+//		this.category_id = category_id;
+//	}
 
 	public double getAmount() {
 		return amount;
@@ -57,5 +60,13 @@ public class Cost extends AbstractEntity implements Serializable{
 
 	public void setDate(String date) {
 		this.date = date;
-	}	
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
 }

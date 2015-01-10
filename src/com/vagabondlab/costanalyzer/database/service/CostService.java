@@ -73,7 +73,7 @@ public class CostService{
 	public List<Cost> getCosts(){
 		GenericRawResults<String[]> rawResults;
 		try {
-			rawResults = em.queryRaw("select * from cost as co join category as ca on co.category_id=ca.id");
+			rawResults = em.queryRaw("select co.id,  from cost as co join category as ca on co.category_id=ca.id");
 			List<String[]> results = rawResults.getResults();
 			String[] resultArray = results.get(0);
 			System.out.println("Account-id 10 has " + resultArray[0] + " orders");

@@ -127,7 +127,6 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_cost);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_cost,(DrawerLayout) findViewById(R.id.drawer_layout_cost));
 		try { 
-			//getHelper().onUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 0, 1);
 			categoryService = new CategoryService(getHelper().getCategoryDao());
 			costService = new CostService(getHelper().getCostDao());
 			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
@@ -251,8 +250,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			return;
 		}
 		
-		String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory_id());
-		mCategoryName.setSelection(spinnerAdapter.getPosition(cnt[0]));
+		//String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory_id());
+		//mCategoryName.setSelection(spinnerAdapter.getPosition(cnt[0]));
 		mCostAmount.setText(String.valueOf(cost.getAmount()));
 		Calendar calender = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
 		mCostDatePicker.init(calender.get(Calendar.YEAR), calender.get(Calendar.MONTH), calender.get(Calendar.DAY_OF_MONTH), null);
@@ -327,7 +326,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		if(action == IConstant.ACTION_EDIT){
 			cost = costService.getCostById(selectedCostId);
 		}
-		cost.setCategory_id(categoryId);
+		//cost.setCategory_id(categoryId);
 		cost.setAmount(costAmount);
 		cost.setDate(costDate);
 		cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
@@ -384,7 +383,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 				Map<String, String> infoMap = new HashMap<String, String>(3);
 				infoMap.put("id", String.valueOf(cost.getId()));
 				
-				String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory_id());
+				String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory().getId());
 				Calendar costDate = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
 				infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
 				infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));

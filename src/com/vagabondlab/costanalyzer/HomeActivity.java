@@ -77,6 +77,8 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
+		//getHelper().onUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
+		
 		try { 
 			categoryService = new CategoryService(getHelper().getCategoryDao());
 			costService = new CostService(getHelper().getCostDao());
@@ -278,8 +280,8 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 			return;
 		}
 		
-		String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory_id());
-		mCategoryName.setSelection(spinnerAdapter.getPosition(cnt[0]));
+		//String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory_id());
+		//mCategoryName.setSelection(spinnerAdapter.getPosition(cnt[0]));
 		mCostAmount.setText(String.valueOf(cost.getAmount()));
 		Calendar calender = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
 		mCostDatePicker.init(calender.get(Calendar.YEAR), calender.get(Calendar.MONTH), calender.get(Calendar.DAY_OF_MONTH), null);
@@ -367,6 +369,8 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_category_missing));
 			return 0;
 		}
+		Category category = categoryService.getCategoryById(categoryId);
+		
 		
 		if(!IUtil.isNotBlank(mCostAmount.getText())){
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_amount_missing));
@@ -380,7 +384,8 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 		if(action == IConstant.ACTION_EDIT){
 			cost = costService.getCostById(selectedCostId);
 		}
-		cost.setCategory_id(categoryId);
+		//cost.setCategory_id(categoryId);
+		cost.setCategory(category);
 		cost.setAmount(costAmount);
 		cost.setDate(costDate);
 		cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
@@ -421,8 +426,8 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	}
 	
 	private void loadCostList(){
-		try {
-			costService.getCosts();
+		try { 
+			//costService.getCosts();
 			List<Cost> costList = costService.searchCost(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
 			loadUI(costList, costList.size()); 
 		} catch (Exception ex) {
@@ -438,13 +443,16 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 				Map<String, String> infoMap = new HashMap<String, String>(3);
 				infoMap.put("id", String.valueOf(cost.getId()));
 				
-				String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory_id());
+				
+				categoryService.refreash(cost.getCategory());
+				
+				String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory().getId());
 				Calendar costDate = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
 				infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
 				infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));
-				infoMap.put("cost_category_name", cnt[0]);
+				infoMap.put("cost_category_name", cost.getCategory().getName());
 				
-				String info = cnt[1];
+				String info = cost.getCategory().getType();
 				if(IUtil.isNotBlank(cost.getCreated_date())){
 					Date date = IUtil.getDate(cost.getCreated_date(), IUtil.DATE_FORMAT);
 					info += "\nadded on " + date;

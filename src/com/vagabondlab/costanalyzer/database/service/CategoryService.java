@@ -18,6 +18,14 @@ public class CategoryService{
 	}
 
 
+	public void refreash(Category category){
+		try {
+			em.refresh(category);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public int createCategory(Category category){
 		try {
 			return em.create(category);

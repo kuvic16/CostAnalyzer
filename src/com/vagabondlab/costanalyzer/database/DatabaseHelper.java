@@ -20,7 +20,7 @@ import com.vagabondlab.costanalyzer.database.entity.Cost;
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
-	private static final String DATABASE_NAME = "striders.db";
+	private static final String DATABASE_NAME = "costassistant.db";
 	private static final int DATABASE_VERSION = 6;
 
 	private Dao<Category, Integer> categoryDao;
