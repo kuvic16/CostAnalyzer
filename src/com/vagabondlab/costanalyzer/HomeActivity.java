@@ -422,8 +422,9 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	
 	private void loadCostList(){
 		try {
-			List<Cost> costList = costService.getAllCost();
-			loadUI(costList, costService.countCost()); 
+			costService.getCosts();
+			List<Cost> costList = costService.searchCost(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+			loadUI(costList, costList.size()); 
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}		
