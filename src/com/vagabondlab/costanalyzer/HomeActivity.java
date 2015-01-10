@@ -58,7 +58,7 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	
 	private List<Map<String, String>> mCostListdata = new ArrayList<Map<String, String>>();
 	private String[] spinnerArray;
-	ArrayAdapter<String> spinnerAdapter;
+	private ArrayAdapter<String> spinnerAdapter;
 	
 	private int selectedCostId;
 	private String selectedCostName;
@@ -66,7 +66,7 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	private CharSequence mTitle;
 	private boolean firstTime = true;
 	private int action = 0;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -83,7 +83,6 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 			categoryService = new CategoryService(getHelper().getCategoryDao());
 			costService = new CostService(getHelper().getCostDao());
 			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
-			//loadCostCategory();
 			loadCostList();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -422,7 +421,7 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	
 	private void loadCostList(){
 		try { 
-			//costService.getCosts();
+			loadQuickView();
 			List<Cost> costList = costService.searchCost(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
 			loadUI(costList, costList.size()); 
 		} catch (Exception ex) {
@@ -466,6 +465,30 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 			getListView().setItemsCanFocus(false);
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
+		}
+	}
+	
+	private void loadQuickView(){
+		try{
+			String today = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
+			
+			double productiveCost = costService.getTotalCost(getString(R.string.productive), today);
+			double wastageCost = costService.getTotalCost(getString(R.string.wastage), today);
+			double totalCost = productiveCost + wastageCost;
+			
+			TextView textViewTotalCost = (TextView)findViewById(R.id.textView_summary_total_cost);
+			textViewTotalCost.setText(String.valueOf(totalCost));
+			
+			TextView textViewProductiveCost = (TextView)findViewById(R.id.textView_summary_effective_cost);
+			textViewProductiveCost.setText(String.valueOf(productiveCost));
+			
+			TextView textViewWastageCost = (TextView)findViewById(R.id.textView_summary_wastage_cost);
+			textViewWastageCost.setText(String.valueOf(wastageCost));
+			
+			TextView topDateText = (TextView)findViewById(R.id.textView_summary_status);
+			topDateText.setText(IUtil.changeDateFormat(today, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy"));
+		}catch(Throwable t){
+			t.printStackTrace();
 		}
 	}
 }

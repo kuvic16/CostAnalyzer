@@ -70,20 +70,6 @@ public class CostService{
 		return null;
 	}
 	
-	public List<Cost> getCosts(){
-		GenericRawResults<String[]> rawResults;
-		try {
-			rawResults = em.queryRaw("select co.id,  from cost as co join category as ca on co.category_id=ca.id");
-			List<String[]> results = rawResults.getResults();
-			String[] resultArray = results.get(0);
-			System.out.println("Account-id 10 has " + resultArray[0] + " orders");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return null;
-	}
-	
 	public long countCost(){
 		try {
 			QueryBuilder<Cost, Integer> builder = em.queryBuilder();
@@ -110,6 +96,43 @@ public class CostService{
 			e.printStackTrace();
 		}
 		return 0;
+	}
+	
+	public double getTotalCost(String categoryType, String costDate){
+		double totalCost = 0.0;
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("select sum(co.amount) from cost as co join category ca on co.category_id=ca.id ");
+			
+			boolean andRequired = false;
+			if(IUtil.isNotBlank(categoryType)){
+				jql.append(" where ");
+				jql.append(" ca.type = '").append(categoryType).append("'");
+				andRequired = true;
+			}
+			
+			if(IUtil.isNotBlank(costDate)){
+				if(andRequired){
+					jql.append(" and ");
+				}else{
+					jql.append(" where ");
+				}
+				jql.append(" co.date = '").append(costDate).append("'");
+			}
+			
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			String[] resultArray = results.get(0);
+			if(IUtil.isNotBlank(resultArray[0])){
+				totalCost = Double.parseDouble(resultArray[0]);
+			}
+			System.out.println("Total cost: " + totalCost);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return totalCost;
 	}
 	
 	public List<Cost> searchCost(String costDate) {

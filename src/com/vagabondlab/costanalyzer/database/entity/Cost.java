@@ -21,9 +21,6 @@ public class Cost extends AbstractEntity implements Serializable{
 	@DatabaseField(canBeNull = false, foreign = true)
     private Category category;
 
-//	@DatabaseField(index = true)
-//	private int category_id;
-	
 	@DatabaseField(dataType =  DataType.DOUBLE)
 	private double amount;
 	
@@ -37,14 +34,6 @@ public class Cost extends AbstractEntity implements Serializable{
 	public void setId(int id) {
 		this.id = id;
 	}
-
-//	public int getCategory_id() {
-//		return category_id;
-//	}
-//
-//	public void setCategory_id(int category_id) {
-//		this.category_id = category_id;
-//	}
 
 	public double getAmount() {
 		return amount;
