@@ -120,10 +120,10 @@ public class CostService{
 			builder.limit(30L);
 			Where<Cost, Integer> where = builder.where();
 
-			boolean needAnd = false;
+			//boolean needAnd = false;
 			if (IUtil.isNotBlank(costDate)) {
 				where.like(IConstant.COST_DATE, costDate + "%");
-				needAnd = true;
+				//needAnd = true;
 			}
 
 			// if(IUtil.isNotBlank(name)){

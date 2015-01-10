@@ -57,7 +57,6 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	private TextView mCostStatus;
 	
 	private List<Map<String, String>> mCostListdata = new ArrayList<Map<String, String>>();
-	private HashMap<Integer,String[]> spinnerCategoryMap = new HashMap<Integer, String[]>();
 	private String[] spinnerArray;
 	ArrayAdapter<String> spinnerAdapter;
 	
@@ -77,13 +76,14 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
+		
 		//getHelper().onUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
 		
 		try { 
 			categoryService = new CategoryService(getHelper().getCategoryDao());
 			costService = new CostService(getHelper().getCostDao());
 			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
-			loadCostCategory();
+			//loadCostCategory();
 			loadCostList();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -279,9 +279,9 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_cost));
 			return;
 		}
+		categoryService.refreash(cost.getCategory());
 		
-		//String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory_id());
-		//mCategoryName.setSelection(spinnerAdapter.getPosition(cnt[0]));
+		mCategoryName.setSelection(spinnerAdapter.getPosition(cost.getCategory().getName()));
 		mCostAmount.setText(String.valueOf(cost.getAmount()));
 		Calendar calender = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
 		mCostDatePicker.init(calender.get(Calendar.YEAR), calender.get(Calendar.MONTH), calender.get(Calendar.DAY_OF_MONTH), null);
@@ -308,6 +308,7 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	
 	private void loadCategorySpinner(Spinner categorySpinner){
 		try {
+			loadCostCategory();
 			spinnerAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_item, spinnerArray);
 			categorySpinner.setAdapter(spinnerAdapter);
 		} catch (Exception ex) {
@@ -318,14 +319,11 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	private void loadCostCategory(){
 		try {
 			List<Category> categoryList = categoryService.getAllCategory();
-			spinnerCategoryMap = new HashMap<Integer, String[]>();
 			spinnerArray = new String[categoryList.size()+1];
 			
 			int i = 0;
 			spinnerArray[i++] = getString(R.string.select_category);
 			for(Category category : categoryList){
-				String [] cnt = {category.getName(), category.getType()};
-				spinnerCategoryMap.put(category.getId(),cnt);
 				spinnerArray[i++] = category.getName();
 			}
 		} catch (Exception ex) {
@@ -364,13 +362,11 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	private int saveCost(){
 		
 		String categoryName = mCategoryName.getSelectedItem().toString();
-		Integer categoryId = IUtil.getKeyFromValue(spinnerCategoryMap, categoryName);
-		if(categoryId == null){
+		Category category = categoryService.getCategoryByName(categoryName);
+		if(category == null){
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_category_missing));
 			return 0;
 		}
-		Category category = categoryService.getCategoryById(categoryId);
-		
 		
 		if(!IUtil.isNotBlank(mCostAmount.getText())){
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_amount_missing));
@@ -384,12 +380,11 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 		if(action == IConstant.ACTION_EDIT){
 			cost = costService.getCostById(selectedCostId);
 		}
-		//cost.setCategory_id(categoryId);
 		cost.setCategory(category);
 		cost.setAmount(costAmount);
 		cost.setDate(costDate);
 		cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-		cost.setCreated_by_name("");
+		cost.setCreated_by_name("you");
 		
 		int sucess = 0;
 		if(action == IConstant.ACTION_ADD){
@@ -443,10 +438,7 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 				Map<String, String> infoMap = new HashMap<String, String>(3);
 				infoMap.put("id", String.valueOf(cost.getId()));
 				
-				
 				categoryService.refreash(cost.getCategory());
-				
-				String[] cnt = (String[])spinnerCategoryMap.get(cost.getCategory().getId());
 				Calendar costDate = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
 				infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
 				infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));

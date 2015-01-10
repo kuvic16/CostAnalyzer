@@ -6,6 +6,8 @@ import java.util.concurrent.Callable;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.SelectArg;
+import com.j256.ormlite.stmt.Where;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 
@@ -61,23 +63,23 @@ public class CategoryService{
 		return null;
 	}
 	
-//	public Category getBeneficiaryByBeneficiaryId(String beneficiaryId){
-//		try {
-//			QueryBuilder<Category, Integer> builder = em.queryBuilder();
-//			Where<Category, Integer> where = builder.where();
-//			SelectArg selectArg = new SelectArg();
-//			where.eq(Category.BENEFICIARY_ID, selectArg);
-//			selectArg.setValue(beneficiaryId);
-//			List<Category> beneficiaryList = em.query(builder.prepare());
-//			if(beneficiaryList != null && beneficiaryList.size() > 0){
-//				return beneficiaryList.get(0);
-//			}
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-//	
+	public Category getCategoryByName(String categoryName){
+		try {
+			QueryBuilder<Category, Integer> builder = em.queryBuilder();
+			Where<Category, Integer> where = builder.where();
+			SelectArg selectArg = new SelectArg();
+			where.eq(IConstant.CATEGORY_NAME, selectArg);
+			selectArg.setValue(categoryName);
+			List<Category> categoryList = em.query(builder.prepare());
+			if(categoryList != null && categoryList.size() > 0){
+				return categoryList.get(0);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 //	public List<Category> getNonRegisteredBeneficiarys(int beneficiaryType){
 //		try {
 //			QueryBuilder<Category, Integer> builder = em.queryBuilder();
