@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -16,11 +20,14 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.DisplayMetrics;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,10 +36,13 @@ import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.vagabondlab.costanalyzer.database.DatabaseHelper;
 import com.vagabondlab.costanalyzer.database.entity.Category;
@@ -42,8 +52,10 @@ import com.vagabondlab.costanalyzer.database.service.CostService;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 
-public class HomeActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class HomeActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private DatabaseHelper databaseHelper = null;
@@ -66,6 +78,9 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	private CharSequence mTitle;
 	private boolean firstTime = true;
 	private int action = 0;
+	private GestureDetector mGestureDetector;
+	private RelativeLayout mRLShortSummary;
+	private String mCurrentDate;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,12 +98,16 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 			categoryService = new CategoryService(getHelper().getCategoryDao());
 			costService = new CostService(getHelper().getCostDao());
 			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
-			loadCostList();
+			mGestureDetector = new GestureDetector(this);
+			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_home_short_summary);
+			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
+			
+			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		if(firstTime){
@@ -201,7 +220,6 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.add_cost) {
-			ViewUtil.showMessage(getApplicationContext(), "something happened");
 			action = IConstant.ACTION_ADD;
 			addNewCostDialougeBox();
 			return true;
@@ -394,7 +412,7 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 		
 		if(sucess > 0){
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_cost_success, categoryName));
-			loadCostList();
+			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
 			return 1;
 		}else{
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_cost_failed));
@@ -411,7 +429,7 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 		
 		if(sucess > 0){
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_cost_success, selectedCostName));
-			loadCostList();
+			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
 			return 1;
 		}else{
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_cost_failed));
@@ -419,10 +437,11 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
     	return 0;
 	}
 	
-	private void loadCostList(){
-		try { 
-			loadQuickView();
-			List<Cost> costList = costService.searchCost(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+	private void loadCostList(String date){
+		try {
+			mCurrentDate = date;
+			loadQuickView(date);
+			List<Cost> costList = costService.searchCost(date);
 			loadUI(costList, costList.size()); 
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
@@ -449,7 +468,8 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 					info += "\nadded on " + date;
 				}
 				infoMap.put("cost_category_type_and_time", info);
-				infoMap.put("cost_amount", String.valueOf(cost.getAmount()));
+				Double costAmount = cost.getAmount();
+				infoMap.put("cost_amount", String.valueOf(costAmount.intValue()));
 				mCostListdata.add(infoMap);
 			}
 			
@@ -468,27 +488,138 @@ public class HomeActivity extends ActionBarActivity implements NavigationDrawerF
 		}
 	}
 	
-	private void loadQuickView(){
+	private void loadQuickView(String date){
 		try{
 			String today = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
 			
-			double productiveCost = costService.getTotalCost(getString(R.string.productive), today);
-			double wastageCost = costService.getTotalCost(getString(R.string.wastage), today);
-			double totalCost = productiveCost + wastageCost;
+			Double productiveCost = costService.getTotalCost(getString(R.string.productive), date);
+			Double wastageCost = costService.getTotalCost(getString(R.string.wastage), date);
+			Double totalCost = productiveCost + wastageCost;
 			
 			TextView textViewTotalCost = (TextView)findViewById(R.id.textView_summary_total_cost);
-			textViewTotalCost.setText(String.valueOf(totalCost));
+			textViewTotalCost.setText(String.valueOf(totalCost.intValue()));
 			
 			TextView textViewProductiveCost = (TextView)findViewById(R.id.textView_summary_effective_cost);
-			textViewProductiveCost.setText(String.valueOf(productiveCost));
+			textViewProductiveCost.setText(String.valueOf(productiveCost.intValue()));
 			
 			TextView textViewWastageCost = (TextView)findViewById(R.id.textView_summary_wastage_cost);
-			textViewWastageCost.setText(String.valueOf(wastageCost));
+			textViewWastageCost.setText(String.valueOf(wastageCost.intValue()));
 			
+			String dateStatus = "";			
+			if(date.equalsIgnoreCase(today)){
+				dateStatus = getString(R.string.today_top_date_text, IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy"));
+			}else{
+				dateStatus = IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy");
+			}
 			TextView topDateText = (TextView)findViewById(R.id.textView_summary_status);
-			topDateText.setText(IUtil.changeDateFormat(today, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy"));
+			topDateText.setText(dateStatus);
+						
 		}catch(Throwable t){
 			t.printStackTrace();
 		}
 	}
+	
+//	@Override
+//	public boolean dispatchTouchEvent(MotionEvent mv) {
+//		boolean handled = mGestureDetector.onTouchEvent(mv);
+//		if (!handled) {
+//			return super.dispatchTouchEvent(mv);
+//		}
+//		return handled; // this is always true
+//	}
+	
+	OnTouchListener shortSummarySwipeListener = new OnTouchListener() {
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			if (mGestureDetector.onTouchEvent(event)) {
+				return false;
+			} else {
+				return false;
+			}
+		}
+	};
+
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,float velocityY) {
+			DisplayMetrics dm = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(dm);
+			int xPixelLimit = (int) (dm.xdpi * .25);
+			int yPixelLimit = (int) (dm.ydpi * .25);
+
+		
+			if ((Math.abs(e1.getX() - e2.getX()) > xPixelLimit && Math.abs(e1
+					.getY() - e2.getY()) < yPixelLimit)
+					|| Math.abs(e1.getX() - e2.getX()) > xPixelLimit * 2) {
+				if (velocityX > 0) {
+					if (e1.getX() > e2.getX()) {
+						//ViewUtil.showMessage(getApplicationContext(), "next view");
+						nextView();
+					} else {
+						//ViewUtil.showMessage(getApplicationContext(), "prev view");
+						prevView();
+					}
+				} else {
+					if (e1.getX() < e2.getX()) {
+						//ViewUtil.showMessage(getApplicationContext(), "prev view");
+						prevView();
+					} else {
+						//ViewUtil.showMessage(getApplicationContext(), "next view");
+						nextView();
+					}
+				}
+				return true;
+			}
+		return false;
+	}
+
+	@Override
+	public boolean onDown(MotionEvent e) {
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+		
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		return false;
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,float distanceY) {
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+		
+	}
+	
+	private void nextView(){
+		YoYo.with(Techniques.FadeOutLeft).duration(500).playOn(findViewById(R.id.relative_layout_root));
+		Date date = IUtil.getDate(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
+		DateTime dateTime = new DateTime(date);
+		dateTime = dateTime.plusDays(-1);
+		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
+		String newDate = fmt.print(dateTime);
+		//ViewUtil.showMessage(getApplicationContext(), newDate);
+		YoYo.with(Techniques.SlideInRight).duration(500).playOn(findViewById(R.id.relative_layout_root));
+		loadCostList(newDate);
+		
+	}
+	
+	private void prevView(){
+		YoYo.with(Techniques.FadeOutRight).duration(500).playOn(findViewById(R.id.relative_layout_root));
+		Date date = IUtil.getDate(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
+		DateTime dateTime = new DateTime(date);
+		dateTime = dateTime.plusDays(1);
+		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
+		String newDate = fmt.print(dateTime);
+		//ViewUtil.showMessage(getApplicationContext(), newDate);
+		loadCostList(newDate);
+		YoYo.with(Techniques.SlideInLeft).duration(500).playOn(findViewById(R.id.relative_layout_root));
+	}
+	
 }

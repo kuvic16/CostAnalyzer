@@ -12,12 +12,14 @@
         android:layout_height="match_parent" />
 
     <RelativeLayout
+        android:id="@+id/relative_layout_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
         
         <RelativeLayout
     		android:id="@+id/relative_layout_home_short_summary"
+    		android:clickable="true"
 			android:layout_width="fill_parent"
 			android:layout_height="130dip"
 			android:background="@layout/home_short_summary_design"
@@ -33,7 +35,7 @@
 				android:layout_alignParentTop="true"
 				android:layout_alignParentLeft="true"
 				android:textColor="#000000"
-				android:text="Today 9 Jan, 2015"
+				android:text=""
 				android:textAppearance="?android:attr/textAppearanceSmall"/>
             
             <TextView
@@ -46,7 +48,7 @@
 				android:layout_alignParentLeft="true"
 				android:background="@layout/summary_total_amount_design"
 				android:textColor="#FFFFFF"
-				android:text="100000"
+				android:text=""
 				android:layout_below="@+id/textView_summary_status"
 				android:textAppearance="?android:attr/textAppearanceLarge"/>
             
@@ -57,7 +59,7 @@
 				android:gravity="center"
 				android:layout_alignParentLeft="true"
 				android:textColor="#000000"
-				android:text="Total Cost"
+				android:text="@string/total_cost"
 				android:layout_below="@+id/textView_summary_total_cost"
 				android:textAppearance="?android:attr/textAppearanceSmall"/>
             
@@ -72,7 +74,7 @@
 				android:layout_toRightOf="@id/textView_summary_total_cost"
 				android:background="@layout/summary_effective_amount_design"
 				android:textColor="#FFFFFF"
-				android:text="40000"
+				android:text=""
 				android:textAppearance="?android:attr/textAppearanceLarge"/>
             
             <TextView
@@ -81,9 +83,10 @@
 				android:layout_height="wrap_content"
 				android:gravity="center"
 				android:textColor="#000000"
-				android:text="Effective"
+				android:text="@string/productive"
 				android:layout_below="@+id/textView_summary_effective_cost"
 				android:layout_toRightOf="@id/textView_summary_total_cost_status"
+				android:layout_alignLeft="@+id/textView_summary_effective_cost"
 				android:textAppearance="?android:attr/textAppearanceSmall"/>
             
             <TextView
@@ -97,7 +100,7 @@
 				android:layout_toRightOf="@id/textView_summary_effective_cost"
 				android:background="@layout/summary_wastage_amount_design"
 				android:textColor="#FFFFFF"
-				android:text="60000"
+				android:text=""
 				android:textAppearance="?android:attr/textAppearanceLarge"/>
             
             <TextView
@@ -106,9 +109,10 @@
 				android:layout_height="wrap_content"
 				android:gravity="center"
 				android:textColor="#000000"
-				android:text="Wastage"
+				android:text="@string/wastage"
 				android:layout_below="@+id/textView_summary_wastage_cost"
 				android:layout_toRightOf="@id/textView_summary_effective_cost_status"
+				android:layout_alignLeft="@+id/textView_summary_wastage_cost"
 				android:textAppearance="?android:attr/textAppearanceSmall"/>
             
         </RelativeLayout>

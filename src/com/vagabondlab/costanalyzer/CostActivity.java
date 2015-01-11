@@ -17,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -460,6 +461,15 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		case 3:
 			break;
 		}
-	}	
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			this.finish();
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 	
 }
