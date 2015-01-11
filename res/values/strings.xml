@@ -59,7 +59,8 @@
 	<string name="pick_date">Pick Date</string>	
 	
 	<!-- Home screen -->
-	<string name="title_home_screen">Cost assistance</string>
+	<string name="title_home_screen">Cost assistant</string>
+	<string name="today_top_date_text">Today %s</string>
 	
 	
 </resources>

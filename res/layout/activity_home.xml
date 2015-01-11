@@ -71,7 +71,7 @@
 				android:layout_below="@+id/textView_summary_status"
 				android:layout_toRightOf="@id/textView_summary_total_cost"
 				android:background="@layout/summary_effective_amount_design"
-				android:textColor="#000000"
+				android:textColor="#FFFFFF"
 				android:text="40000"
 				android:textAppearance="?android:attr/textAppearanceLarge"/>
             

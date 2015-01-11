@@ -1945,6 +1945,7 @@ containing a value of this type.
         /**  Home screen 
          */
         public static final int title_home_screen=0x7f0b0044;
+        public static final int today_top_date_text=0x7f0b0045;
         public static final int wastage=0x7f0b002a;
     }
     public static final class style {
