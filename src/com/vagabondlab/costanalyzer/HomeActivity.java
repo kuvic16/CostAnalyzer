@@ -501,9 +501,19 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 			
 			TextView textViewProductiveCost = (TextView)findViewById(R.id.textView_summary_effective_cost);
 			textViewProductiveCost.setText(String.valueOf(productiveCost.intValue()));
+//			if(totalCost != 0 && productiveCost != 0){
+//				TextView textViewProductiveCostStatus = (TextView)findViewById(R.id.textView_summary_effective_cost_status);
+//				int productivePercantage = (productiveCost.intValue() * 100)/totalCost.intValue();
+//				textViewProductiveCostStatus.setText(getString(R.string.productive) + "(" + String.valueOf(productivePercantage) + "%)");
+//			}
 			
 			TextView textViewWastageCost = (TextView)findViewById(R.id.textView_summary_wastage_cost);
 			textViewWastageCost.setText(String.valueOf(wastageCost.intValue()));
+//			if(totalCost != 0 && wastageCost != 0){
+//				TextView textViewWastageCostStatus = (TextView)findViewById(R.id.textView_summary_wastage_cost_status);
+//				int wastagePercantage = (wastageCost.intValue() * 100)/totalCost.intValue();
+//				textViewWastageCostStatus.setText(getString(R.string.wastage) + "(" + String.valueOf(wastagePercantage) + "%)");
+//			}
 			
 			String dateStatus = "";			
 			if(date.equalsIgnoreCase(today)){

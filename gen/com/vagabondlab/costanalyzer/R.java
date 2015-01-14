@@ -1744,11 +1744,11 @@ containing a value of this type.
         public static final int textView_cost_status=0x7f060045;
         public static final int textView_summary_effective_cost=0x7f06004e;
         public static final int textView_summary_effective_cost_status=0x7f06004f;
-        public static final int textView_summary_effective_wastage_status=0x7f060051;
         public static final int textView_summary_status=0x7f06004b;
         public static final int textView_summary_total_cost=0x7f06004c;
         public static final int textView_summary_total_cost_status=0x7f06004d;
         public static final int textView_summary_wastage_cost=0x7f060050;
+        public static final int textView_summary_wastage_cost_status=0x7f060051;
         public static final int title=0x7f060027;
         public static final int up=0x7f060016;
         public static final int useLogo=0x7f060005;

@@ -104,7 +104,7 @@
 				android:textAppearance="?android:attr/textAppearanceLarge"/>
             
             <TextView
-				android:id="@+id/textView_summary_effective_wastage_status"
+				android:id="@+id/textView_summary_wastage_cost_status"
 				android:layout_width="80dip"
 				android:layout_height="wrap_content"
 				android:gravity="center"
