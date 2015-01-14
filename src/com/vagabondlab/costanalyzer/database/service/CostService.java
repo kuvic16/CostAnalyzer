@@ -98,6 +98,27 @@ public class CostService{
 		return 0;
 	}
 	
+	public List<String[]> getTotalCostGroupByType(String costDate){
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("select ca.type, sum(co.amount) from cost as co join category ca on co.category_id=ca.id ");
+			
+			if(IUtil.isNotBlank(costDate)){
+				jql.append(" where ");
+				jql.append(" co.date = '").append(costDate).append("'");
+			}
+			jql.append(" group by ca.type");
+			
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			return results;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public double getTotalCost(String categoryType, String costDate){
 		double totalCost = 0.0;
 		GenericRawResults<String[]> rawResults;

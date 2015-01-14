@@ -14,6 +14,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -44,6 +45,8 @@ import android.widget.TextView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.vagabondlab.costanalyzer.database.DatabaseHelper;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.entity.Cost;
@@ -54,6 +57,7 @@ import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 public class HomeActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -81,6 +85,7 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 	private GestureDetector mGestureDetector;
 	private RelativeLayout mRLShortSummary;
 	private String mCurrentDate;
+	private ProgressDialog mProgressDialog = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -491,9 +496,26 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 	private void loadQuickView(String date){
 		try{
 			String today = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
+			Double productiveCost = 0.0;
+			Double wastageCost = 0.0;
 			
-			Double productiveCost = costService.getTotalCost(getString(R.string.productive), date);
-			Double wastageCost = costService.getTotalCost(getString(R.string.wastage), date);
+			List<String[]> costListGroupByType = costService.getTotalCostGroupByType(date);
+			if(IUtil.isNotBlank(costListGroupByType)){
+				for(String[] costs : costListGroupByType){
+					try{
+						if(costs[0].equalsIgnoreCase(getString(R.string.productive))){
+							productiveCost = Double.valueOf(costs[1]);
+						}else if(costs[0].equalsIgnoreCase(getString(R.string.wastage))){
+							wastageCost = Double.valueOf(costs[1]);
+						}
+					}catch(Throwable t){
+						t.printStackTrace();
+					}
+				}
+			}
+			
+//			Double productiveCost = costService.getTotalCost(getString(R.string.productive), date);
+//			Double wastageCost = costService.getTotalCost(getString(R.string.wastage), date);
 			Double totalCost = productiveCost + wastageCost;
 			
 			TextView textViewTotalCost = (TextView)findViewById(R.id.textView_summary_total_cost);
@@ -608,28 +630,63 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 	}
 	
 	private void nextView(){
-		YoYo.with(Techniques.FadeOutLeft).duration(500).playOn(findViewById(R.id.relative_layout_root));
+		YoYo.with(Techniques.SlideInRight)
+			.duration(500)
+			.interpolate(new AccelerateDecelerateInterpolator())
+			.withListener(animatorListener)
+			.playOn(findViewById(R.id.relative_layout_root));
+		
 		Date date = IUtil.getDate(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
 		DateTime dateTime = new DateTime(date);
 		dateTime = dateTime.plusDays(-1);
 		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
 		String newDate = fmt.print(dateTime);
-		//ViewUtil.showMessage(getApplicationContext(), newDate);
-		YoYo.with(Techniques.SlideInRight).duration(500).playOn(findViewById(R.id.relative_layout_root));
 		loadCostList(newDate);
 		
 	}
 	
 	private void prevView(){
-		YoYo.with(Techniques.FadeOutRight).duration(500).playOn(findViewById(R.id.relative_layout_root));
+		YoYo.with(Techniques.SlideInLeft)
+			.duration(500)
+			.interpolate(new AccelerateDecelerateInterpolator())
+			.withListener(animatorListener)
+			.playOn(findViewById(R.id.relative_layout_root));
+		
 		Date date = IUtil.getDate(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
 		DateTime dateTime = new DateTime(date);
 		dateTime = dateTime.plusDays(1);
 		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
 		String newDate = fmt.print(dateTime);
-		//ViewUtil.showMessage(getApplicationContext(), newDate);
 		loadCostList(newDate);
-		YoYo.with(Techniques.SlideInLeft).duration(500).playOn(findViewById(R.id.relative_layout_root));
 	}
+	
+	AnimatorListener animatorListener = new AnimatorListener() {
+		
+		@Override
+		public void onAnimationStart(Animator arg0) {
+			mProgressDialog = ProgressDialog.show(HomeActivity.this, "Please wait ...", "Loading...", true);
+			mProgressDialog.setCancelable(true);
+		}
+		
+		@Override
+		public void onAnimationRepeat(Animator arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void onAnimationEnd(Animator arg0) {
+			if(mProgressDialog != null){
+				mProgressDialog.dismiss();
+			}
+		}
+		
+		@Override
+		public void onAnimationCancel(Animator arg0) {
+			if(mProgressDialog != null){
+				mProgressDialog.dismiss();
+			}
+		}
+	};
 	
 }
