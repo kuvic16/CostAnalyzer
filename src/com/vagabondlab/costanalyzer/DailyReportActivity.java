@@ -59,7 +59,7 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
-public class HomeActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks {
+public class DailyReportActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private DatabaseHelper databaseHelper = null;
@@ -124,7 +124,7 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 		
 		switch (position) {
 		case 0:
-			Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+			Intent i = new Intent(getApplicationContext(),DailyReportActivity.class);
 			startActivity(i);
 			break;
 		case 1:
@@ -666,7 +666,7 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 		
 		@Override
 		public void onAnimationStart(Animator arg0) {
-			mProgressDialog = ProgressDialog.show(HomeActivity.this, "Please wait ...", "Loading...", true);
+			mProgressDialog = ProgressDialog.show(DailyReportActivity.this, "Please wait ...", "Loading...", true);
 			mProgressDialog.setCancelable(true);
 		}
 		

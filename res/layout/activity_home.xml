@@ -23,6 +23,7 @@
 			android:layout_width="fill_parent"
 			android:layout_height="130dip"
 			android:background="@layout/home_short_summary_design"
+			android:gravity="center"
 			android:layout_alignParentTop="true"
 			android:layout_alignParentLeft="true">
             
@@ -38,83 +39,94 @@
 				android:text=""
 				android:textAppearance="?android:attr/textAppearanceSmall"/>
             
-            <TextView
-				android:id="@+id/textView_summary_total_cost"
-				android:layout_width="80dip"
-				android:layout_height="80dip"
-				android:layout_margin="5dip"
-				android:layout_marginBottom="0dip"
-				android:gravity="center"
-				android:layout_alignParentLeft="true"
-				android:background="@layout/summary_total_amount_design"
-				android:textColor="#FFFFFF"
-				android:text=""
-				android:layout_below="@+id/textView_summary_status"
-				android:textAppearance="?android:attr/textAppearanceLarge"/>
-            
-            <TextView
-				android:id="@+id/textView_summary_total_cost_status"
-				android:layout_width="80dip"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:layout_alignParentLeft="true"
-				android:textColor="#000000"
-				android:text="@string/total_cost"
-				android:layout_below="@+id/textView_summary_total_cost"
-				android:textAppearance="?android:attr/textAppearanceSmall"/>
-            
-            <TextView
-				android:id="@+id/textView_summary_effective_cost"
-				android:layout_width="80dip"
-				android:layout_height="80dip"
-				android:layout_margin="5dip"
-				android:layout_marginBottom="0dip"
+            <RelativeLayout 
+	    		android:id="@+id/relative_layout_summary"
+	    		android:clickable="true"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
 				android:gravity="center"
 				android:layout_below="@+id/textView_summary_status"
-				android:layout_toRightOf="@id/textView_summary_total_cost"
-				android:background="@layout/summary_effective_amount_design"
-				android:textColor="#FFFFFF"
-				android:text=""
-				android:textAppearance="?android:attr/textAppearanceLarge"/>
+				android:layout_alignParentLeft="true">
             
-            <TextView
-				android:id="@+id/textView_summary_effective_cost_status"
-				android:layout_width="80dip"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:textColor="#000000"
-				android:text="@string/productive"
-				android:layout_below="@+id/textView_summary_effective_cost"
-				android:layout_toRightOf="@id/textView_summary_total_cost_status"
-				android:layout_alignLeft="@+id/textView_summary_effective_cost"
-				android:textAppearance="?android:attr/textAppearanceSmall"/>
             
-            <TextView
-				android:id="@+id/textView_summary_wastage_cost"
-				android:layout_width="80dip"
-				android:layout_height="80dip"
-				android:layout_margin="5dip"
-				android:layout_marginBottom="0dip"
-				android:gravity="center"
-				android:layout_below="@+id/textView_summary_status"
-				android:layout_toRightOf="@id/textView_summary_effective_cost"
-				android:background="@layout/summary_wastage_amount_design"
-				android:textColor="#FFFFFF"
-				android:text=""
-				android:textAppearance="?android:attr/textAppearanceLarge"/>
-            
-            <TextView
-				android:id="@+id/textView_summary_wastage_cost_status"
-				android:layout_width="80dip"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:textColor="#000000"
-				android:text="@string/wastage"
-				android:layout_below="@+id/textView_summary_wastage_cost"
-				android:layout_toRightOf="@id/textView_summary_effective_cost_status"
-				android:layout_alignLeft="@+id/textView_summary_wastage_cost"
-				android:textAppearance="?android:attr/textAppearanceSmall"/>
-            
+	            <TextView
+					android:id="@+id/textView_summary_total_cost"
+					android:layout_width="80dip"
+					android:layout_height="80dip"
+					android:layout_margin="5dip"
+					android:layout_marginBottom="0dip"
+					android:gravity="center"
+					android:layout_alignParentLeft="true"
+					android:background="@layout/summary_total_amount_design"
+					android:textColor="#FFFFFF"
+					android:text=""
+					android:layout_alignParentTop="true"
+					android:textAppearance="?android:attr/textAppearanceLarge"/>
+	            
+	            
+	            <TextView
+					android:id="@+id/textView_summary_total_cost_status"
+					android:layout_width="80dip"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:layout_alignParentLeft="true"
+					android:textColor="#000000"
+					android:text="@string/total_cost"
+					android:layout_below="@+id/textView_summary_total_cost"
+					android:textAppearance="?android:attr/textAppearanceSmall"/>
+	            
+	            <TextView
+					android:id="@+id/textView_summary_effective_cost"
+					android:layout_width="80dip"
+					android:layout_height="80dip"
+					android:layout_margin="5dip"
+					android:layout_marginBottom="0dip"
+					android:gravity="center"
+					android:layout_alignParentTop="true"
+					android:layout_toRightOf="@id/textView_summary_total_cost"
+					android:background="@layout/summary_effective_amount_design"
+					android:textColor="#FFFFFF"
+					android:text=""
+					android:textAppearance="?android:attr/textAppearanceLarge"/>
+	            
+	            <TextView
+					android:id="@+id/textView_summary_effective_cost_status"
+					android:layout_width="80dip"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:textColor="#000000"
+					android:text="@string/productive"
+					android:layout_below="@+id/textView_summary_effective_cost"
+					android:layout_toRightOf="@id/textView_summary_total_cost_status"
+					android:layout_alignLeft="@+id/textView_summary_effective_cost"
+					android:textAppearance="?android:attr/textAppearanceSmall"/>
+	            
+	            <TextView
+					android:id="@+id/textView_summary_wastage_cost"
+					android:layout_width="80dip"
+					android:layout_height="80dip"
+					android:layout_margin="5dip"
+					android:layout_marginBottom="0dip"
+					android:gravity="center"
+					android:layout_alignParentTop="true"
+					android:layout_toRightOf="@id/textView_summary_effective_cost"
+					android:background="@layout/summary_wastage_amount_design"
+					android:textColor="#FFFFFF"
+					android:text=""
+					android:textAppearance="?android:attr/textAppearanceLarge"/>
+	            
+	            <TextView
+					android:id="@+id/textView_summary_wastage_cost_status"
+					android:layout_width="80dip"
+					android:layout_height="wrap_content"
+					android:gravity="center"
+					android:textColor="#000000"
+					android:text="@string/wastage"
+					android:layout_below="@+id/textView_summary_wastage_cost"
+					android:layout_toRightOf="@id/textView_summary_effective_cost_status"
+					android:layout_alignLeft="@+id/textView_summary_wastage_cost"
+					android:textAppearance="?android:attr/textAppearanceSmall"/>
+            </RelativeLayout>
         </RelativeLayout>
 
         <TextView
