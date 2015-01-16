@@ -113,12 +113,34 @@ public class CostService{
 			rawResults = em.queryRaw(jql.toString());
 			List<String[]> results = rawResults.getResults();
 			return results;
-		} catch (SQLException e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
+	public List<String[]> getTotalCostGroupByCategory(String costDate){
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("select ca.name, count(*), sum(co.amount) from cost as co join category ca on co.category_id=ca.id ");
+			
+			if(IUtil.isNotBlank(costDate)){
+				jql.append(" where ");
+				jql.append(" co.date = '").append(costDate).append("'");
+			}
+			jql.append(" group by co.category_id");
+			
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			return results;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Deprecated
 	public double getTotalCost(String categoryType, String costDate){
 		double totalCost = 0.0;
 		GenericRawResults<String[]> rawResults;

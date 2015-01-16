@@ -1,0 +1,56 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_layout_short_summary"
+    style="@style/relativeLayoutShortSummaryStyle" >
+
+    <TextView
+        android:id="@+id/textView_summary_status"
+        style="@style/textViewSummaryStatusStyle" />
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_summary"
+        style="@style/relativeLayoutSummaryStyle"
+        android:layout_below="@+id/textView_summary_status" >
+
+        <TextView
+            android:id="@+id/textView_summary_total_cost"
+            style="@style/textViewSummaryCostStyle"
+            android:layout_alignParentLeft="true"
+            android:background="@layout/summary_total_amount_design" />
+
+        <TextView
+            android:id="@+id/textView_summary_total_cost_status"
+            style="@style/textViewSummaryCostStatusStyle"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView_summary_total_cost"
+            android:text="@string/total_cost" />
+
+        <TextView
+            android:id="@+id/textView_summary_effective_cost"
+            style="@style/textViewSummaryCostStyle"
+            android:layout_toRightOf="@id/textView_summary_total_cost"
+            android:background="@layout/summary_effective_amount_design" />
+
+        <TextView
+            android:id="@+id/textView_summary_effective_cost_status"
+            style="@style/textViewSummaryCostStatusStyle"
+            android:layout_alignLeft="@+id/textView_summary_effective_cost"
+            android:layout_below="@+id/textView_summary_effective_cost"
+            android:layout_toRightOf="@id/textView_summary_total_cost_status"
+            android:text="@string/productive" />
+
+        <TextView
+            android:id="@+id/textView_summary_wastage_cost"
+            style="@style/textViewSummaryCostStyle"
+            android:layout_toRightOf="@id/textView_summary_effective_cost"
+            android:background="@layout/summary_wastage_amount_design" />
+
+        <TextView
+            android:id="@+id/textView_summary_wastage_cost_status"
+            style="@style/textViewSummaryCostStatusStyle"
+            android:layout_alignLeft="@+id/textView_summary_wastage_cost"
+            android:layout_below="@+id/textView_summary_wastage_cost"
+            android:layout_toRightOf="@id/textView_summary_effective_cost_status"
+            android:text="@string/wastage" />
+    </RelativeLayout>
+
+</RelativeLayout>

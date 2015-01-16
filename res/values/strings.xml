@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Cost Assistance</string>
+    <string name="app_name">Cost Analyzer</string>
     <string name="main_menu1">Home</string>
     <string name="main_menu2">Cost category</string>
     <string name="main_menu3">Cost history</string>
-    <string name="main_menu4">Users log</string>
+    <string name="main_menu4">Daily report</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
     <string name="test">This is just test</string>
-    <string name="title_activity_category">CategoryActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="error">error: %s</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="search">Search</string>
     
     <!-- Category screen -->
+    <string name="title_activity_category">Cost category</string>
     <string name="cost_category">Cost category</string>
     <string name="category_name">Category Name</string>
     <string name="category_type">Category Type</string>
@@ -62,6 +63,9 @@
 	<string name="title_home_screen">Cost analyzer</string>
 	<string name="today_top_date_text">Today %s</string>
 	<string name="total_cost">Total Cost</string>
+	
+	<!-- Daily Report -->
+	<string name="title_daily_report">Daily report</string>
 	
 	
 </resources>

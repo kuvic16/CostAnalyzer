@@ -90,14 +90,12 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_home);
-		setTitle(getString(R.string.title_home_screen));
+		setContentView(R.layout.activity_daily_report);
+		setTitle(getString(R.string.title_daily_report));
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
-		
-		//getHelper().onUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
 		
 		try { 
 			categoryService = new CategoryService(getHelper().getCategoryDao());
@@ -136,6 +134,8 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		case 3:
+			i = new Intent(getApplicationContext(),DailyReportActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		}
 	}
@@ -145,25 +145,6 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 	protected ListView getListView() {
 	    if (mListView == null) {
 	        mListView = (ListView) findViewById(android.R.id.list);
-	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
-					try{
-						View viewCostId = ((ViewGroup) v).getChildAt(2);
-						View viewCostDetails = ((ViewGroup) v).getChildAt(1);
-						View viewCostCategoryName = ((ViewGroup) viewCostDetails).getChildAt(0);
-						View viewCostAmount = ((ViewGroup) viewCostDetails).getChildAt(2);
-						
-						selectedCostId = Integer.valueOf(((TextView) viewCostId).getText().toString());
-						selectedCostName = ((TextView) viewCostCategoryName).getText().toString() + " : " + ((TextView) viewCostAmount).getText().toString();
-						
-						registerForContextMenu(mListView);
-	                    openContextMenu(mListView);
-					}catch(Throwable t){
-						t.printStackTrace();
-					}
-				}
-			});	        
 	    }
 	    return mListView;
 	}
@@ -216,7 +197,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (!mNavigationDrawerFragment.isDrawerOpen()) {
-			getMenuInflater().inflate(R.menu.home, menu);
+			getMenuInflater().inflate(R.menu.report, menu);
 			restoreActionBar();
 			return true;
 		}
@@ -226,39 +207,11 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.add_cost) {
-			action = IConstant.ACTION_ADD;
-			addNewCostDialougeBox();
+		if (id == R.id.search) {
+			
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-		// Context menu
-		menu.setHeaderTitle(selectedCostName);
-		menu.add(Menu.NONE, IConstant.CONTEXT_MENU_EDIT, Menu.NONE, R.string.edit);
-		menu.add(Menu.NONE, IConstant.CONTEXT_MENU_ARCHIVE, Menu.NONE, R.string.delete);
-		menu.add(Menu.NONE, IConstant.CONTEXT_MENU_CANCEL, Menu.NONE, R.string.cancel);
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case IConstant.CONTEXT_MENU_EDIT: {
-			action = IConstant.ACTION_EDIT;
-			editCostDialougeBox();
-		}
-			break;
-		case IConstant.CONTEXT_MENU_ARCHIVE: {
-			action = IConstant.ACTION_DELETE;
-			deleteCostDialougeBox();
-		}
-			break;
-		}
-
-		return super.onContextItemSelected(item);
 	}
 	
 	@Override
@@ -269,214 +222,34 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 	    }
 	}
 	
-	@SuppressLint("InflateParams")
-	private void addNewCostDialougeBox(){
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View costFormView = factory.inflate(R.layout.cost_form, null);
 		
-		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
-		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
-		mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
-		loadCategorySpinner(mCategoryName);
-	
-		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.add)
-		     .setTitle(R.string.add_new_cost)
-		     .setView(costFormView)
-		     .setPositiveButton(R.string.save, saveCancelListener)
-		     .setNegativeButton(R.string.cancel, saveCancelListener);
-		alert.show();
-	}
-	
-	@SuppressLint("InflateParams")
-	private void editCostDialougeBox(){
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View costFormView = factory.inflate(R.layout.cost_form, null);
-		
-		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
-		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
-		mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
-		loadCategorySpinner(mCategoryName);
-		
-		Cost cost = costService.getCostById(selectedCostId);
-		if(cost == null){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_cost));
-			return;
-		}
-		categoryService.refreash(cost.getCategory());
-		
-		mCategoryName.setSelection(spinnerAdapter.getPosition(cost.getCategory().getName()));
-		mCostAmount.setText(String.valueOf(cost.getAmount()));
-		Calendar calender = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
-		mCostDatePicker.init(calender.get(Calendar.YEAR), calender.get(Calendar.MONTH), calender.get(Calendar.DAY_OF_MONTH), null);
-		
-		
-		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.edit)
-		     .setTitle(R.string.edit_cost)
-		     .setView(costFormView)
-		     .setPositiveButton(R.string.save, saveCancelListener)
-		     .setNegativeButton(R.string.cancel, saveCancelListener);
-		alert.show();
-	}
-	
-	private void deleteCostDialougeBox(){
-		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.delete)
-		     .setTitle(R.string.delete_cost)
-		     .setMessage(getString(R.string.delete_cost_are_u_sure, selectedCostName))
-		     .setPositiveButton(R.string.delete, deleteCancelListener)
-		     .setNegativeButton(R.string.cancel, deleteCancelListener);
-		alert.show();
-	}
-	
-	private void loadCategorySpinner(Spinner categorySpinner){
-		try {
-			loadCostCategory();
-			spinnerAdapter =new ArrayAdapter<String>(getApplicationContext(),R.layout.spinner_item, spinnerArray);
-			categorySpinner.setAdapter(spinnerAdapter);
-		} catch (Exception ex) {
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
-		}
-	}
-	
-	private void loadCostCategory(){
-		try {
-			List<Category> categoryList = categoryService.getAllCategory();
-			spinnerArray = new String[categoryList.size()+1];
-			
-			int i = 0;
-			spinnerArray[i++] = getString(R.string.select_category);
-			for(Category category : categoryList){
-				spinnerArray[i++] = category.getName();
-			}
-		} catch (Exception ex) {
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
-		}
-	}
-	
-	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int i) {
-			switch (i) {
-			case DialogInterface.BUTTON_POSITIVE:
-				if(saveCost()==1){
-					break;
-				}
-			case DialogInterface.BUTTON_NEGATIVE: 
-				break;
-			}
-		}
-	};
-	
-	DialogInterface.OnClickListener deleteCancelListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int i) {
-			switch (i) {
-			case DialogInterface.BUTTON_POSITIVE:
-				if(deleteCost()==1){
-					break;
-				}
-			case DialogInterface.BUTTON_NEGATIVE: 
-				break;
-			}
-		}
-	};
-	
-	private int saveCost(){
-		
-		String categoryName = mCategoryName.getSelectedItem().toString();
-		Category category = categoryService.getCategoryByName(categoryName);
-		if(category == null){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_category_missing));
-			return 0;
-		}
-		
-		if(!IUtil.isNotBlank(mCostAmount.getText())){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_amount_missing));
-			return 0;
-		} 
-		
-		Double costAmount = Double.valueOf(mCostAmount.getText().toString());
-		String costDate = IUtil.getDateFromDatePicker(mCostDatePicker, IUtil.DATE_FORMAT_YYYY_MM_DD);
-		
-		Cost cost = new Cost();
-		if(action == IConstant.ACTION_EDIT){
-			cost = costService.getCostById(selectedCostId);
-		}
-		cost.setCategory(category);
-		cost.setAmount(costAmount);
-		cost.setDate(costDate);
-		cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-		cost.setCreated_by_name("you");
-		
-		int sucess = 0;
-		if(action == IConstant.ACTION_ADD){
-			sucess = costService.createCost(cost);
-		}else if(action == IConstant.ACTION_EDIT){
-			sucess = costService.updateCost(cost);
-		} 
-		
-		if(sucess > 0){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_cost_success, categoryName));
-			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
-			return 1;
-		}else{
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_cost_failed));
-		}
-    	
-		return 0;
-	}
-	
-	private int deleteCost(){
-		int sucess = 0;
-		if(action == IConstant.ACTION_DELETE){
-			sucess = costService.deleteCostById(selectedCostId);
-		} 
-		
-		if(sucess > 0){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_cost_success, selectedCostName));
-			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
-			return 1;
-		}else{
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_cost_failed));
-		}
-    	return 0;
-	}
-	
 	private void loadCostList(String date){
 		try {
 			mCurrentDate = date;
 			loadQuickView(date);
-			List<Cost> costList = costService.searchCost(date);
+			List<String[]>  costList = costService.getTotalCostGroupByCategory(mCurrentDate);
+			ViewUtil.showMessage(getApplicationContext(), "size: " + costList.size());
 			loadUI(costList, costList.size()); 
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}		
 	}
 
-	private void loadUI(List<Cost> costList, long total) {
+	private void loadUI(List<String[]> costList, long total) {
 		try {
 			mCostStatus.setText(getString(R.string.cost_status, total));
 			mCostListdata = new ArrayList<Map<String,String>>();
-			for (Cost cost : costList) {
+			for (String[] costs : costList) {
 				Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("id", String.valueOf(cost.getId()));
+				infoMap.put("id", "");
 				
-				categoryService.refreash(cost.getCategory());
-				Calendar costDate = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
-				infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
-				infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));
-				infoMap.put("cost_category_name", cost.getCategory().getName());
+				infoMap.put("cost_day", costs[1]);
+				infoMap.put("cost_month", "");
+				infoMap.put("cost_category_name", costs[0]);
 				
-				String info = cost.getCategory().getType();
-				if(IUtil.isNotBlank(cost.getCreated_date())){
-					Date date = IUtil.getDate(cost.getCreated_date(), IUtil.DATE_FORMAT);
-					info += "\nadded on " + date;
-				}
+				String info = "";
 				infoMap.put("cost_category_type_and_time", info);
-				Double costAmount = cost.getAmount();
-				infoMap.put("cost_amount", String.valueOf(costAmount.intValue()));
+				infoMap.put("cost_amount", costs[2]);
 				mCostListdata.add(infoMap);
 			}
 			
@@ -488,7 +261,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 					new int[] { R.id.cost_list_row_id, R.id.cost_date_day, R.id.cost_date_month, R.id.cost_category_name, R.id.cost_type_and_time, R.id.cost_amount 
 			});
 			setListAdapter(adapter);
-			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			//getListView().setChoiceMode(ListView.INVISIBLE);
 			getListView().setItemsCanFocus(false);
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
@@ -516,10 +289,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 				}
 			}
 			
-//			Double productiveCost = costService.getTotalCost(getString(R.string.productive), date);
-//			Double wastageCost = costService.getTotalCost(getString(R.string.wastage), date);
 			Double totalCost = productiveCost + wastageCost;
-			
 			TextView textViewTotalCost = (TextView)findViewById(R.id.textView_summary_total_cost);
 			textViewTotalCost.setText(String.valueOf(totalCost.intValue()));
 			
@@ -528,7 +298,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 //			if(totalCost != 0 && productiveCost != 0){
 //				TextView textViewProductiveCostStatus = (TextView)findViewById(R.id.textView_summary_effective_cost_status);
 //				int productivePercantage = (productiveCost.intValue() * 100)/totalCost.intValue();
-//				textViewProductiveCostStatus.setText(getString(R.string.productive) + "(" + String.valueOf(productivePercantage) + "%)");
+//				textViewProductiveCostStatus.setText(getString(R.string.productive) + " " + String.valueOf(productivePercantage) + "%");
 //			}
 			
 			TextView textViewWastageCost = (TextView)findViewById(R.id.textView_summary_wastage_cost);
@@ -536,7 +306,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 //			if(totalCost != 0 && wastageCost != 0){
 //				TextView textViewWastageCostStatus = (TextView)findViewById(R.id.textView_summary_wastage_cost_status);
 //				int wastagePercantage = (wastageCost.intValue() * 100)/totalCost.intValue();
-//				textViewWastageCostStatus.setText(getString(R.string.wastage) + "(" + String.valueOf(wastagePercantage) + "%)");
+//				textViewWastageCostStatus.setText(getString(R.string.wastage) + " " + String.valueOf(wastagePercantage) + "%");
 //			}
 			
 			String dateStatus = "";			
@@ -552,15 +322,6 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 			t.printStackTrace();
 		}
 	}
-	
-//	@Override
-//	public boolean dispatchTouchEvent(MotionEvent mv) {
-//		boolean handled = mGestureDetector.onTouchEvent(mv);
-//		if (!handled) {
-//			return super.dispatchTouchEvent(mv);
-//		}
-//		return handled; // this is always true
-//	}
 	
 	OnTouchListener shortSummarySwipeListener = new OnTouchListener() {
 		@Override
@@ -586,18 +347,14 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 					|| Math.abs(e1.getX() - e2.getX()) > xPixelLimit * 2) {
 				if (velocityX > 0) {
 					if (e1.getX() > e2.getX()) {
-						//ViewUtil.showMessage(getApplicationContext(), "next view");
 						nextView();
 					} else {
-						//ViewUtil.showMessage(getApplicationContext(), "prev view");
 						prevView();
 					}
 				} else {
 					if (e1.getX() < e2.getX()) {
-						//ViewUtil.showMessage(getApplicationContext(), "prev view");
 						prevView();
 					} else {
-						//ViewUtil.showMessage(getApplicationContext(), "next view");
 						nextView();
 					}
 				}

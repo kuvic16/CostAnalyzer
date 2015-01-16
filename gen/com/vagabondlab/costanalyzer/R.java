@@ -1659,10 +1659,10 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f06002e;
         public static final int action_mode_bar_stub=0x7f06002d;
         public static final int action_mode_close_button=0x7f060020;
-        public static final int action_settings=0x7f06006d;
+        public static final int action_settings=0x7f06006e;
         public static final int activity_chooser_view_content=0x7f060021;
-        public static final int add_category=0x7f06006b;
-        public static final int add_cost=0x7f06006c;
+        public static final int add_category=0x7f06006c;
+        public static final int add_cost=0x7f06006d;
         public static final int always=0x7f06000d;
         public static final int beginning=0x7f060012;
         public static final int checkbox=0x7f060029;
@@ -1699,7 +1699,7 @@ containing a value of this type.
         public static final int listMode=0x7f060002;
         public static final int list_item=0x7f060025;
         public static final int middle=0x7f060013;
-        public static final int navigation_drawer=0x7f06004e;
+        public static final int navigation_drawer=0x7f06004b;
         public static final int navigation_drawer_category=0x7f060042;
         public static final int navigation_drawer_cost=0x7f060046;
         public static final int never=0x7f06000b;
@@ -1712,10 +1712,12 @@ containing a value of this type.
         public static final int radio_productive=0x7f060059;
         public static final int radio_wastage=0x7f06005a;
         public static final int relative_layout_cost_date=0x7f060060;
-        public static final int relative_layout_home_short_summary=0x7f06004f;
+        public static final int relative_layout_home_short_summary=0x7f06004c;
         public static final int relative_layout_root=0x7f060049;
-        public static final int relative_layout_short_summary=0x7f06004a;
-        public static final int relative_layout_summary=0x7f06004c;
+        public static final int relative_layout_short_summary=0x7f060068;
+        public static final int relative_layout_short_summary_section=0x7f06004a;
+        public static final int relative_layout_summary=0x7f06004e;
+        public static final int search=0x7f06006f;
         public static final int search_badge=0x7f060035;
         public static final int search_bar=0x7f060034;
         public static final int search_button=0x7f060036;
@@ -1735,9 +1737,9 @@ containing a value of this type.
         public static final int split_action_bar=0x7f060019;
         public static final int submit_area=0x7f06003c;
         public static final int tabMode=0x7f060003;
-        public static final int text1=0x7f060068;
-        public static final int text2=0x7f06006a;
-        public static final int text3=0x7f060069;
+        public static final int text1=0x7f060069;
+        public static final int text2=0x7f06006b;
+        public static final int text3=0x7f06006a;
         public static final int textView_category_name=0x7f060055;
         public static final int textView_category_status=0x7f060041;
         public static final int textView_category_type=0x7f060058;
@@ -1746,8 +1748,8 @@ containing a value of this type.
         public static final int textView_cost_status=0x7f060045;
         public static final int textView_summary_effective_cost=0x7f060051;
         public static final int textView_summary_effective_cost_status=0x7f060052;
-        public static final int textView_summary_status=0x7f06004b;
-        public static final int textView_summary_total_cost=0x7f06004d;
+        public static final int textView_summary_status=0x7f06004d;
+        public static final int textView_summary_total_cost=0x7f06004f;
         public static final int textView_summary_total_cost_status=0x7f060050;
         public static final int textView_summary_wastage_cost=0x7f060053;
         public static final int textView_summary_wastage_cost_status=0x7f060054;
@@ -1818,18 +1820,20 @@ containing a value of this type.
         public static final int fragment_navigation_drawer=0x7f030020;
         public static final int home_short_summary_design=0x7f030021;
         public static final int list_cost_amount_design=0x7f030022;
-        public static final int spinner_item=0x7f030023;
-        public static final int summary_effective_amount_design=0x7f030024;
-        public static final int summary_total_amount_design=0x7f030025;
-        public static final int summary_wastage_amount_design=0x7f030026;
-        public static final int support_simple_spinner_dropdown_item=0x7f030027;
-        public static final int two_item=0x7f030028;
+        public static final int short_status_layout=0x7f030023;
+        public static final int spinner_item=0x7f030024;
+        public static final int summary_effective_amount_design=0x7f030025;
+        public static final int summary_total_amount_design=0x7f030026;
+        public static final int summary_wastage_amount_design=0x7f030027;
+        public static final int support_simple_spinner_dropdown_item=0x7f030028;
+        public static final int two_item=0x7f030029;
     }
     public static final class menu {
         public static final int category=0x7f0d0000;
         public static final int cost=0x7f0d0001;
         public static final int global=0x7f0d0002;
         public static final int home=0x7f0d0003;
+        public static final int report=0x7f0d0004;
     }
     public static final class raw {
         public static final int ormlite_config=0x7f050000;
@@ -1893,65 +1897,69 @@ containing a value of this type.
         public static final int abc_toolbar_collapse_description=0x7f0b0004;
         public static final int action_example=0x7f0b0017;
         public static final int action_settings=0x7f0b0018;
-        public static final int add_new_category=0x7f0b0025;
-        public static final int add_new_cost=0x7f0b0037;
+        public static final int add_new_category=0x7f0b0026;
+        public static final int add_new_cost=0x7f0b0038;
         public static final int app_name=0x7f0b0010;
-        public static final int cancel=0x7f0b0024;
-        public static final int category_name=0x7f0b0020;
-        public static final int category_name_missing=0x7f0b002b;
-        public static final int category_status=0x7f0b002e;
-        public static final int category_type=0x7f0b0021;
-        public static final int cost_amount=0x7f0b0035;
-        public static final int cost_amount_missing=0x7f0b003c;
-        /**  Category screen 
-         */
-        public static final int cost_category=0x7f0b001f;
-        public static final int cost_category_missing=0x7f0b003b;
-        public static final int cost_date=0x7f0b0036;
-        public static final int cost_status=0x7f0b003f;
-        public static final int delete=0x7f0b001e;
-        public static final int delete_category=0x7f0b0027;
-        public static final int delete_category_are_u_sure=0x7f0b0028;
-        public static final int delete_category_failed=0x7f0b0031;
-        public static final int delete_category_success=0x7f0b0030;
-        public static final int delete_cost=0x7f0b0039;
-        public static final int delete_cost_are_u_sure=0x7f0b003a;
-        public static final int delete_cost_failed=0x7f0b0042;
-        public static final int delete_cost_success=0x7f0b0041;
-        public static final int edit=0x7f0b001d;
-        public static final int edit_category=0x7f0b0026;
-        public static final int edit_cost=0x7f0b0038;
-        public static final int error=0x7f0b001c;
-        public static final int hello_world=0x7f0b001b;
+        public static final int cancel=0x7f0b0025;
+        public static final int category_name=0x7f0b0021;
+        public static final int category_name_missing=0x7f0b002c;
+        public static final int category_status=0x7f0b002f;
+        public static final int category_type=0x7f0b0022;
+        public static final int cost_amount=0x7f0b0036;
+        public static final int cost_amount_missing=0x7f0b003d;
+        public static final int cost_category=0x7f0b0020;
+        public static final int cost_category_missing=0x7f0b003c;
+        public static final int cost_date=0x7f0b0037;
+        public static final int cost_status=0x7f0b0040;
+        public static final int delete=0x7f0b001d;
+        public static final int delete_category=0x7f0b0028;
+        public static final int delete_category_are_u_sure=0x7f0b0029;
+        public static final int delete_category_failed=0x7f0b0032;
+        public static final int delete_category_success=0x7f0b0031;
+        public static final int delete_cost=0x7f0b003a;
+        public static final int delete_cost_are_u_sure=0x7f0b003b;
+        public static final int delete_cost_failed=0x7f0b0043;
+        public static final int delete_cost_success=0x7f0b0042;
+        public static final int edit=0x7f0b001c;
+        public static final int edit_category=0x7f0b0027;
+        public static final int edit_cost=0x7f0b0039;
+        public static final int error=0x7f0b001b;
+        public static final int hello_world=0x7f0b001a;
         public static final int main_menu1=0x7f0b0011;
         public static final int main_menu2=0x7f0b0012;
         public static final int main_menu3=0x7f0b0013;
         public static final int main_menu4=0x7f0b0014;
         public static final int navigation_drawer_close=0x7f0b0016;
         public static final int navigation_drawer_open=0x7f0b0015;
-        public static final int new_category=0x7f0b0022;
-        public static final int new_cost=0x7f0b0034;
-        public static final int not_found_category=0x7f0b002f;
-        public static final int not_found_cost=0x7f0b0040;
-        public static final int pick_date=0x7f0b0043;
-        public static final int productive=0x7f0b0029;
-        public static final int save=0x7f0b0023;
-        public static final int save_category_failed=0x7f0b002d;
-        public static final int save_category_success=0x7f0b002c;
-        public static final int save_cost_failed=0x7f0b003e;
-        public static final int save_cost_success=0x7f0b003d;
-        public static final int select_category=0x7f0b0032;
+        public static final int new_category=0x7f0b0023;
+        public static final int new_cost=0x7f0b0035;
+        public static final int not_found_category=0x7f0b0030;
+        public static final int not_found_cost=0x7f0b0041;
+        public static final int pick_date=0x7f0b0044;
+        public static final int productive=0x7f0b002a;
+        public static final int save=0x7f0b0024;
+        public static final int save_category_failed=0x7f0b002e;
+        public static final int save_category_success=0x7f0b002d;
+        public static final int save_cost_failed=0x7f0b003f;
+        public static final int save_cost_success=0x7f0b003e;
+        public static final int search=0x7f0b001e;
+        public static final int select_category=0x7f0b0033;
         public static final int test=0x7f0b0019;
-        public static final int title_activity_category=0x7f0b001a;
+        /**  Category screen 
+         */
+        public static final int title_activity_category=0x7f0b001f;
         /**  Cost screen 
          */
-        public static final int title_activity_cost=0x7f0b0033;
+        public static final int title_activity_cost=0x7f0b0034;
+        /**  Daily Report 
+         */
+        public static final int title_daily_report=0x7f0b0048;
         /**  Home screen 
          */
-        public static final int title_home_screen=0x7f0b0044;
-        public static final int today_top_date_text=0x7f0b0045;
-        public static final int total_cost=0x7f0b0046;
-        public static final int wastage=0x7f0b002a;
+        public static final int title_home_screen=0x7f0b0045;
+        public static final int today_top_date_text=0x7f0b0046;
+        public static final int total_cost=0x7f0b0047;
+        public static final int wastage=0x7f0b002b;
     }
     public static final class style {
         /** 

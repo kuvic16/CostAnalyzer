@@ -18,26 +18,11 @@
         android:orientation="vertical" >
         
         <RelativeLayout
-    		android:id="@+id/relative_layout_short_summary"
-			style="@style/relativeLayoutShortSummaryStyle">
-            
-            <TextView
-				android:id="@+id/textView_summary_status"
-				style="@style/textViewSummaryStatusStyle"/>
-            
-            <RelativeLayout
-	    		android:id="@+id/relative_layout_summary"
-	    		android:layout_below="@+id/textView_summary_status"
-				style="@style/relativeLayoutSummaryStyle">
-            
-                <TextView
-					android:id="@+id/textView_summary_total_cost"
-					android:layout_alignParentLeft="true"
-					android:background="@layout/summary_total_amount_design"
-					style="@style/textViewSummaryCostStyle"/>
-	            
-	            
-            </RelativeLayout>
+    		android:id="@+id/relative_layout_short_summary_section"
+    		android:layout_width="fill_parent"
+        	android:layout_height="wrap_content">
+        	
+            <include layout="@layout/short_status_layout"/>        	
         </RelativeLayout>
 
         <TextView
@@ -45,7 +30,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/relative_layout_short_summary"
+            android:layout_below="@+id/relative_layout_short_summary_section"
             android:background="#FFA07A"
             android:padding="5dp"
             android:paddingTop="0dp"
@@ -56,6 +41,8 @@
             android:id="@android:id/list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:clickable="false"
+            android:listSelector="@android:color/transparent"
             android:layout_below="@+id/textView_cost_status" />
     </RelativeLayout>
     
