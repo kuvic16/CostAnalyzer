@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Cost Analyzer</string>
+    <string name="app_name">Cost analyzer</string>
     <string name="main_menu1">Home</string>
     <string name="main_menu2">Cost category</string>
     <string name="main_menu3">Cost history</string>
     <string name="main_menu4">Daily report</string>
+    <string name="main_menu5">Weekly report</string>
+    <string name="main_menu6">Monthly report</string>
+    <string name="main_menu7">Yearly report</string>
+    <string name="main_menu8">Total report</string>
+    <string name="main_menu9">Transaction</string>
+    <string name="main_menu10">Help</string>
+    <string name="main_menu11">About VLab</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -68,5 +75,10 @@
 	<string name="title_daily_report">Daily report</string>
 	<string name="category_wise_cost_status">Category wise cost listed below. Total category cost entry: %s</string>
 	
+	<!-- Weekly Report -->
+	<string name="title_weekly_report">Weekly report</string>
+	
+	<!-- Total Report -->
+	<string name="title_total_report">Total report</string>
 	
 </resources>

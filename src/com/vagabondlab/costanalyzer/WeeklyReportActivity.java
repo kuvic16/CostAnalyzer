@@ -50,7 +50,7 @@ import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
 
 @SuppressLint({ "ClickableViewAccessibility", "DefaultLocale" })
-public class DailyReportActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks, DateSetListener
+public class WeeklyReportActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks, DateSetListener
 																		{
 
 	private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -115,7 +115,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		case 3:
-			i = new Intent(getApplicationContext(),DailyReportActivity.class);
+			i = new Intent(getApplicationContext(),WeeklyReportActivity.class);
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		}
@@ -418,7 +418,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 		
 		@Override
 		public void onAnimationStart(Animator arg0) {
-			mProgressDialog = ProgressDialog.show(DailyReportActivity.this, "Please wait ...", "Loading...", true);
+			mProgressDialog = ProgressDialog.show(WeeklyReportActivity.this, "Please wait ...", "Loading...", true);
 			mProgressDialog.setCancelable(true);
 		}
 		

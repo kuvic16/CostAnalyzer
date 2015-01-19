@@ -459,6 +459,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		case 3:
+			i = new Intent(getApplicationContext(),DailyReportActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		}
 	}
