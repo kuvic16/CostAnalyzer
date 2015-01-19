@@ -68,7 +68,7 @@
 	
 	<!-- Home screen -->
 	<string name="title_home_screen">Cost analyzer</string>
-	<string name="today_top_date_text">Today %s</string>
+	<string name="page_top_date_text">Today %s</string>
 	<string name="total_cost">Total Cost</string>
 	
 	<!-- Daily Report -->
@@ -80,5 +80,6 @@
 	
 	<!-- Total Report -->
 	<string name="title_total_report">Total report</string>
+	
 	
 </resources>

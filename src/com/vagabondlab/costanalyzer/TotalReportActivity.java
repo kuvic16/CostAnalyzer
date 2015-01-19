@@ -73,7 +73,7 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_total_report);
-		setTitle(getString(R.string.title_daily_report));
+		setTitle(getString(R.string.title_total_report));
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
@@ -88,7 +88,7 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 			ListView mList = (ListView)findViewById(android.R.id.list);
 			mList.setOnTouchListener(shortSummarySwipeListener);
 			
-			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+			loadCostList(null, null);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -216,11 +216,11 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 	}
 	
 		
-	private void loadCostList(String date){
+	private void loadCostList(String startDate, String endDate){
 		try {
-			mCurrentDate = date;
-			loadQuickView(date);
-			List<String[]>  costList = costService.getTotalCostGroupByCategory(mCurrentDate);
+			//mCurrentDate = date;
+			loadQuickView(startDate, endDate);
+			List<String[]>  costList = costService.getTotalCostGroupByCategory(startDate, endDate);
 			loadUI(costList, costList.size()); 
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
@@ -262,14 +262,14 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 		}
 	}
 	
-	private void loadQuickView(String date){
+	private void loadQuickView(String startDate, String endDate){
 		try{
 			String today = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
 			Double productiveCost = 0.0;
 			Double wastageCost = 0.0;
 			totalCost = 0.0;
 			
-			List<String[]> costListGroupByType = costService.getTotalCostGroupByType(date);
+			List<String[]> costListGroupByType = costService.getTotalCostGroupByType(startDate, endDate);
 			if(IUtil.isNotBlank(costListGroupByType)){
 				for(String[] costs : costListGroupByType){
 					try{
@@ -304,14 +304,14 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 //				textViewWastageCostStatus.setText(getString(R.string.wastage) + " " + String.valueOf(wastagePercantage) + "%");
 //			}
 			
-			String dateStatus = "";			
-			if(date.equalsIgnoreCase(today)){
-				dateStatus = getString(R.string.today_top_date_text, IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy"));
-			}else{
-				dateStatus = IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy");
-			}
-			TextView topDateText = (TextView)findViewById(R.id.textView_summary_status);
-			topDateText.setText(dateStatus);
+//			String dateStatus = "";			
+//			if(date.equalsIgnoreCase(today)){
+//				dateStatus = getString(R.string.page_top_date_text, IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy"));
+//			}else{
+//				dateStatus = IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy");
+//			}
+//			TextView topDateText = (TextView)findViewById(R.id.textView_summary_status);
+//			topDateText.setText(dateStatus);
 						
 		}catch(Throwable t){
 			t.printStackTrace();
@@ -395,7 +395,7 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 		dateTime = dateTime.plusDays(-1);
 		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
 		String newDate = fmt.print(dateTime);
-		loadCostList(newDate);
+		//loadCostList(newDate);
 		
 	}
 	
@@ -411,7 +411,7 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 		dateTime = dateTime.plusDays(1);
 		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
 		String newDate = fmt.print(dateTime);
-		loadCostList(newDate);
+		//loadCostList(newDate);
 	}
 	
 	AnimatorListener animatorListener = new AnimatorListener() {
@@ -451,7 +451,7 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 		.withListener(animatorListener)
 		.playOn(findViewById(R.id.relative_layout_root));
 	
-		loadCostList(date);
+		//loadCostList(date);
 	}
 	
 }

@@ -45,5 +45,10 @@
             android:configChanges="orientation"
             android:label="@string/title_weekly_report" >
         </activity>
+        <activity
+            android:name=".TotalReportActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_total_report" >
+        </activity>
     </application>
 </manifest>

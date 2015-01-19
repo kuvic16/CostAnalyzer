@@ -306,7 +306,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 			
 			String dateStatus = "";			
 			if(date.equalsIgnoreCase(today)){
-				dateStatus = getString(R.string.today_top_date_text, IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy"));
+				dateStatus = getString(R.string.page_top_date_text, IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy"));
 			}else{
 				dateStatus = IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy");
 			}

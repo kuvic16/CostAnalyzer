@@ -143,6 +143,10 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 			i = new Intent(getApplicationContext(),WeeklyReportActivity.class);
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
+		case 7:
+			i = new Intent(getApplicationContext(),TotalReportActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+			break;
 		}
 	}
 	
@@ -547,7 +551,7 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 			
 			String dateStatus = "";			
 			if(date.equalsIgnoreCase(today)){
-				dateStatus = getString(R.string.today_top_date_text, IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy"));
+				dateStatus = getString(R.string.page_top_date_text, IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy"));
 			}else{
 				dateStatus = IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy");
 			}

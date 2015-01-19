@@ -1949,6 +1949,7 @@ containing a value of this type.
         public static final int new_cost=0x7f0b003c;
         public static final int not_found_category=0x7f0b0037;
         public static final int not_found_cost=0x7f0b0048;
+        public static final int page_top_date_text=0x7f0b004d;
         public static final int pick_date=0x7f0b004b;
         public static final int productive=0x7f0b0031;
         public static final int save=0x7f0b002b;
@@ -1977,7 +1978,6 @@ containing a value of this type.
         /**  Weekly Report 
          */
         public static final int title_weekly_report=0x7f0b0051;
-        public static final int today_top_date_text=0x7f0b004d;
         public static final int total_cost=0x7f0b004e;
         public static final int wastage=0x7f0b0032;
     }

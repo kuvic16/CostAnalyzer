@@ -119,6 +119,40 @@ public class CostService{
 		return null;
 	}
 	
+	public List<String[]> getTotalCostGroupByType(String startDate, String endDate){
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("select ca.type, sum(co.amount) from cost as co join category ca on co.category_id=ca.id ");
+			
+			boolean andNeed = false;
+			if(IUtil.isNotBlank(startDate)){
+				jql.append(" where ");
+				jql.append(" co.date >= '").append(startDate).append("'");
+				andNeed = true;
+			}
+			
+			if(IUtil.isNotBlank(endDate)){
+				if(andNeed){
+					jql.append(" and ");
+				}else{
+					jql.append(" where ");
+				}
+				jql.append(" co.date <= '").append(endDate).append("'");
+				andNeed = true;
+			}
+			
+			jql.append(" group by ca.type");
+			
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			return results;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public List<String[]> getTotalCostGroupByCategory(String costDate){
 		GenericRawResults<String[]> rawResults;
 		try {
@@ -129,6 +163,40 @@ public class CostService{
 				jql.append(" where ");
 				jql.append(" co.date = '").append(costDate).append("'");
 			}
+			jql.append(" group by co.category_id order by total desc");
+			
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			return results;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List<String[]> getTotalCostGroupByCategory(String startDate, String endDate){
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("select ca.name, count(*), sum(co.amount) as total,ca.type from cost as co join category ca on co.category_id=ca.id ");
+			
+			boolean andNeed = false;
+			if(IUtil.isNotBlank(startDate)){
+				jql.append(" where ");
+				jql.append(" co.date >= '").append(startDate).append("'");
+				andNeed = true;
+			}
+			
+			if(IUtil.isNotBlank(endDate)){
+				if(andNeed){
+					jql.append(" and ");
+				}else{
+					jql.append(" where ");
+				}
+				jql.append(" co.date <= '").append(endDate).append("'");
+				andNeed = true;
+			}
+			
 			jql.append(" group by co.category_id order by total desc");
 			
 			rawResults = em.queryRaw(jql.toString());
