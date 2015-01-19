@@ -66,6 +66,7 @@
 	
 	<!-- Daily Report -->
 	<string name="title_daily_report">Daily report</string>
+	<string name="category_wise_cost_status">Category wise cost listed below. Total category cost entry: %s</string>
 	
 	
 </resources>

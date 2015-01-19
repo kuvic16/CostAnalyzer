@@ -123,13 +123,13 @@ public class CostService{
 		GenericRawResults<String[]> rawResults;
 		try {
 			StringBuilder jql = new StringBuilder();
-			jql.append("select ca.name, count(*), sum(co.amount) from cost as co join category ca on co.category_id=ca.id ");
+			jql.append("select ca.name, count(*), sum(co.amount) as total,ca.type from cost as co join category ca on co.category_id=ca.id ");
 			
 			if(IUtil.isNotBlank(costDate)){
 				jql.append(" where ");
 				jql.append(" co.date = '").append(costDate).append("'");
 			}
-			jql.append(" group by co.category_id");
+			jql.append(" group by co.category_id order by total desc");
 			
 			rawResults = em.queryRaw(jql.toString());
 			List<String[]> results = rawResults.getResults();

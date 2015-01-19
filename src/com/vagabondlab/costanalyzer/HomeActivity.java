@@ -470,7 +470,7 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 				infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
 				infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));
 				infoMap.put("cost_category_name", cost.getCategory().getName());
-				
+				 
 				String info = cost.getCategory().getType();
 				if(IUtil.isNotBlank(cost.getCreated_date())){
 					Date date = IUtil.getDate(cost.getCreated_date(), IUtil.DATE_FORMAT);

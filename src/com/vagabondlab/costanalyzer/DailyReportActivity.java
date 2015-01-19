@@ -13,33 +13,28 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
-import android.view.ContextMenu;
-import android.view.LayoutInflater;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -48,45 +43,37 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.vagabondlab.costanalyzer.database.DatabaseHelper;
-import com.vagabondlab.costanalyzer.database.entity.Category;
-import com.vagabondlab.costanalyzer.database.entity.Cost;
-import com.vagabondlab.costanalyzer.database.service.CategoryService;
 import com.vagabondlab.costanalyzer.database.service.CostService;
+import com.vagabondlab.costanalyzer.utilities.DatePickerFragment;
+import com.vagabondlab.costanalyzer.utilities.DatePickerFragment.DateSetListener;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.animation.AccelerateDecelerateInterpolator;
 
-public class DailyReportActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks {
+import android.app.DatePickerDialog;
+
+
+@SuppressLint({ "ClickableViewAccessibility", "DefaultLocale" })
+public class DailyReportActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks, DateSetListener
+																		{
 
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private DatabaseHelper databaseHelper = null;
-	private CategoryService categoryService;
 	private CostService costService;
-	
-	private Spinner mCategoryName;
-	private EditText mCostAmount;
-	private DatePicker mCostDatePicker;
-
 	private TextView mCostStatus;
-	
 	private List<Map<String, String>> mCostListdata = new ArrayList<Map<String, String>>();
-	private String[] spinnerArray;
-	private ArrayAdapter<String> spinnerAdapter;
 	
-	private int selectedCostId;
-	private String selectedCostName;
-
 	private CharSequence mTitle;
 	private boolean firstTime = true;
-	private int action = 0;
 	private GestureDetector mGestureDetector;
 	private RelativeLayout mRLShortSummary;
 	private String mCurrentDate;
 	private ProgressDialog mProgressDialog = null;
 	
+	private Double totalCost = 0.0;
+	private DatePickerDialog fromDatePickerDialog;
+	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -98,14 +85,13 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
 		
 		try { 
-			categoryService = new CategoryService(getHelper().getCategoryDao());
 			costService = new CostService(getHelper().getCostDao());
 			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
 			mGestureDetector = new GestureDetector(this);
 			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
 			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
-			
-			
+			ListView mList = (ListView)findViewById(android.R.id.list);
+			mList.setOnTouchListener(shortSummarySwipeListener);
 			
 			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
 		} catch (SQLException e) {
@@ -122,7 +108,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 		
 		switch (position) {
 		case 0:
-			Intent i = new Intent(getApplicationContext(),DailyReportActivity.class);
+			Intent i = new Intent(getApplicationContext(),HomeActivity.class);
 			startActivity(i);
 			break;
 		case 1:
@@ -203,16 +189,28 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 		}
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+	
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.search) {
-			
-			return true;
+			DialogFragment newFragment = new DatePickerFragment();
+		    newFragment.show(getSupportFragmentManager(), "datePicker");
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+//	private void showCalenderDialog(){
+//		final Calendar c = Calendar.getInstance();
+//        int year = c.get(Calendar.YEAR);
+//        int month = c.get(Calendar.MONTH);
+//        int day = c.get(Calendar.DAY_OF_MONTH);
+//
+//        // Create a new instance of DatePickerDialog and return it
+//        return new DatePickerDialog(getActivity(), this, year, month, day);
+//	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -228,7 +226,6 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 			mCurrentDate = date;
 			loadQuickView(date);
 			List<String[]>  costList = costService.getTotalCostGroupByCategory(mCurrentDate);
-			ViewUtil.showMessage(getApplicationContext(), "size: " + costList.size());
 			loadUI(costList, costList.size()); 
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
@@ -237,31 +234,33 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 
 	private void loadUI(List<String[]> costList, long total) {
 		try {
-			mCostStatus.setText(getString(R.string.cost_status, total));
+			mCostStatus.setText(getString(R.string.category_wise_cost_status, total));
 			mCostListdata = new ArrayList<Map<String,String>>();
 			for (String[] costs : costList) {
 				Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("id", "");
-				
-				infoMap.put("cost_day", costs[1]);
-				infoMap.put("cost_month", "");
 				infoMap.put("cost_category_name", costs[0]);
 				
-				String info = "";
+				String info = costs[3] + "\n" + costs[1] + " time happened";
 				infoMap.put("cost_category_type_and_time", info);
 				infoMap.put("cost_amount", costs[2]);
+				Double cost = Double.valueOf(costs[2]);
+				Double costPercantage = 0.0;
+				if (totalCost != 0 && cost != 0) {
+					costPercantage = (cost * 100)/ totalCost;					
+				}
+				String result = String.format("%.1f", costPercantage); 
+				infoMap.put("cost_percantage", result + "%");
 				mCostListdata.add(infoMap);
 			}
 			
 			SimpleAdapter adapter = new SimpleAdapter( 
 					this, 
 					mCostListdata,
-					R.layout.cost_list_view, 
-					new String[] {"id", "cost_day","cost_month", "cost_category_name", "cost_category_type_and_time", "cost_amount" }, 
-					new int[] { R.id.cost_list_row_id, R.id.cost_date_day, R.id.cost_date_month, R.id.cost_category_name, R.id.cost_type_and_time, R.id.cost_amount 
+					R.layout.category_wise_cost_list_view, 
+					new String[] {"cost_category_name", "cost_category_type_and_time", "cost_amount", "cost_percantage" }, 
+					new int[] { R.id.cost_category_name, R.id.cost_type_and_time, R.id.cost_amount, R.id.cost_amount_percent 
 			});
 			setListAdapter(adapter);
-			//getListView().setChoiceMode(ListView.INVISIBLE);
 			getListView().setItemsCanFocus(false);
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
@@ -273,6 +272,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 			String today = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
 			Double productiveCost = 0.0;
 			Double wastageCost = 0.0;
+			totalCost = 0.0;
 			
 			List<String[]> costListGroupByType = costService.getTotalCostGroupByType(date);
 			if(IUtil.isNotBlank(costListGroupByType)){
@@ -289,7 +289,7 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 				}
 			}
 			
-			Double totalCost = productiveCost + wastageCost;
+			totalCost = productiveCost + wastageCost;
 			TextView textViewTotalCost = (TextView)findViewById(R.id.textView_summary_total_cost);
 			textViewTotalCost.setText(String.valueOf(totalCost.intValue()));
 			
@@ -447,5 +447,16 @@ public class DailyReportActivity extends ActionBarActivity implements OnGestureL
 			}
 		}
 	};
+
+	@Override
+	public void returnDate(String date) {
+		YoYo.with(Techniques.SlideInDown)
+		.duration(500)
+		.interpolate(new AccelerateDecelerateInterpolator())
+		.withListener(animatorListener)
+		.playOn(findViewById(R.id.relative_layout_root));
+	
+		loadCostList(date);
+	}
 	
 }

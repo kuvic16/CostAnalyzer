@@ -34,7 +34,7 @@
             android:background="#FFA07A"
             android:padding="5dp"
             android:paddingTop="0dp"
-            android:text="@string/cost_status"
+            android:text="@string/category_wise_cost_status"
             android:textSize="12sp" />
 
         <ListView

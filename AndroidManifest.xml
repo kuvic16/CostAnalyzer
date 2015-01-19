@@ -18,21 +18,27 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name=".HomeActivity"
+            android:configChanges="orientation"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".CategoryActivity"
-            android:label="@string/title_activity_category" >
+            android:configChanges="orientation"
+            android:label="@string/title_activity_category" >            
         </activity>
         <activity
             android:name=".CostActivity"
-            android:label="@string/title_activity_category" >
+            android:configChanges="orientation"
+            android:label="@string/title_activity_cost" >
+        </activity>
+        <activity
+            android:name=".DailyReportActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_daily_report" >
         </activity>
     </application>
-
 </manifest>

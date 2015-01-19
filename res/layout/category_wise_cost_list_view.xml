@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/relative_layout_category_wise_cost_list"
+	android:layout_width="fill_parent"
+	android:layout_height="60dip"
+	android:paddingRight="8dip"
+	android:paddingLeft="8dip"
+	android:paddingTop="5dip"
+	android:paddingBottom="5dip"
+	android:minHeight="?android:attr/listPreferredItemHeight">
+
+    <TextView
+			android:id="@+id/cost_category_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:textColor="#000000"
+			android:textSize="20sp"
+			android:text="Lunch"
+			android:textAppearance="?android:attr/textAppearanceLarge"/>
+    
+    <TextView
+			android:id="@+id/cost_type_and_time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:layout_below="@+id/cost_category_name"
+			android:layout_alignParentLeft="true"
+			android:textColor="#000000"
+			android:textSize="12sp"
+			android:text="Productive"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+    
+    <TextView
+			android:id="@+id/cost_amount"
+			android:layout_width="50dip"
+			android:layout_height="fill_parent"
+			android:gravity="center"
+			android:layout_alignParentTop="true"
+			android:layout_toLeftOf="@+id/cost_amount_percent"
+			android:background="@layout/list_cost_amount_design"
+			android:textColor="#ffffff"
+			android:textStyle="bold"
+			android:text="10000000"
+			android:layout_marginRight="3dip"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+    
+    <TextView
+			android:id="@+id/cost_amount_percent"
+			android:layout_width="50dip"
+			android:layout_height="fill_parent"
+			android:gravity="center"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentRight="true"
+			android:background="@layout/list_cost_amount_percant_design"
+			android:textColor="#ffffff"
+			android:textStyle="bold"
+			android:text="100%"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+</RelativeLayout>
