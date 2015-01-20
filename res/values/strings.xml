@@ -79,6 +79,7 @@
 	
 	<!-- Weekly Report -->
 	<string name="title_weekly_report">Weekly report</string>
+	<string name="weeks">Weeks</string>
 	
 	<!-- Total Report -->
 	<string name="title_total_report">Total report</string>

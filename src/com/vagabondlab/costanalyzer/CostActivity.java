@@ -462,6 +462,14 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			i = new Intent(getApplicationContext(),DailyReportActivity.class);
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
+		case 4:
+			i = new Intent(getApplicationContext(),WeeklyReportActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+			break;
+		case 7:
+			i = new Intent(getApplicationContext(),TotalReportActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+			break;
 		}
 	}
 	

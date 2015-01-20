@@ -68,8 +68,27 @@
 		<item name="android:gravity">center</item>
 		<item name="android:textColor">#000000</item>
 		<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
-		
+	</style>
+	
+  	<style name="textViewWeeklySummaryCostStyle">
+  	    <item name="android:layout_width">60dip</item>
+		<item name="android:layout_height">60dip</item>
+		<item name="android:layout_margin">2dip</item>
+		<item name="android:layout_marginBottom">0dip</item>
+		<item name="android:gravity">center</item>
+		<item name="android:textColor">#FFFFFF</item>
+		<item name="android:text"></item>
+		<item name="android:layout_alignParentTop">true</item>
+		<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
   	</style>
+  	<style name="textViewWeeklySummaryCostStatusStyle">
+    	<item name="android:layout_width">60dip</item>
+		<item name="android:layout_height">wrap_content</item>
+		<item name="android:gravity">center</item>
+		<item name="android:textColor">#000000</item>
+		<item name="android:textSize">12sp</item>
+		<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+	</style>
   	
   	<!-- 1:end -->
 

@@ -72,26 +72,26 @@ public class WeeklyReportActivity extends ActionBarActivity implements OnGesture
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_daily_report);
-		setTitle(getString(R.string.title_daily_report));
+		setContentView(R.layout.activity_weekly_report);
+		setTitle(getString(R.string.title_weekly_report));
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
 		
-		try { 
-			costService = new CostService(getHelper().getCostDao());
-			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
-			mGestureDetector = new GestureDetector(this);
-			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
-			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
-			ListView mList = (ListView)findViewById(android.R.id.list);
-			mList.setOnTouchListener(shortSummarySwipeListener);
-			
-			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+//		try { 
+//			costService = new CostService(getHelper().getCostDao());
+//			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
+//			mGestureDetector = new GestureDetector(this);
+//			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
+//			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
+//			ListView mList = (ListView)findViewById(android.R.id.list);
+//			mList.setOnTouchListener(shortSummarySwipeListener);
+//			
+//			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	@Override
@@ -115,7 +115,15 @@ public class WeeklyReportActivity extends ActionBarActivity implements OnGesture
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		case 3:
+			i = new Intent(getApplicationContext(),DailyReportActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+			break;
+		case 4:
 			i = new Intent(getApplicationContext(),WeeklyReportActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+			break;
+		case 7:
+			i = new Intent(getApplicationContext(),TotalReportActivity.class);
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		}

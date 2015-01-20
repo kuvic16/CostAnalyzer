@@ -18,11 +18,86 @@
         android:orientation="vertical" >
         
         <RelativeLayout
+    		android:id="@+id/relative_layout_week_menu_section"
+    		android:layout_width="80dip"
+        	android:layout_height="fill_parent"
+        	android:layout_alignParentLeft="true"
+        	android:layout_alignParentTop="true">
+        	<TextView
+	            android:id="@+id/textView_week_status"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_alignParentLeft="true"
+	            android:background="#FFA07A"
+	            android:padding="5dp"
+	            android:paddingTop="0dp"
+	            android:text="@string/weeks"
+	            android:gravity="center"
+	            android:textSize="12sp" />
+            
+        	<ListView
+	            android:id="@android:id/list"
+	            android:layout_width="fill_parent"
+	            android:layout_height="fill_parent"
+	            android:clickable="false"
+	            android:listSelector="@android:color/transparent"
+	            android:layout_below="@+id/textView_week_status" />
+        </RelativeLayout>
+        <RelativeLayout
+    		android:id="@+id/relative_layout_week_details_section"
+    		android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+        	android:layout_toRightOf="@id/relative_layout_week_menu_section"
+        	android:layout_alignParentTop="true"
+        	>
+            <RelativeLayout
+	    		android:id="@+id/relative_layout_short_summary_section"
+	    		android:layout_alignParentTop="true"
+	    		android:layout_width="fill_parent"
+	        	android:layout_height="wrap_content">
+	        	<include layout="@layout/weekly_short_status_layout"/>        	
+        	</RelativeLayout>
+        	<ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/relative_layout_short_summary_section"
+                 >
+
+                <TableLayout
+                    android:id="@+id/weekTable"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:stretchColumns="1" >
+
+                    <TableRow android:background="#33CCCC" >
+
+                        <TextView
+                            android:padding="3dip"
+                            android:text="Day" />
+
+                        <TextView
+                            android:gravity="right"
+                            android:padding="3dip"
+                            android:text="Amount" />
+                    </TableRow>
+
+                    <View
+                        android:id="@+id/separator"
+                        android:layout_width="fill_parent"
+                        android:layout_height="0.2dp"
+                        android:background="@android:color/darker_gray"
+                        android:visibility="visible" />
+                </TableLayout>
+            </ScrollView>
+
+        </RelativeLayout>
+        
+        <!-- 
+        <RelativeLayout
     		android:id="@+id/relative_layout_short_summary_section"
     		android:layout_width="fill_parent"
         	android:layout_height="wrap_content">
-        	
-            <include layout="@layout/short_status_layout"/>        	
+        	<include layout="@layout/short_status_layout"/>        	
         </RelativeLayout>
 
         <TextView
@@ -43,7 +118,7 @@
             android:layout_height="fill_parent"
             android:clickable="false"
             android:listSelector="@android:color/transparent"
-            android:layout_below="@+id/textView_cost_status" />
+            android:layout_below="@+id/textView_cost_status" /> -->
     </RelativeLayout>
     
     <fragment
