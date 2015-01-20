@@ -70,6 +70,8 @@
 	<string name="title_home_screen">Cost analyzer</string>
 	<string name="page_top_date_text">Today %s</string>
 	<string name="total_cost">Total Cost</string>
+	<string name="productive_cost_status">All productive cost listed below. Total cost entry: %s</string>
+	<string name="wastage_cost_status">All wastage cost listed below. Total cost entry: %s</string>
 	
 	<!-- Daily Report -->
 	<string name="title_daily_report">Daily report</string>

@@ -83,10 +83,10 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 			costService = new CostService(getHelper().getCostDao());
 			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
 			mGestureDetector = new GestureDetector(this);
-			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
-			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
-			ListView mList = (ListView)findViewById(android.R.id.list);
-			mList.setOnTouchListener(shortSummarySwipeListener);
+			//mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
+			//mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
+			//ListView mList = (ListView)findViewById(android.R.id.list);
+			//mList.setOnTouchListener(shortSummarySwipeListener);
 			
 			loadCostList(null, null);
 		} catch (SQLException e) {

@@ -1911,7 +1911,7 @@ containing a value of this type.
         public static final int category_name_missing=0x7f0b0033;
         public static final int category_status=0x7f0b0036;
         public static final int category_type=0x7f0b0029;
-        public static final int category_wise_cost_status=0x7f0b0050;
+        public static final int category_wise_cost_status=0x7f0b0052;
         public static final int cost_amount=0x7f0b003d;
         public static final int cost_amount_missing=0x7f0b0044;
         public static final int cost_category=0x7f0b0027;
@@ -1952,6 +1952,7 @@ containing a value of this type.
         public static final int page_top_date_text=0x7f0b004d;
         public static final int pick_date=0x7f0b004b;
         public static final int productive=0x7f0b0031;
+        public static final int productive_cost_status=0x7f0b004f;
         public static final int save=0x7f0b002b;
         public static final int save_category_failed=0x7f0b0035;
         public static final int save_category_success=0x7f0b0034;
@@ -1968,18 +1969,19 @@ containing a value of this type.
         public static final int title_activity_cost=0x7f0b003b;
         /**  Daily Report 
          */
-        public static final int title_daily_report=0x7f0b004f;
+        public static final int title_daily_report=0x7f0b0051;
         /**  Home screen 
          */
         public static final int title_home_screen=0x7f0b004c;
         /**  Total Report 
          */
-        public static final int title_total_report=0x7f0b0052;
+        public static final int title_total_report=0x7f0b0054;
         /**  Weekly Report 
          */
-        public static final int title_weekly_report=0x7f0b0051;
+        public static final int title_weekly_report=0x7f0b0053;
         public static final int total_cost=0x7f0b004e;
         public static final int wastage=0x7f0b0032;
+        public static final int wastage_cost_status=0x7f0b0050;
     }
     public static final class style {
         /** 

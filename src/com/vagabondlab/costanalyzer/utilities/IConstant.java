@@ -6,6 +6,7 @@ public final class IConstant {
 	public static final String CREATED_DATE = "created_date";
 	
 	public static final String COST_DATE = "date";
+	public static final String COST_TYPE = "category_type";
 	
 	public static final String CATEGORY_NAME = "name";
 	

@@ -27,11 +27,11 @@
     <style name="relativeLayoutShortSummaryStyle">
 		<item name="android:clickable">true</item>
 		<item name="android:layout_width">fill_parent</item>
-		<item name="android:layout_height">130dip</item>
+		<item name="android:layout_height">140dip</item>
 		<item name="android:background">@layout/home_short_summary_design</item>
 		<item name="android:gravity">center</item>
 		<item name="android:layout_alignParentTop">true</item>
-		<item name="android:layout_alignParentLeft">true</item>
+		<item name="android:layout_alignParentLeft">true</item>		
   	</style>
   	<style name="textViewSummaryStatusStyle">
     	<item name="android:layout_width">fill_parent</item>

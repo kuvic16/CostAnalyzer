@@ -23,13 +23,17 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.ContextMenu;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -55,10 +59,8 @@ import com.vagabondlab.costanalyzer.database.service.CostService;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.animation.AccelerateDecelerateInterpolator;
 
+@SuppressLint("ClickableViewAccessibility")
 public class HomeActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks {
 
 	private NavigationDrawerFragment mNavigationDrawerFragment;
@@ -87,6 +89,14 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 	private String mCurrentDate;
 	private ProgressDialog mProgressDialog = null;
 	
+	private TextView mTotalCostView;
+	private TextView mProductiveCostView;
+	private TextView mWastageCostView;
+	private Double productiveCost = 0.0;
+	private Double wastageCost = 0.0;
+	private Double totalCost = 0.0;
+	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -107,7 +117,17 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
 			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
 			
+			mTotalCostView = (TextView)findViewById(R.id.textView_summary_total_cost);
+			mTotalCostView.setOnClickListener(totalCostTouchListener);
+			mTotalCostView.setOnTouchListener(shortSummarySwipeListener);
 			
+			mProductiveCostView = (TextView)findViewById(R.id.textView_summary_effective_cost);
+			mProductiveCostView.setOnClickListener(productiveCostTouchListener);
+			mProductiveCostView.setOnTouchListener(shortSummarySwipeListener);
+			
+			mWastageCostView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
+			mWastageCostView.setOnClickListener(wastageCostTouchListener);
+			mWastageCostView.setOnTouchListener(shortSummarySwipeListener);
 			
 			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
 		} catch (SQLException e) {
@@ -458,38 +478,50 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 		try {
 			mCurrentDate = date;
 			loadQuickView(date);
-			List<Cost> costList = costService.searchCost(date);
-			loadUI(costList, costList.size()); 
+			loadListView(date, null); 
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
-		}		
+		}
+	}
+	
+	private void loadListView(String costDate, String costType){
+		List<Cost> costList = costService.searchCost(costDate);
+		loadUI(costList, costList.size(), costType);
 	}
 
-	private void loadUI(List<Cost> costList, long total) {
+	private void loadUI(List<Cost> costList, long total, String costType) {
 		try {
-			mCostStatus.setText(getString(R.string.cost_status, total));
 			mCostListdata = new ArrayList<Map<String,String>>();
 			for (Cost cost : costList) {
-				Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("id", String.valueOf(cost.getId()));
-				
 				categoryService.refreash(cost.getCategory());
-				Calendar costDate = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
-				infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
-				infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));
-				infoMap.put("cost_category_name", cost.getCategory().getName());
-				 
-				String info = cost.getCategory().getType();
-				if(IUtil.isNotBlank(cost.getCreated_date())){
-					Date date = IUtil.getDate(cost.getCreated_date(), IUtil.DATE_FORMAT);
-					info += "\nadded on " + date;
+				if(costType == null || costType.equalsIgnoreCase(cost.getCategory().getType())){
+				
+					Map<String, String> infoMap = new HashMap<String, String>(3);
+					infoMap.put("id", String.valueOf(cost.getId()));
+					
+					Calendar costDate = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
+					infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
+					infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));
+					infoMap.put("cost_category_name", cost.getCategory().getName());
+					 
+					String info = cost.getCategory().getType();
+					if(IUtil.isNotBlank(cost.getCreated_date())){
+						Date date = IUtil.getDate(cost.getCreated_date(), IUtil.DATE_FORMAT);
+						info += "\nadded on " + date;
+					}
+					infoMap.put("cost_category_type_and_time", info);
+					Double costAmount = cost.getAmount();
+					infoMap.put("cost_amount", String.valueOf(costAmount.intValue()));
+					mCostListdata.add(infoMap);
 				}
-				infoMap.put("cost_category_type_and_time", info);
-				Double costAmount = cost.getAmount();
-				infoMap.put("cost_amount", String.valueOf(costAmount.intValue()));
-				mCostListdata.add(infoMap);
 			}
-			
+			if(costType == null){
+				mCostStatus.setText(getString(R.string.cost_status, mCostListdata.size()));
+			}else if(costType.equalsIgnoreCase(getString(R.string.productive))){
+				mCostStatus.setText(getString(R.string.productive_cost_status, mCostListdata.size()));
+			}else if(costType.equalsIgnoreCase(getString(R.string.wastage))){
+				mCostStatus.setText(getString(R.string.wastage_cost_status, mCostListdata.size()));
+			}
 			SimpleAdapter adapter = new SimpleAdapter( 
 					this, 
 					mCostListdata,
@@ -508,8 +540,9 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 	private void loadQuickView(String date){
 		try{
 			String today = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
-			Double productiveCost = 0.0;
-			Double wastageCost = 0.0;
+			productiveCost = 0.0;
+			wastageCost = 0.0;
+			totalCost = 0.0;
 			
 			List<String[]> costListGroupByType = costService.getTotalCostGroupByType(date);
 			if(IUtil.isNotBlank(costListGroupByType)){
@@ -526,28 +559,10 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 				}
 			}
 			
-//			Double productiveCost = costService.getTotalCost(getString(R.string.productive), date);
-//			Double wastageCost = costService.getTotalCost(getString(R.string.wastage), date);
-			Double totalCost = productiveCost + wastageCost;
-			
-			TextView textViewTotalCost = (TextView)findViewById(R.id.textView_summary_total_cost);
-			textViewTotalCost.setText(String.valueOf(totalCost.intValue()));
-			
-			TextView textViewProductiveCost = (TextView)findViewById(R.id.textView_summary_effective_cost);
-			textViewProductiveCost.setText(String.valueOf(productiveCost.intValue()));
-//			if(totalCost != 0 && productiveCost != 0){
-//				TextView textViewProductiveCostStatus = (TextView)findViewById(R.id.textView_summary_effective_cost_status);
-//				int productivePercantage = (productiveCost.intValue() * 100)/totalCost.intValue();
-//				textViewProductiveCostStatus.setText(getString(R.string.productive) + "(" + String.valueOf(productivePercantage) + "%)");
-//			}
-			
-			TextView textViewWastageCost = (TextView)findViewById(R.id.textView_summary_wastage_cost);
-			textViewWastageCost.setText(String.valueOf(wastageCost.intValue()));
-//			if(totalCost != 0 && wastageCost != 0){
-//				TextView textViewWastageCostStatus = (TextView)findViewById(R.id.textView_summary_wastage_cost_status);
-//				int wastagePercantage = (wastageCost.intValue() * 100)/totalCost.intValue();
-//				textViewWastageCostStatus.setText(getString(R.string.wastage) + "(" + String.valueOf(wastagePercantage) + "%)");
-//			}
+			totalCost = productiveCost + wastageCost;
+			mTotalCostView.setText(String.valueOf(totalCost.intValue()));
+			mProductiveCostView.setText(String.valueOf(productiveCost.intValue()));
+			mWastageCostView.setText(String.valueOf(wastageCost.intValue()));
 			
 			String dateStatus = "";			
 			if(date.equalsIgnoreCase(today)){
@@ -563,15 +578,6 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 		}
 	}
 	
-//	@Override
-//	public boolean dispatchTouchEvent(MotionEvent mv) {
-//		boolean handled = mGestureDetector.onTouchEvent(mv);
-//		if (!handled) {
-//			return super.dispatchTouchEvent(mv);
-//		}
-//		return handled; // this is always true
-//	}
-	
 	OnTouchListener shortSummarySwipeListener = new OnTouchListener() {
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
@@ -580,6 +586,53 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 			} else {
 				return false;
 			}
+		}
+	};
+	
+	OnClickListener totalCostTouchListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				YoYo.with(Techniques.ZoomIn)
+					.duration(500)
+					.interpolate(new AccelerateDecelerateInterpolator())
+					.withListener(animatorListener)
+					.playOn(mTotalCostView);
+				
+				loadListView(mCurrentDate, null);
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener productiveCostTouchListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				YoYo.with(Techniques.ZoomIn)
+					.duration(500)
+					.interpolate(new AccelerateDecelerateInterpolator())
+					.withListener(animatorListener)
+					.playOn(mProductiveCostView);
+				
+				loadListView(mCurrentDate, getString(R.string.productive));
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener wastageCostTouchListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			YoYo.with(Techniques.ZoomIn)
+				.duration(500)
+				.interpolate(new AccelerateDecelerateInterpolator())
+				.withListener(animatorListener)
+				.playOn(mWastageCostView);
+			
+			loadListView(mCurrentDate, getString(R.string.wastage));
 		}
 	};
 
@@ -596,18 +649,14 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 					|| Math.abs(e1.getX() - e2.getX()) > xPixelLimit * 2) {
 				if (velocityX > 0) {
 					if (e1.getX() > e2.getX()) {
-						//ViewUtil.showMessage(getApplicationContext(), "next view");
 						nextView();
 					} else {
-						//ViewUtil.showMessage(getApplicationContext(), "prev view");
 						prevView();
 					}
 				} else {
 					if (e1.getX() < e2.getX()) {
-						//ViewUtil.showMessage(getApplicationContext(), "prev view");
 						prevView();
 					} else {
-						//ViewUtil.showMessage(getApplicationContext(), "next view");
 						nextView();
 					}
 				}
