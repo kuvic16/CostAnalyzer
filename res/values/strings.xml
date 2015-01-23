@@ -80,6 +80,12 @@
 	<!-- Weekly Report -->
 	<string name="title_weekly_report">Weekly report</string>
 	<string name="weeks">Weeks</string>
+	<string name="week">Week</string>
+	<string name="amount">Amount</string>
+	<string name="day">Day</string>
+	<string name="parcantage">Parcantage</string>
+	<string name="type">Type</string>
+	<string name="number">no.</string>
 	
 	<!-- Total Report -->
 	<string name="title_total_report">Total report</string>

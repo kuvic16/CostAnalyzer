@@ -2,6 +2,7 @@ package com.vagabondlab.costanalyzer.utilities;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +18,7 @@ public final class IUtil {
 	public static final String DATE_FORMAT_DD_MM_YYYY = "dd-MM-yyyy";
 	public static final String DATE_FORMAT_YYYY_MM_DD = "yyyy-MM-dd";
 	public static final String DATE_FORMAT_EEE_D_MMM_YYYY = "EEE, d MMM yyyy";
+	public static final String DATE_FORMAT_MMM_D_YY = "MMM d, ''yy";
 	public static final String DATE_FORMAT_MMM = "MMM";
 	
 	@SuppressLint("SimpleDateFormat")
@@ -133,5 +135,38 @@ public final class IUtil {
 			t.printStackTrace();
 		}
 		return null;
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	public static List<List<String>> getNumberOfWeeks() {
+        SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD);
+        List<List<String>> weekdates = new ArrayList<List<String>>();
+        List<String> dates;
+        
+        Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, 1);
+        while (c.get(Calendar.MONTH) == month) {
+                dates = new ArrayList<String>();
+              while (c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
+                c.add(Calendar.DAY_OF_MONTH, -1);
+              }
+              dates.add(format.format(c.getTime()));
+              c.add(Calendar.DAY_OF_MONTH, 6);
+              dates.add(format.format(c.getTime()));
+              weekdates.add(dates);
+              c.add(Calendar.DAY_OF_MONTH, 1);
+        }
+        System.out.println(weekdates);
+        return weekdates;
+    }
+	
+	public static int getCurrentWeek(){
+		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.WEEK_OF_MONTH);
 	}
 }

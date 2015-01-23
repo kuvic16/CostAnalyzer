@@ -208,6 +208,43 @@ public class CostService{
 		return null;
 	}
 	
+	public List<String[]> getCostListGroupByDate(String startDate, String endDate, String productive, String wastage){
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append(" select co.date, ");
+			jql.append(" sum(case when ca.type='").append(productive).append("' then co.amount else 0 end) as productive, ");
+			jql.append(" sum(case when ca.type='").append(wastage).append("' then co.amount else 0 end) as wastage, ");
+			jql.append(" sum(co.amount) as total ");
+			jql.append(" from cost co join category ca on (co.category_id=ca.id) ");
+			boolean andNeed = false;
+			if(IUtil.isNotBlank(startDate)){
+				jql.append(" where ");
+				jql.append(" co.date >= '").append(startDate).append("'");
+				andNeed = true;
+			}
+			
+			if(IUtil.isNotBlank(endDate)){
+				if(andNeed){
+					jql.append(" and ");
+				}else{
+					jql.append(" where ");
+				}
+				jql.append(" co.date <= '").append(endDate).append("'");
+				andNeed = true;
+			}
+			
+			jql.append(" group by co.date order by co.date");
+			
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			return results;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	@Deprecated
 	public double getTotalCost(String categoryType, String costDate){
 		double totalCost = 0.0;

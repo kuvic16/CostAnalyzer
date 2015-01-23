@@ -7,7 +7,7 @@
     tools:context="com.vagabondlab.costanalyzer.WeeklyReportActivity" >
 
     <FrameLayout
-        android:id="@+id/container" 
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
@@ -16,83 +16,108 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
-        
+
         <RelativeLayout
-    		android:id="@+id/relative_layout_week_menu_section"
-    		android:layout_width="80dip"
-        	android:layout_height="fill_parent"
-        	android:layout_alignParentLeft="true"
-        	android:layout_alignParentTop="true">
-        	<TextView
-	            android:id="@+id/textView_week_status"
-	            android:layout_width="fill_parent"
-	            android:layout_height="wrap_content"
-	            android:layout_alignParentLeft="true"
-	            android:background="#FFA07A"
-	            android:padding="5dp"
-	            android:paddingTop="0dp"
-	            android:text="@string/weeks"
-	            android:gravity="center"
-	            android:textSize="12sp" />
-            
-        	<ListView
-	            android:id="@android:id/list"
-	            android:layout_width="fill_parent"
-	            android:layout_height="fill_parent"
-	            android:clickable="false"
-	            android:listSelector="@android:color/transparent"
-	            android:layout_below="@+id/textView_week_status" />
+            android:id="@+id/relative_layout_week_menu_section"
+            android:layout_width="80dip"
+            android:layout_height="fill_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" >
+
+            <TextView
+                android:id="@+id/textView_week_status"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:background="#FFA07A"
+                android:gravity="center"
+                android:padding="5dp"
+                android:paddingTop="0dp"
+                android:text="@string/weeks"
+                android:textSize="15sp" />
+
+            <ListView
+                android:id="@android:id/list"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@+id/textView_week_status" />
         </RelativeLayout>
+
         <RelativeLayout
-    		android:id="@+id/relative_layout_week_details_section"
-    		android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:layout_toRightOf="@id/relative_layout_week_menu_section"
-        	android:layout_alignParentTop="true"
-        	>
+            android:id="@+id/relative_layout_week_details_section"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/relative_layout_week_menu_section"
+            android:background="#98AFC7" >
+
             <RelativeLayout
-	    		android:id="@+id/relative_layout_short_summary_section"
-	    		android:layout_alignParentTop="true"
-	    		android:layout_width="fill_parent"
-	        	android:layout_height="wrap_content">
-	        	<include layout="@layout/weekly_short_status_layout"/>        	
-        	</RelativeLayout>
-        	<ScrollView
+                android:id="@+id/relative_layout_short_summary_section"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true" >
+
+                <include layout="@layout/weekly_short_status_layout" />
+            </RelativeLayout>
+
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/relative_layout_short_summary_section"
-                 >
+                android:layout_below="@+id/relative_layout_short_summary_section" >
 
-                <TableLayout
-                    android:id="@+id/weekTable"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:stretchColumns="1" >
+                    android:layout_height="wrap_content" >
 
-                    <TableRow android:background="#33CCCC" >
+                    <TableLayout
+                        android:id="@+id/weekTable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:stretchColumns="1" >
 
-                        <TextView
-                            android:padding="3dip"
-                            android:text="Day" />
+                        <TableRow android:background="#33CCCC" >
 
-                        <TextView
-                            android:gravity="right"
-                            android:padding="3dip"
-                            android:text="Amount" />
-                    </TableRow>
+                            <TextView
+                                android:padding="3dip"
+                                android:text="@string/day" />
 
-                    <View
-                        android:id="@+id/separator"
-                        android:layout_width="fill_parent"
-                        android:layout_height="0.2dp"
-                        android:background="@android:color/darker_gray"
-                        android:visibility="visible" />
-                </TableLayout>
+                            <TextView
+                                android:gravity="right"
+                                android:padding="3dip"
+                                android:text="@string/productive" />
+
+                            <TextView
+                                android:gravity="right"
+                                android:padding="3dip"
+                                android:text="@string/wastage" />
+
+                            <TextView
+                                android:gravity="right"
+                                android:padding="3dip"
+                                android:text="@string/total_cost" />
+                        </TableRow>
+
+                        <View
+                            android:id="@+id/separator"
+                            android:layout_width="fill_parent"
+                            android:layout_height="0.2dp"
+                            android:background="@android:color/darker_gray"
+                            android:visibility="visible" />
+                    </TableLayout>
+                    
+                    <TableLayout
+                        android:id="@+id/categoryWiseCostTable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/weekTable"
+                        android:stretchColumns="1" >
+                    </TableLayout>
+                    
+                </RelativeLayout>
             </ScrollView>
-
         </RelativeLayout>
-        
-        <!-- 
+
+        <!--
         <RelativeLayout
     		android:id="@+id/relative_layout_short_summary_section"
     		android:layout_width="fill_parent"
@@ -118,9 +143,10 @@
             android:layout_height="fill_parent"
             android:clickable="false"
             android:listSelector="@android:color/transparent"
-            android:layout_below="@+id/textView_cost_status" /> -->
+            android:layout_below="@+id/textView_cost_status" />
+        -->
     </RelativeLayout>
-    
+
     <fragment
         android:id="@+id/navigation_drawer"
         android:name="com.vagabondlab.costanalyzer.NavigationDrawerFragment"

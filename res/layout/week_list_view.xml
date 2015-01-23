@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/relative_layout_category_wise_cost_list"
+	android:layout_width="fill_parent"
+	android:layout_height="60dip"
+	android:paddingRight="8dip"
+	android:paddingLeft="8dip"
+	android:paddingTop="5dip"
+	android:paddingBottom="5dip"
+	android:minHeight="?android:attr/listPreferredItemHeight">
+
+    <TextView
+			android:id="@+id/week_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:textColor="#000000"
+			android:textSize="20sp"
+			android:text="Week 1"
+			android:textAppearance="?android:attr/textAppearanceLarge"/>
+    
+    <TextView
+			android:id="@+id/week_start_end_date"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:layout_below="@+id/week_name"
+			android:layout_alignParentLeft="true"
+			android:textColor="#000000"
+			android:textSize="12sp"
+			android:text="29 Dec'14 - 04 Jan '15"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+    
+    
+    <TextView
+			android:id="@+id/week_number"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			android:layout_below="@+id/week_start_end_date"
+			android:layout_alignParentLeft="true"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+</RelativeLayout>
