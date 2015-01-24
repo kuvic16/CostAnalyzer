@@ -1,6 +1,7 @@
 package com.vagabondlab.costanalyzer.utilities;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -138,14 +139,12 @@ public final class IUtil {
 	}
 	
 	@SuppressLint("SimpleDateFormat")
-	public static List<List<String>> getNumberOfWeeks() {
+	public static List<List<String>> getNumberOfWeeks(int month, int year) {
         SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD);
         List<List<String>> weekdates = new ArrayList<List<String>>();
         List<String> dates;
         
         Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
         
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
@@ -167,6 +166,18 @@ public final class IUtil {
 	
 	public static int getCurrentWeek(){
 		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.WEEK_OF_MONTH);
+	}
+	
+	@SuppressLint("SimpleDateFormat")
+	public static int getWeek(String date){
+		SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD);
+		Calendar calendar = Calendar.getInstance();
+		try {
+			calendar.setTime(format.parse(date));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		return calendar.get(Calendar.WEEK_OF_MONTH);
 	}
 }

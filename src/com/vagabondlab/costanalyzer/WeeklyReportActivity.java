@@ -2,6 +2,7 @@ package com.vagabondlab.costanalyzer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,8 +29,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.HeaderViewListAdapter;
@@ -94,9 +95,7 @@ public class WeeklyReportActivity extends ActionBarActivity implements OnGesture
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
-		weeks = IUtil.getNumberOfWeeks();
-		currentWeek = IUtil.getCurrentWeek();
-		loadWeekListViewUI();
+		
 		try { 
 			costService = new CostService(getHelper().getCostDao());
 			//mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
@@ -117,10 +116,26 @@ public class WeeklyReportActivity extends ActionBarActivity implements OnGesture
 			mWastageCostView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
 			//mWastageCostView.setOnClickListener(wastageCostTouchListener);
 			mWastageCostView.setOnTouchListener(shortSummarySwipeListener);
-			
-			loadCostList(currentWeek);
+		
+			Calendar calendar = Calendar.getInstance();
+			loadWeekReport(calendar);
+//	        weeks = IUtil.getNumberOfWeeks(c.get(Calendar.MONTH), c.get(Calendar.YEAR));
+//			currentWeek = IUtil.getCurrentWeek();
+//			loadWeekListViewUI();
+//			loadCostList(currentWeek);
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void loadWeekReport(Calendar calendar){
+		try{
+			weeks = IUtil.getNumberOfWeeks(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
+			currentWeek = calendar.get(Calendar.WEEK_OF_MONTH);
+			loadWeekListViewUI();
+			loadCostList(currentWeek);
+		}catch(Throwable t){
+			
 		}
 	}
 	
@@ -246,16 +261,6 @@ public class WeeklyReportActivity extends ActionBarActivity implements OnGesture
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-//	private void showCalenderDialog(){
-//		final Calendar c = Calendar.getInstance();
-//        int year = c.get(Calendar.YEAR);
-//        int month = c.get(Calendar.MONTH);
-//        int day = c.get(Calendar.DAY_OF_MONTH);
-//
-//        // Create a new instance of DatePickerDialog and return it
-//        return new DatePickerDialog(getActivity(), this, year, month, day);
-//	}
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -584,12 +589,18 @@ public class WeeklyReportActivity extends ActionBarActivity implements OnGesture
 	@Override
 	public void returnDate(String date) {
 		YoYo.with(Techniques.SlideInDown)
-		.duration(500)
+		.duration(100)
 		.interpolate(new AccelerateDecelerateInterpolator())
 		.withListener(animatorListener)
 		.playOn(findViewById(R.id.relative_layout_root));
 	
 		//loadCostList(date);
+		Calendar calender = IUtil.getCalender(date, IUtil.DATE_FORMAT_YYYY_MM_DD);
+		loadWeekReport(calender);
+//		weeks = IUtil.getNumberOfWeeks(calender.get(Calendar.MONTH), calender.get(Calendar.YEAR));
+//		currentWeek = calender.get(Calendar.WEEK_OF_MONTH);
+//		loadWeekListViewUI();
+//		loadCostList(currentWeek);
 	}
 	
 }
