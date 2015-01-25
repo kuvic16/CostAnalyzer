@@ -87,6 +87,9 @@
 	<string name="type">Type</string>
 	<string name="number">no.</string>
 	
+	<!-- Monthly Report -->
+	<string name="title_monthly_report">Monthly report</string>
+	
 	<!-- Total Report -->
 	<string name="title_total_report">Total report</string>
 	

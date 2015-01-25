@@ -1823,28 +1823,29 @@ containing a value of this type.
         public static final int activity_cost=0x7f030018;
         public static final int activity_daily_report=0x7f030019;
         public static final int activity_home=0x7f03001a;
-        public static final int activity_total_report=0x7f03001b;
-        public static final int activity_weekly_report=0x7f03001c;
-        public static final int category_form=0x7f03001d;
-        public static final int category_wise_cost_list_view=0x7f03001e;
-        public static final int cost_form=0x7f03001f;
-        public static final int cost_list_cost_date_design=0x7f030020;
-        public static final int cost_list_view=0x7f030021;
-        public static final int fragment_home=0x7f030022;
-        public static final int fragment_navigation_drawer=0x7f030023;
-        public static final int home_short_summary_design=0x7f030024;
-        public static final int list_cost_amount_design=0x7f030025;
-        public static final int list_cost_amount_percant_design=0x7f030026;
-        public static final int rectangle_border_right_side=0x7f030027;
-        public static final int short_status_layout=0x7f030028;
-        public static final int spinner_item=0x7f030029;
-        public static final int summary_effective_amount_design=0x7f03002a;
-        public static final int summary_total_amount_design=0x7f03002b;
-        public static final int summary_wastage_amount_design=0x7f03002c;
-        public static final int support_simple_spinner_dropdown_item=0x7f03002d;
-        public static final int two_item=0x7f03002e;
-        public static final int week_list_view=0x7f03002f;
-        public static final int weekly_short_status_layout=0x7f030030;
+        public static final int activity_monthly_report=0x7f03001b;
+        public static final int activity_total_report=0x7f03001c;
+        public static final int activity_weekly_report=0x7f03001d;
+        public static final int category_form=0x7f03001e;
+        public static final int category_wise_cost_list_view=0x7f03001f;
+        public static final int cost_form=0x7f030020;
+        public static final int cost_list_cost_date_design=0x7f030021;
+        public static final int cost_list_view=0x7f030022;
+        public static final int fragment_home=0x7f030023;
+        public static final int fragment_navigation_drawer=0x7f030024;
+        public static final int home_short_summary_design=0x7f030025;
+        public static final int list_cost_amount_design=0x7f030026;
+        public static final int list_cost_amount_percant_design=0x7f030027;
+        public static final int rectangle_border_right_side=0x7f030028;
+        public static final int short_status_layout=0x7f030029;
+        public static final int spinner_item=0x7f03002a;
+        public static final int summary_effective_amount_design=0x7f03002b;
+        public static final int summary_total_amount_design=0x7f03002c;
+        public static final int summary_wastage_amount_design=0x7f03002d;
+        public static final int support_simple_spinner_dropdown_item=0x7f03002e;
+        public static final int two_item=0x7f03002f;
+        public static final int week_list_view=0x7f030030;
+        public static final int weekly_short_status_layout=0x7f030031;
     }
     public static final class menu {
         public static final int category=0x7f0d0000;
@@ -1989,9 +1990,12 @@ containing a value of this type.
         /**  Home screen 
          */
         public static final int title_home_screen=0x7f0b004c;
+        /**  Monthly Report 
+         */
+        public static final int title_monthly_report=0x7f0b005b;
         /**  Total Report 
          */
-        public static final int title_total_report=0x7f0b005b;
+        public static final int title_total_report=0x7f0b005c;
         /**  Weekly Report 
          */
         public static final int title_weekly_report=0x7f0b0053;
