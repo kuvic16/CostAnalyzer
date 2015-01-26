@@ -1665,7 +1665,7 @@ containing a value of this type.
         public static final int add_cost=0x7f060078;
         public static final int always=0x7f06000d;
         public static final int beginning=0x7f060012;
-        public static final int categoryWiseCostTable=0x7f06005a;
+        public static final int categoryWiseCostTable=0x7f060055;
         public static final int checkbox=0x7f060029;
         public static final int collapseActionView=0x7f06000f;
         public static final int container=0x7f060048;
@@ -1720,8 +1720,8 @@ containing a value of this type.
         public static final int relative_layout_short_summary=0x7f060070;
         public static final int relative_layout_short_summary_section=0x7f06004a;
         public static final int relative_layout_summary=0x7f06004e;
-        public static final int relative_layout_week_details_section=0x7f060057;
-        public static final int relative_layout_week_menu_section=0x7f060055;
+        public static final int relative_layout_week_details_section=0x7f060058;
+        public static final int relative_layout_week_menu_section=0x7f060056;
         public static final int search=0x7f06007a;
         public static final int search_badge=0x7f060035;
         public static final int search_bar=0x7f060034;
@@ -1734,7 +1734,7 @@ containing a value of this type.
         public static final int search_src_text=0x7f06003a;
         public static final int search_voice_btn=0x7f06003e;
         public static final int section_label=0x7f06006f;
-        public static final int separator=0x7f060059;
+        public static final int separator=0x7f06005a;
         public static final int shortcut=0x7f06002a;
         public static final int showCustom=0x7f060009;
         public static final int showHome=0x7f060006;
@@ -1759,11 +1759,11 @@ containing a value of this type.
         public static final int textView_summary_total_cost_status=0x7f060050;
         public static final int textView_summary_wastage_cost=0x7f060053;
         public static final int textView_summary_wastage_cost_status=0x7f060054;
-        public static final int textView_week_status=0x7f060056;
+        public static final int textView_week_status=0x7f060057;
         public static final int title=0x7f060027;
         public static final int up=0x7f060016;
         public static final int useLogo=0x7f060005;
-        public static final int weekTable=0x7f060058;
+        public static final int weekTable=0x7f060059;
         public static final int week_name=0x7f060074;
         public static final int week_number=0x7f060076;
         public static final int week_start_end_date=0x7f060075;

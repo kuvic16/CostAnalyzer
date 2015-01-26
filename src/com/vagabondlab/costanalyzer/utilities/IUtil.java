@@ -180,4 +180,10 @@ public final class IUtil {
 		}
 		return calendar.get(Calendar.WEEK_OF_MONTH);
 	}
+	
+	
+	public static String theMonth(int month){
+	    String[] monthNames = {"", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+	    return monthNames[month];
+	}
 }

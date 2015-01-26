@@ -1,11 +1,15 @@
 package com.vagabondlab.costanalyzer.utilities;
 
+import com.vagabondlab.costanalyzer.R;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +48,34 @@ public final class ViewUtil {
 		dividerView.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, 1));
 		dividerView.setBackgroundColor(Color.LTGRAY);
         return dividerView;
+	}
+	
+	public static TextView getTableColumn(Context context, String text, int gravity){
+		TextView label = new TextView(context);
+		label.setPadding(1, 3, 1, 3);
+        label.setText(text);
+        label.setGravity(gravity);
+        label.setTextColor(Color.BLACK);
+        return label;
+	}
+	
+	public static TableRow getWeekDayTableHeader(Context context){
+		TableRow header = new TableRow(context);
+		header.setBackgroundColor(Color.LTGRAY);
+		header.addView(getTableColumn(context, context.getString(R.string.day), Gravity.LEFT));
+		header.addView(getTableColumn(context, context.getString(R.string.productive), Gravity.CENTER));
+		header.addView(getTableColumn(context, context.getString(R.string.wastage), Gravity.CENTER));
+		header.addView(getTableColumn(context, context.getString(R.string.total_cost), Gravity.RIGHT));
+		return header;
+	}
+	
+	public static TableRow getCategoryWiseCostTableHeader(Context context){
+		TableRow header = new TableRow(context);
+		header.setBackgroundColor(Color.LTGRAY);
+		header.addView(getTableColumn(context, context.getString(R.string.category_name), Gravity.CENTER));
+		header.addView(getTableColumn(context, context.getString(R.string.total_cost), Gravity.CENTER));
+		header.addView(getTableColumn(context, context.getString(R.string.parcantage), Gravity.LEFT));
+		return header;
 	}
 
 }
