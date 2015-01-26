@@ -34,22 +34,46 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" >
     				<TextView
-			            android:id="@+id/textView_cost_status"
+			            android:id="@+id/textView_category_wise_cost_status"
 			            android:layout_width="fill_parent"
 			            android:layout_height="wrap_content"
 			            android:layout_alignParentLeft="true"
 			            android:background="#FFA07A"
-			            android:padding="5dp"
-			            android:paddingTop="0dp"
+			            android:paddingLeft="5dp"
+			            android:paddingRight="5dp"
+			            android:paddingTop="1dp"
+			            android:paddingBottom="1dp"
 			            android:text="@string/category_wise_cost_status"
 			            android:textSize="12sp" />
 			        <TableLayout
 			            android:id="@+id/categoryWiseCostTable"
 			            android:layout_width="match_parent"
 			            android:layout_height="wrap_content"
-			            android:layout_below="@+id/textView_cost_status"
-			            android:stretchColumns="1" >
-			        </TableLayout>                    
+			            android:layout_below="@+id/textView_category_wise_cost_status"
+			            android:stretchColumns="*" >
+			        </TableLayout>
+			        
+			        <TextView
+			            android:id="@+id/textView_day_wise_cost_status"
+			            android:layout_width="fill_parent"
+			            android:layout_height="wrap_content"
+			            android:layout_alignParentLeft="true"
+			            android:background="#FFA07A"
+			            android:layout_marginTop="10dp"
+			            android:paddingLeft="5dp"
+			            android:paddingRight="5dp"
+			            android:paddingTop="1dp"
+			            android:paddingBottom="1dp"
+			            android:layout_below="@+id/categoryWiseCostTable"
+			            android:text="@string/day_wise_cost_status"
+			            android:textSize="12sp" />
+			        <TableLayout
+			            android:id="@+id/dayWiseCostTable"
+			            android:layout_width="match_parent"
+			            android:layout_height="wrap_content"
+			            android:layout_below="@+id/textView_day_wise_cost_status"
+			            android:stretchColumns="*" >
+			        </TableLayout>
                 </RelativeLayout>
         </ScrollView>
     </RelativeLayout>

@@ -69,7 +69,7 @@
 	<!-- Home screen -->
 	<string name="title_home_screen">Cost analyzer</string>
 	<string name="page_top_date_text">Today %s</string>
-	<string name="total_cost">Total Cost</string>
+	<string name="total_cost">Total</string>
 	<string name="productive_cost_status">All productive cost listed below. Total cost entry: %s</string>
 	<string name="wastage_cost_status">All wastage cost listed below. Total cost entry: %s</string>
 	
@@ -83,12 +83,13 @@
 	<string name="week">Week</string>
 	<string name="amount">Amount</string>
 	<string name="day">Day</string>
-	<string name="parcantage">Parcantage</string>
+	<string name="parcantage">Percentage</string>
 	<string name="type">Type</string>
 	<string name="number">no.</string>
 	
 	<!-- Monthly Report -->
 	<string name="title_monthly_report">Monthly report</string>
+	<string name="day_wise_cost_status">Day wise cost listed below. Total entry: %s</string>
 	
 	<!-- Total Report -->
 	<string name="title_total_report">Total report</string>

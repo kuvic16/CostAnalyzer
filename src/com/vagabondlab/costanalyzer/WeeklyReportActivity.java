@@ -379,7 +379,7 @@ public class WeeklyReportActivity extends ActionBarActivity implements OnGesture
 	}
 		
 	private void loadCostList(int weekNumber){
-		try {
+		try { 
 			String startDate = weeks.get(currentWeek-1).get(0);
 			String endDate = weeks.get(currentWeek-1).get(1);
 			loadQuickView(startDate, endDate);

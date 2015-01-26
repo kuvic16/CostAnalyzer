@@ -62,8 +62,8 @@ public class MonthlyReportActivity extends ActionBarActivity implements OnGestur
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private DatabaseHelper databaseHelper = null;
 	private CostService costService;
-	private TextView mCostStatus;
-	private List<Map<String, String>> mCostListdata = new ArrayList<Map<String, String>>();
+	private TextView mCategoryWiseCostStatus;
+	private TextView mDayWiseCostStatus;
 	
 	private CharSequence mTitle;
 	private boolean firstTime = true;
@@ -79,6 +79,8 @@ public class MonthlyReportActivity extends ActionBarActivity implements OnGestur
 	private Double productiveCost = 0.0;
 	private Double wastageCost = 0.0;
 	private Double totalCost = 0.0;
+	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
+	
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -93,8 +95,10 @@ public class MonthlyReportActivity extends ActionBarActivity implements OnGestur
 		
 		try { 
 			costService = new CostService(getHelper().getCostDao());
-			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
 			mGestureDetector = new GestureDetector(this);
+			
+			mCategoryWiseCostStatus = (TextView)findViewById(R.id.textView_category_wise_cost_status);
+			mDayWiseCostStatus = (TextView)findViewById(R.id.textView_day_wise_cost_status);
 			
 			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
 			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
@@ -221,13 +225,15 @@ public class MonthlyReportActivity extends ActionBarActivity implements OnGestur
 	private void loadCostList(DateTime date){
 		try {
 			mCurrentDate =  date;
-			DateTimeFormatter format = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
-			String startDate = format.print(date.dayOfMonth().withMinimumValue());
-			String endDate = format.print(date.dayOfMonth().withMaximumValue());
+			String startDate = dateFormatter.print(date.dayOfMonth().withMinimumValue());
+			String endDate = dateFormatter.print(date.dayOfMonth().withMaximumValue());
 			loadQuickView(startDate, endDate);
 			
 			List<String[]>  costList = costService.getTotalCostGroupByCategory(startDate, endDate);
 			loadCategoryWiseCostListViewUI(costList);
+			
+			costList = costService.getCostListGroupByDate(startDate, endDate, getString(R.string.productive), getString(R.string.wastage));
+			loadDayWiseCostListViewUI(costList);
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}		
@@ -270,6 +276,7 @@ public class MonthlyReportActivity extends ActionBarActivity implements OnGestur
 			table.addView(ViewUtil.getCategoryWiseCostTableHeader(this));
 			for(String[] cost : costList){
 				TableRow tr = new TableRow(this);
+				tr.setPadding(5, 1, 5, 1);
 				tr.addView(ViewUtil.getTableColumn(this, cost[0] + "(" + cost[1] + ")", Gravity.LEFT));
 				tr.addView(ViewUtil.getTableColumn(this, cost[2], Gravity.CENTER));
 				
@@ -282,6 +289,29 @@ public class MonthlyReportActivity extends ActionBarActivity implements OnGestur
 				table.addView(tr);
 				table.addView(ViewUtil.getDividerView(getApplicationContext()));
 			}
+			mCategoryWiseCostStatus.setText(getString(R.string.category_wise_cost_status, costList.size()));
+		} catch (Exception ex) {
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
+		}
+	}
+	
+	private void loadDayWiseCostListViewUI(List<String[]> costList) {
+		try {
+			TableLayout table = (TableLayout)findViewById(R.id.dayWiseCostTable);
+			table.removeAllViews();
+			table.addView(ViewUtil.getWeekDayTableHeader(this));
+			for(String[] cost : costList){
+				TableRow tr = new TableRow(this);
+				tr.setPadding(5, 1, 5, 1);
+				//String day = IUtil.changeDateFormat(cost[0], IUtil.DATE_FORMAT_YYYY_MM_DD, "E");
+				tr.addView(ViewUtil.getTableColumn(this, cost[0], Gravity.LEFT));
+				tr.addView(ViewUtil.getTableColumn(this, cost[1], Gravity.CENTER));
+				tr.addView(ViewUtil.getTableColumn(this, cost[2], Gravity.CENTER));
+				tr.addView(ViewUtil.getTableColumn(this, cost[3], Gravity.CENTER));
+				table.addView(tr);
+				table.addView(ViewUtil.getDividerView(getApplicationContext()));
+			}
+			mDayWiseCostStatus.setText(getString(R.string.day_wise_cost_status, costList.size()));
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}
@@ -411,8 +441,8 @@ public class MonthlyReportActivity extends ActionBarActivity implements OnGestur
 		.interpolate(new AccelerateDecelerateInterpolator())
 		.withListener(animatorListener)
 		.playOn(findViewById(R.id.relative_layout_root));
-	
-		//loadCostList(date);
+		
+		loadCostList(dateFormatter.parseDateTime(date));
 	}
 	
 }
