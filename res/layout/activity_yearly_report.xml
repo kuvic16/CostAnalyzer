@@ -4,7 +4,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.vagabondlab.costanalyzer.MonthlyReportActivity" >
+    tools:context="com.vagabondlab.costanalyzer.YearlyReportActivity" >
 
     <FrameLayout
         android:id="@+id/container" 
@@ -54,7 +54,7 @@
 			        </TableLayout>
 			        
 			        <TextView
-			            android:id="@+id/textView_day_wise_cost_status"
+			            android:id="@+id/textView_month_wise_cost_status"
 			            android:layout_width="fill_parent"
 			            android:layout_height="wrap_content"
 			            android:layout_alignParentLeft="true"
@@ -65,13 +65,13 @@
 			            android:paddingTop="1dp"
 			            android:paddingBottom="1dp"
 			            android:layout_below="@+id/categoryWiseCostTable"
-			            android:text="@string/day_wise_cost_status" 
+			            android:text="@string/month_wise_cost_status" 
 			            android:textSize="12sp" />
 			        <TableLayout
 			            android:id="@+id/dayWiseCostTable"
 			            android:layout_width="match_parent"
 			            android:layout_height="wrap_content"
-			            android:layout_below="@+id/textView_day_wise_cost_status"
+			            android:layout_below="@+id/textView_month_wise_cost_status"
 			            android:stretchColumns="*" >
 			        </TableLayout>
                 </RelativeLayout>

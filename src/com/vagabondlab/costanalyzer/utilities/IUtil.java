@@ -186,4 +186,12 @@ public final class IUtil {
 	    String[] monthNames = {"", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 	    return monthNames[month];
 	}
+	
+	public static String firstDayOfYear(String year){
+		return year + "-01-01";
+	}
+	
+	public static String endDayOfYear(String year){
+		return year + "-12-31";
+	}
 }

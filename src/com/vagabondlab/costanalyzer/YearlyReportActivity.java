@@ -1,11 +1,7 @@
 package com.vagabondlab.costanalyzer;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -22,17 +18,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.HeaderViewListAdapter;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.SimpleAdapter;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
@@ -50,30 +45,38 @@ import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
 
 @SuppressLint({ "ClickableViewAccessibility", "DefaultLocale" })
-public class TotalReportActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks, DateSetListener
+public class YearlyReportActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks, DateSetListener
 																		{
 
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private DatabaseHelper databaseHelper = null;
 	private CostService costService;
-	private TextView mCostStatus;
-	private List<Map<String, String>> mCostListdata = new ArrayList<Map<String, String>>();
+	private TextView mCategoryWiseCostStatus;
+	private TextView mMonthWiseCostStatus;
 	
 	private CharSequence mTitle;
 	private boolean firstTime = true;
 	private GestureDetector mGestureDetector;
 	private RelativeLayout mRLShortSummary;
-	private String mCurrentDate;
+	private DateTime mCurrentDate;
 	private ProgressDialog mProgressDialog = null;
 	
+	private TextView mSummaryStatusView;
+	private TextView mTotalCostView;
+	private TextView mProductiveCostView;
+	private TextView mWastageCostView;
+	private Double productiveCost = 0.0;
+	private Double wastageCost = 0.0;
 	private Double totalCost = 0.0;
+	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
+	
 	
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_total_report);
-		setTitle(getString(R.string.title_total_report));
+		setContentView(R.layout.activity_yearly_report);
+		setTitle(getString(R.string.title_yearly_report));
 
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
@@ -81,14 +84,27 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 		
 		try { 
 			costService = new CostService(getHelper().getCostDao());
-			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
 			mGestureDetector = new GestureDetector(this);
-			//mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
-			//mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
-			//ListView mList = (ListView)findViewById(android.R.id.list);
-			//mList.setOnTouchListener(shortSummarySwipeListener);
 			
-			loadCostList(null, null);
+			mCategoryWiseCostStatus = (TextView)findViewById(R.id.textView_category_wise_cost_status);
+			mMonthWiseCostStatus = (TextView)findViewById(R.id.textView_month_wise_cost_status);
+			
+			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
+			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
+			
+			mSummaryStatusView = (TextView)findViewById(R.id.textView_summary_status);
+			
+			mTotalCostView = (TextView)findViewById(R.id.textView_summary_total_cost);
+			mTotalCostView.setOnTouchListener(shortSummarySwipeListener);
+			
+			mProductiveCostView = (TextView)findViewById(R.id.textView_summary_effective_cost);
+			mProductiveCostView.setOnTouchListener(shortSummarySwipeListener);
+			
+			mWastageCostView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
+			mWastageCostView.setOnTouchListener(shortSummarySwipeListener);
+		
+			DateTime date = new DateTime();
+			loadCostList(date);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -136,29 +152,6 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 			break;
 		}
 	}
-	
-	// for listview activity
-	private ListView mListView;
-	protected ListView getListView() {
-	    if (mListView == null) {
-	        mListView = (ListView) findViewById(android.R.id.list);
-	    }
-	    return mListView;
-	}
-
-	protected void setListAdapter(ListAdapter adapter) {
-	    getListView().setAdapter(adapter);
-	}
-
-	protected ListAdapter getListAdapter() {
-	    ListAdapter adapter = getListView().getAdapter();
-	    if (adapter instanceof HeaderViewListAdapter) {
-	        return ((HeaderViewListAdapter)adapter).getWrappedAdapter();
-	    } else {
-	        return adapter;
-	    }
-	}
-	// end listview activity
 	
 	@Override
 	protected void onDestroy() {
@@ -213,16 +206,6 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 		return super.onOptionsItemSelected(item);
 	}
 	
-//	private void showCalenderDialog(){
-//		final Calendar c = Calendar.getInstance();
-//        int year = c.get(Calendar.YEAR);
-//        int month = c.get(Calendar.MONTH);
-//        int day = c.get(Calendar.DAY_OF_MONTH);
-//
-//        // Create a new instance of DatePickerDialog and return it
-//        return new DatePickerDialog(getActivity(), this, year, month, day);
-//	}
-	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if(requestCode==IConstant.PARENT_ACTIVITY_REQUEST_CODE){
@@ -232,59 +215,29 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 	}
 	
 		
-	private void loadCostList(String startDate, String endDate){
+	private void loadCostList(DateTime date){
 		try {
-			//mCurrentDate = date;
+			mCurrentDate =  date;
+			String startDate = IUtil.firstDayOfYear(String.valueOf(date.getYear()));
+			String endDate = IUtil.endDayOfYear(String.valueOf(date.getYear()));
 			loadQuickView(startDate, endDate);
+			
 			List<String[]>  costList = costService.getTotalCostGroupByCategory(startDate, endDate);
-			loadUI(costList, costList.size()); 
+			loadCategoryWiseCostListViewUI(costList);
+			
+			costList = costService.getCostListGroupByMonth(startDate, endDate, getString(R.string.productive), getString(R.string.wastage));
+			loadMonthWiseCostListViewUI(costList);
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}		
 	}
 
-	private void loadUI(List<String[]> costList, long total) {
-		try {
-			mCostStatus.setText(getString(R.string.category_wise_cost_status, total));
-			mCostListdata = new ArrayList<Map<String,String>>();
-			for (String[] costs : costList) {
-				Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("cost_category_name", costs[0]);
-				
-				String info = costs[3] + "\n" + costs[1] + " time happened";
-				infoMap.put("cost_category_type_and_time", info);
-				infoMap.put("cost_amount", costs[2]);
-				Double cost = Double.valueOf(costs[2]);
-				Double costPercantage = 0.0;
-				if (totalCost != 0 && cost != 0) {
-					costPercantage = (cost * 100)/ totalCost;					
-				}
-				String result = String.format("%.1f", costPercantage); 
-				infoMap.put("cost_percantage", result + "%");
-				mCostListdata.add(infoMap);
-			}
-			
-			SimpleAdapter adapter = new SimpleAdapter( 
-					this, 
-					mCostListdata,
-					R.layout.category_wise_cost_list_view, 
-					new String[] {"cost_category_name", "cost_category_type_and_time", "cost_amount", "cost_percantage" }, 
-					new int[] { R.id.cost_category_name, R.id.cost_type_and_time, R.id.cost_amount, R.id.cost_amount_percent 
-			});
-			setListAdapter(adapter);
-			getListView().setItemsCanFocus(false);
-		} catch (Exception ex) {
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
-		}
-	}
 	
 	private void loadQuickView(String startDate, String endDate){
 		try{
-			String today = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
-			Double productiveCost = 0.0;
-			Double wastageCost = 0.0;
+			productiveCost = 0.0;
+			wastageCost = 0.0;
 			totalCost = 0.0;
-			
 			List<String[]> costListGroupByType = costService.getTotalCostGroupByType(startDate, endDate);
 			if(IUtil.isNotBlank(costListGroupByType)){
 				for(String[] costs : costListGroupByType){
@@ -299,38 +252,61 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 					}
 				}
 			}
-			
 			totalCost = productiveCost + wastageCost;
-			TextView textViewTotalCost = (TextView)findViewById(R.id.textView_summary_total_cost);
-			textViewTotalCost.setText(String.valueOf(totalCost.intValue()));
-			
-			TextView textViewProductiveCost = (TextView)findViewById(R.id.textView_summary_effective_cost);
-			textViewProductiveCost.setText(String.valueOf(productiveCost.intValue()));
-//			if(totalCost != 0 && productiveCost != 0){
-//				TextView textViewProductiveCostStatus = (TextView)findViewById(R.id.textView_summary_effective_cost_status);
-//				int productivePercantage = (productiveCost.intValue() * 100)/totalCost.intValue();
-//				textViewProductiveCostStatus.setText(getString(R.string.productive) + " " + String.valueOf(productivePercantage) + "%");
-//			}
-			
-			TextView textViewWastageCost = (TextView)findViewById(R.id.textView_summary_wastage_cost);
-			textViewWastageCost.setText(String.valueOf(wastageCost.intValue()));
-//			if(totalCost != 0 && wastageCost != 0){
-//				TextView textViewWastageCostStatus = (TextView)findViewById(R.id.textView_summary_wastage_cost_status);
-//				int wastagePercantage = (wastageCost.intValue() * 100)/totalCost.intValue();
-//				textViewWastageCostStatus.setText(getString(R.string.wastage) + " " + String.valueOf(wastagePercantage) + "%");
-//			}
-			
-//			String dateStatus = "";			
-//			if(date.equalsIgnoreCase(today)){
-//				dateStatus = getString(R.string.page_top_date_text, IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy"));
-//			}else{
-//				dateStatus = IUtil.changeDateFormat(date, IUtil.DATE_FORMAT_YYYY_MM_DD, "EEE, MMM d, yyyy");
-//			}
-//			TextView topDateText = (TextView)findViewById(R.id.textView_summary_status);
-//			topDateText.setText(dateStatus);
-						
+			mTotalCostView.setText(String.valueOf(totalCost.intValue()));
+			mProductiveCostView.setText(String.valueOf(productiveCost.intValue()));
+			mWastageCostView.setText(String.valueOf(wastageCost.intValue()));
+			mSummaryStatusView.setText(String.valueOf(mCurrentDate.getYear()));
 		}catch(Throwable t){
 			t.printStackTrace();
+		}
+	}
+	
+	private void loadCategoryWiseCostListViewUI(List<String[]> costList) {
+		try {
+			TableLayout table = (TableLayout)findViewById(R.id.categoryWiseCostTable);
+			table.removeAllViews();
+			table.addView(ViewUtil.getCategoryWiseCostTableHeader(this));
+			for(String[] cost : costList){
+				TableRow tr = new TableRow(this);
+				tr.setPadding(5, 1, 5, 1);
+				tr.addView(ViewUtil.getTableColumn(this, cost[0] + "(" + cost[1] + ")", Gravity.LEFT));
+				tr.addView(ViewUtil.getTableColumn(this, cost[2], Gravity.CENTER));
+				
+				Double ccost = Double.valueOf(cost[2]);
+				Double costPercantage = 0.0;
+				if (totalCost != 0 && ccost != 0) {
+					costPercantage = (ccost * 100)/ totalCost;					
+				}
+				tr.addView(ViewUtil.getTableColumn(this, String.format("%.1f", costPercantage) + "%", Gravity.CENTER));
+				table.addView(tr);
+				table.addView(ViewUtil.getDividerView(getApplicationContext()));
+			}
+			mCategoryWiseCostStatus.setText(getString(R.string.category_wise_cost_status, costList.size()));
+		} catch (Exception ex) {
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
+		}
+	}
+	
+	private void loadMonthWiseCostListViewUI(List<String[]> costList) {
+		try {
+			TableLayout table = (TableLayout)findViewById(R.id.dayWiseCostTable);
+			table.removeAllViews();
+			table.addView(ViewUtil.getWeekDayTableHeader(this));
+			for(String[] cost : costList){
+				TableRow tr = new TableRow(this);
+				tr.setPadding(5, 1, 5, 1);
+				int month = Integer.valueOf(cost[0]);
+				tr.addView(ViewUtil.getTableColumn(this, IUtil.theMonth(month), Gravity.LEFT));
+				tr.addView(ViewUtil.getTableColumn(this, cost[1], Gravity.CENTER));
+				tr.addView(ViewUtil.getTableColumn(this, cost[2], Gravity.CENTER));
+				tr.addView(ViewUtil.getTableColumn(this, cost[3], Gravity.CENTER));
+				table.addView(tr);
+				table.addView(ViewUtil.getDividerView(getApplicationContext()));
+			}
+			mMonthWiseCostStatus.setText(getString(R.string.month_wise_cost_status, costList.size()));
+		} catch (Exception ex) {
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}
 	}
 	
@@ -406,12 +382,8 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 			.withListener(animatorListener)
 			.playOn(findViewById(R.id.relative_layout_root));
 		
-		Date date = IUtil.getDate(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
-		DateTime dateTime = new DateTime(date);
-		dateTime = dateTime.plusDays(-1);
-		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
-		String newDate = fmt.print(dateTime);
-		//loadCostList(newDate);
+		DateTime prevDate = mCurrentDate.plusMonths(-1);
+		loadCostList(prevDate);
 		
 	}
 	
@@ -422,19 +394,15 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 			.withListener(animatorListener)
 			.playOn(findViewById(R.id.relative_layout_root));
 		
-		Date date = IUtil.getDate(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
-		DateTime dateTime = new DateTime(date);
-		dateTime = dateTime.plusDays(1);
-		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
-		String newDate = fmt.print(dateTime);
-		//loadCostList(newDate);
+		DateTime nextDate = mCurrentDate.plusMonths(1);
+		loadCostList(nextDate);
 	}
 	
 	AnimatorListener animatorListener = new AnimatorListener() {
 		
 		@Override
 		public void onAnimationStart(Animator arg0) {
-			mProgressDialog = ProgressDialog.show(TotalReportActivity.this, "Please wait ...", "Loading...", true);
+			mProgressDialog = ProgressDialog.show(YearlyReportActivity.this, "Please wait ...", "Loading...", true);
 			mProgressDialog.setCancelable(true);
 		}
 		
@@ -466,8 +434,8 @@ public class TotalReportActivity extends ActionBarActivity implements OnGestureL
 		.interpolate(new AccelerateDecelerateInterpolator())
 		.withListener(animatorListener)
 		.playOn(findViewById(R.id.relative_layout_root));
-	
-		//loadCostList(date);
+		
+		loadCostList(dateFormatter.parseDateTime(date));
 	}
 	
 }

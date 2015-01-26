@@ -91,6 +91,10 @@
 	<string name="title_monthly_report">Monthly report</string>
 	<string name="day_wise_cost_status">Day wise cost listed below. Total entry: %s</string>
 	
+	<!-- Yearly Report -->
+	<string name="title_yearly_report">Yearly report</string>
+	<string name="month_wise_cost_status">Month wise cost listed below. Total entry: %s</string>
+	
 	<!-- Total Report -->
 	<string name="title_total_report">Total report</string>
 	
