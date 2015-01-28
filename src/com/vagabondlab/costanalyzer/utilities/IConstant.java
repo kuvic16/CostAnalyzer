@@ -4,11 +4,13 @@ public final class IConstant {
 	public static final int PARENT_ACTIVITY_REQUEST_CODE = 99;
 	
 	public static final String CREATED_DATE = "created_date";
+	public static final String LAST_MODIFIED_DATE = "last_modified_date";
 	
 	public static final String COST_DATE = "date";
 	public static final String COST_TYPE = "category_type";
 	
 	public static final String CATEGORY_NAME = "name";
+	public static final String TRANSACTION_NAME = "name";
 	
 	
 	public static final int ACTION_ADD = 1;
