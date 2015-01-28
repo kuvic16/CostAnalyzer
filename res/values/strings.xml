@@ -98,5 +98,22 @@
 	<!-- Total Report -->
 	<string name="title_total_report">Total report</string>
 	
+	<!-- Transaction screen -->
+    <string name="title_activity_transaction">My Transaction</string>
+    <string name="transaction_name">Transaction with whom?</string>
+    <string name="transaction_lend_amount">Lend amount</string>
+    <string name="transaction_borrow_amount">Borrow amount</string>
+    <string name="new_transaction">New Transaction</string>
+    <string name="edit_transaction">Edit Transaction</string>
+    <string name="delete_transaction">Delete Transaction</string>
+    <string name="delete_transaction_are_u_sure">Are you sure to delete with transaction \"%s\"</string>
+	<string name="transaction_name_missing">Please write the name of transaction person</string>
+	<string name="save_transaction_success">Transaction with \"%s\" saved</string>
+	<string name="save_transaction_failed">Failed to save transaction. Please try again</string>
+	<string name="transaction_status">All transaction listed below. Total transaction: %s</string>
+	<string name="not_found_transaction_name">Name of transaction person not found</string>
+	<string name="delete_transaction_success">Transaction deleted with \"%s\"</string>
+	
+	
 	
 </resources>
