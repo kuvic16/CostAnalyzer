@@ -60,5 +60,10 @@
             android:configChanges="orientation"
             android:label="@string/title_yearly_report" >
         </activity>
+        <activity
+            android:name=".TransactionActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_activity_transaction" >
+        </activity>
     </application>
 </manifest>

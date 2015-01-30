@@ -161,6 +161,10 @@ public class MonthlyReportActivity extends ActionBarActivity implements OnGestur
 			i = new Intent(getApplicationContext(),TotalReportActivity.class);
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
+		case 8:
+			i = new Intent(getApplicationContext(),TransactionActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+			break;
 		}
 	}
 	

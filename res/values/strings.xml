@@ -10,7 +10,7 @@
     <string name="main_menu6">Monthly report</string>
     <string name="main_menu7">Yearly report</string>
     <string name="main_menu8">Total report</string>
-    <string name="main_menu9">Transaction</string>
+    <string name="main_menu9">My Transaction</string>
     <string name="main_menu10">Help</string>
     <string name="main_menu11">About VLab</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -106,13 +106,15 @@
     <string name="new_transaction">New Transaction</string>
     <string name="edit_transaction">Edit Transaction</string>
     <string name="delete_transaction">Delete Transaction</string>
-    <string name="delete_transaction_are_u_sure">Are you sure to delete with transaction \"%s\"</string>
+    <string name="delete_transaction_are_u_sure">Are you sure to delete transaction with \"%s\"</string>
 	<string name="transaction_name_missing">Please write the name of transaction person</string>
 	<string name="save_transaction_success">Transaction with \"%s\" saved</string>
 	<string name="save_transaction_failed">Failed to save transaction. Please try again</string>
 	<string name="transaction_status">All transaction listed below. Total transaction: %s</string>
+	<string name="not_found_transaction">Transaction not found</string>
 	<string name="not_found_transaction_name">Name of transaction person not found</string>
 	<string name="delete_transaction_success">Transaction deleted with \"%s\"</string>
+	<string name="delete_transaction_failed">Failed to delete Transaction with \"%s\"</string>
 	
 	
 	

@@ -27,14 +27,12 @@ import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.vagabondlab.costanalyzer.database.DatabaseHelper;
-import com.vagabondlab.costanalyzer.database.entity.Category;
-import com.vagabondlab.costanalyzer.database.service.CategoryService;
+import com.vagabondlab.costanalyzer.database.entity.Transaction;
 import com.vagabondlab.costanalyzer.database.service.TransactionService;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
@@ -110,16 +108,16 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
-		setContentView(R.layout.activity_category);
+		setContentView(R.layout.activity_transaction);
 		
-		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_category);
-		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_category,(DrawerLayout) findViewById(R.id.drawer_layout_category));
-		setTitle(getString(R.string.cost_category));
-		
+		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_transaction);
+		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_transaction,(DrawerLayout) findViewById(R.id.drawer_layout_transaction));
+		setTitle(getString(R.string.title_activity_transaction));
+		//getHelper().onTransactionUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
 		try {
-			categoryService = new CategoryService(getHelper().getCategoryDao());
-			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
-			loadCategoryList();
+			transactionService = new TransactionService(getHelper().getTransactionDao());
+			mTransactionStatus = (TextView)findViewById(R.id.textView_transaction_status);
+			loadTransactionList();
 			mTitle = getTitle();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -160,7 +158,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
 		// Context menu
-		menu.setHeaderTitle(selectedCategoryName);
+		menu.setHeaderTitle(selectedTransactionName);
 		menu.add(Menu.NONE, CONTEXT_MENU_EDIT, Menu.NONE, R.string.edit);
 		menu.add(Menu.NONE, CONTEXT_MENU_ARCHIVE, Menu.NONE, R.string.delete);
 		menu.add(Menu.NONE, CONTEXT_MENU_CANCEL, Menu.NONE, R.string.cancel);
@@ -180,7 +178,6 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		}
 			break;
 		}
-
 		return super.onContextItemSelected(item);
 	}
 
@@ -207,16 +204,15 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	@SuppressLint("InflateParams")
 	private void addNewCategoryDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
-		final View categoryFormView = factory.inflate(R.layout.category_form, null);
-		mCategoryName = (EditText)categoryFormView.findViewById(R.id.editText_category_name);
-		mProductive = (RadioButton)categoryFormView.findViewById(R.id.radio_productive);
-		mWastage = (RadioButton)categoryFormView.findViewById(R.id.radio_wastage);
-		
+		final View transactionFormView = factory.inflate(R.layout.form_transaction, null);
+		mName = (EditText)transactionFormView.findViewById(R.id.editText_transaction_name);
+		mLendAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_lend_amount);
+		mBorrowAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_borrow_amount);
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.add)
-		     .setTitle(R.string.add_new_category)
-		     .setView(categoryFormView)
+		     .setTitle(R.string.new_transaction)
+		     .setView(transactionFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
 		     .setNegativeButton(R.string.cancel, saveCancelListener);
 		alert.show();
@@ -225,28 +221,30 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	@SuppressLint("InflateParams")
 	private void editCategoryDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
-		final View categoryFormView = factory.inflate(R.layout.category_form, null);
-		mCategoryName = (EditText)categoryFormView.findViewById(R.id.editText_category_name);
-		mProductive = (RadioButton)categoryFormView.findViewById(R.id.radio_productive);
-		mWastage = (RadioButton)categoryFormView.findViewById(R.id.radio_wastage);
+		final View transactionFormView = factory.inflate(R.layout.form_transaction, null);
+		mName = (EditText)transactionFormView.findViewById(R.id.editText_transaction_name);
+		mLendAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_lend_amount);
+		mBorrowAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_borrow_amount);
 		
-		Category category = categoryService.getCategoryById(selectedCategoryId);
-		if(category == null){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_category));
+		Transaction transaction = transactionService.getTransactionById(selectedTransactionId);
+		if(transaction == null){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_transaction));
 			return;
 		}
 		
-		mCategoryName.setText(category.getName());
-		if(category.getType().equalsIgnoreCase(getString(R.string.productive))){
-			mProductive.setChecked(true);
-		}else if(category.getType().equalsIgnoreCase(getString(R.string.wastage))){
-			mWastage.setChecked(true);
+		mName.setText(transaction.getName());
+		if(transaction.getLend_amount() > 0){
+			mLendAmount.setText(String.valueOf(transaction.getLend_amount()));
 		}
+		if(transaction.getBorrow_amount() > 0){
+			mBorrowAmount.setText(String.valueOf(transaction.getBorrow_amount()));
+		}
+		
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.edit)
-		     .setTitle(R.string.edit_category)
-		     .setView(categoryFormView)
+		     .setTitle(R.string.edit_transaction)
+		     .setView(transactionFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
 		     .setNegativeButton(R.string.cancel, saveCancelListener);
 		alert.show();
@@ -255,8 +253,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private void deleteCategoryDialougeBox(){
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.delete)
-		     .setTitle(R.string.delete_category)
-		     .setMessage(getString(R.string.delete_category_are_u_sure, selectedCategoryName))
+		     .setTitle(R.string.delete_transaction)
+		     .setMessage(getString(R.string.delete_transaction_are_u_sure, selectedTransactionName))
 		     .setPositiveButton(R.string.delete, deleteCancelListener)
 		     .setNegativeButton(R.string.cancel, deleteCancelListener);
 		alert.show();
@@ -268,7 +266,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
-				if(saveCategory()==1){
+				if(saveTransaction()==1){
 					break;
 				}
 			case DialogInterface.BUTTON_NEGATIVE: 
@@ -282,7 +280,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
-				if(deleteCategory()==1){
+				if(deleteTransaction()==1){
 					break;
 				}
 			case DialogInterface.BUTTON_NEGATIVE: 
@@ -291,90 +289,92 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		}
 	};
 	
-	private int saveCategory(){
-		if(IUtil.isNotBlank(mCategoryName.getText())){
-    		String categoryName = mCategoryName.getText().toString().toLowerCase();
-    		String categoryType = getString(R.string.productive);
-    		if(mWastage.isChecked()){
-    			categoryType = getString(R.string.wastage);
-    		}else if(mProductive.isChecked()){
-    			categoryType = getString(R.string.productive);
-    		}
+	private int saveTransaction(){
+		if(IUtil.isNotBlank(mName.getText())){
+    		String name = mName.getText().toString().toLowerCase();
+    		String lendAmount = mLendAmount.getText().toString();
+    		String borrowAmount = mBorrowAmount.getText().toString();
     		
-    		Category category= new Category();
+    		Transaction transaction = new Transaction();
     		if(action == IConstant.ACTION_EDIT){
-    			category= categoryService.getCategoryById(selectedCategoryId);
+    			transaction = transactionService.getTransactionById(selectedTransactionId);
     		}
-    		category.setName(categoryName);
-    		category.setType(categoryType);
-    		category.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-    		category.setCreated_by_name("");
+    		transaction.setName(name);
+    		if(IUtil.isNotBlank(lendAmount)){
+    			transaction.setLend_amount(Double.parseDouble(lendAmount));
+    		}
+    		if(IUtil.isNotBlank(borrowAmount)){
+    			transaction.setBorrow_amount(Double.parseDouble(borrowAmount));
+    		}
+    		transaction.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+    		transaction.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
     		
     		int sucess = 0;
     		if(action == IConstant.ACTION_ADD){
-    			sucess = categoryService.createCategory(category);
+    			sucess = transactionService.createTransaction(transaction);
     		}else if(action == IConstant.ACTION_EDIT){
-    			sucess = categoryService.updateCategory(category);
-    		} 
+    			sucess = transactionService.updateTransaction(transaction);
+    		}
     		
     		if(sucess > 0){
-    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_success, categoryName));
-    			loadCategoryList();
+    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_success, name));
+    			loadTransactionList();
     			return 1;
     		}else{
-    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_category_failed));
+    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_failed));
     		}
     	}else{
-    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.category_name_missing));
+    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.transaction_name_missing));
     	}
 		return 0;
 	}
 	
-	private int deleteCategory(){
+	private int deleteTransaction(){
 		int sucess = 0;
 		if(action == IConstant.ACTION_DELETE){
-			sucess = categoryService.deleteCategoryById(selectedCategoryId);
-		} 
+			sucess = transactionService.deleteTransactionById(selectedTransactionId);
+		}
 		
 		if(sucess > 0){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_category_success, selectedCategoryName));
-			loadCategoryList();
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_transaction_success, selectedTransactionName));
+			loadTransactionList();
 			return 1;
 		}else{
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_category_failed));
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_transaction_failed, selectedTransactionName));
 		}
     	return 0;
 	}
 	
-	private void loadCategoryList(){
+	private void loadTransactionList(){
 		try {
-			List<Category> categoryList = categoryService.getAllCategory();
-			loadUI(categoryList, categoryService.countCategory());
+			List<Transaction> transactionList = transactionService.getAllTransaction();
+			loadUI(transactionList, transactionService.countTransaction());
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}		
 	}
 
-	private void loadUI(List<Category> categoryList, long total) {
+	private void loadUI(List<Transaction> transactionList, long total) {
 		try {
-			mCategoryStatus.setText(getString(R.string.category_status, total));
-			mCategoryListdata = new ArrayList<Map<String,String>>();
-			for (Category category : categoryList) {
+			mTransactionStatus.setText(getString(R.string.transaction_status, total));
+			mTransactionListdata = new ArrayList<Map<String,String>>();
+			for (Transaction transaction : transactionList) {
 				Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("name", category.getName());
-				infoMap.put("id", String.valueOf(category.getId()));
-				String info = category.getType();
-				if(IUtil.isNotBlank(category.getCreated_date())){
-					Date date = IUtil.getDate(category.getCreated_date(), IUtil.DATE_FORMAT);				
+				infoMap.put("name", transaction.getName());
+				infoMap.put("id", String.valueOf(transaction.getId()));
+				String info = getString(R.string.transaction_lend_amount) + ": " + transaction.getLend_amount();
+				info += getString(R.string.transaction_borrow_amount) + ": " + transaction.getBorrow_amount();
+				if(IUtil.isNotBlank(transaction.getCreated_date())){
+					Date date = IUtil.getDate(transaction.getCreated_date(), IUtil.DATE_FORMAT);				
 					info += ", " + date;
 				}
 				infoMap.put("info", info);
-				mCategoryListdata.add(infoMap);
+				mTransactionListdata.add(infoMap);
 			}
 			
 			SimpleAdapter adapter = new SimpleAdapter(
 					this, 
-					mCategoryListdata,
+					mTransactionListdata,
 					R.layout.two_item, 
 					new String[] {"name","info", "id" }, new int[] { R.id.text1, R.id.text2,R.id.text3 
 			});
@@ -424,6 +424,10 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			break;
 		case 7:
 			i = new Intent(getApplicationContext(),TotalReportActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+			break;
+		case 8:
+			i = new Intent(getApplicationContext(),TransactionActivity.class);
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
 		}

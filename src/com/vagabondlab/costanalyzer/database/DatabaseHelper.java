@@ -13,6 +13,7 @@ import com.j256.ormlite.table.TableUtils;
 import com.vagabondlab.costanalyzer.R;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.entity.Cost;
+import com.vagabondlab.costanalyzer.database.entity.Transaction;
 
 /**
  * Database helper which creates and upgrades the database and provides the DAOs for the app.
@@ -25,6 +26,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 	private Dao<Category, Integer> categoryDao;
 	private Dao<Cost, Integer> costDao;
+	private Dao<Transaction, Integer> transactionDao;
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -36,6 +38,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		try {
 			TableUtils.createTable(connectionSource, Category.class);
 			TableUtils.createTable(connectionSource, Cost.class);
+			TableUtils.createTable(connectionSource, Transaction.class);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Unable to create datbases", e);
 		}
@@ -46,6 +49,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		try {
 			TableUtils.dropTable(connectionSource, Category.class, true);
 			TableUtils.dropTable(connectionSource, Cost.class, true);
+			TableUtils.dropTable(connectionSource, Transaction.class, true);
 			onCreate(sqliteDatabase, connectionSource);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "+ newVer, e);
@@ -66,6 +70,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		return costDao;
 	}
 	
+	public Dao<Transaction, Integer> getTransactionDao() throws SQLException {
+		if (transactionDao == null) {
+			transactionDao = getDao(Transaction.class);
+		}
+		return transactionDao;
+	}
+	
 	public void onCategoryUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
 		try {
 			TableUtils.dropTable(connectionSource, Category.class, true);
@@ -79,6 +90,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		try {
 			TableUtils.dropTable(connectionSource, Cost.class, true);
 			TableUtils.createTable(connectionSource, Cost.class);
+		} catch (SQLException e) {
+			Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "+ newVer, e);
+		}
+	}
+	
+	public void onTransactionUpgrade(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource, int oldVer, int newVer) {
+		try {
+			TableUtils.dropTable(connectionSource, Transaction.class, true);
+			TableUtils.createTable(connectionSource, Transaction.class);
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Unable to upgrade database from version " + oldVer + " to new "+ newVer, e);
 		}
