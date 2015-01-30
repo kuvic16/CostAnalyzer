@@ -115,7 +115,8 @@
 	<string name="not_found_transaction_name">Name of transaction person not found</string>
 	<string name="delete_transaction_success">Transaction deleted with \"%s\"</string>
 	<string name="delete_transaction_failed">Failed to delete Transaction with \"%s\"</string>
-	
-	
-	
+	<string name="lend">Lend</string>
+	<string name="borrow">Borrow</string>
+	<string name="balance">Balance</string>
+	<string name="transaction_summary_status">Your current transaction status</string>
 </resources>

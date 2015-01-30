@@ -62,6 +62,17 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private final int CONTEXT_MENU_CANCEL = 3;
 	private int action = 0;
 	private boolean firstTime = true;
+	
+	private TextView mSummaryStatusView;
+	private TextView mBalanceAmountView;
+	private TextView mBalanceAmountViewLabel;
+	private TextView mLendAmountView;
+	private TextView mLendAmountViewLabel;
+	private TextView mBorrowAmountView;
+	private TextView mBorrowAmountViewLabel;
+	private Double lendAmount = 0.0;
+	private Double borrowAmount = 0.0;
+	private Double balanceAmount = 0.0;
 
 	
 	
@@ -74,10 +85,10 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 				@Override
 				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
 					try{
-						View idChild = ((ViewGroup) v).getChildAt(1);
+						View idChild = ((ViewGroup) v).getChildAt(0);
 						selectedTransactionId = Integer.valueOf(((TextView) idChild).getText().toString());
 						
-						View nameChild = ((ViewGroup) v).getChildAt(0);
+						View nameChild = ((ViewGroup) v).getChildAt(1);
 						selectedTransactionName = ((TextView) nameChild).getText().toString();
 						
 						registerForContextMenu(mListView);
@@ -113,10 +124,26 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_transaction);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_transaction,(DrawerLayout) findViewById(R.id.drawer_layout_transaction));
 		setTitle(getString(R.string.title_activity_transaction));
-		//getHelper().onTransactionUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
+		//getHelper().onTransactionUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 0, 1);
 		try {
 			transactionService = new TransactionService(getHelper().getTransactionDao());
 			mTransactionStatus = (TextView)findViewById(R.id.textView_transaction_status);
+			
+			mSummaryStatusView = (TextView)findViewById(R.id.textView_summary_status);
+			mSummaryStatusView.setText(getString(R.string.transaction_summary_status));
+			
+			mBorrowAmountView = (TextView)findViewById(R.id.textView_summary_total_cost);
+			mBorrowAmountViewLabel = (TextView)findViewById(R.id.textView_summary_total_cost_status);
+			mBorrowAmountViewLabel.setText(getString(R.string.borrow));
+			
+			mLendAmountView = (TextView)findViewById(R.id.textView_summary_effective_cost);
+			mLendAmountViewLabel = (TextView)findViewById(R.id.textView_summary_effective_cost_status);
+			mLendAmountViewLabel.setText(getString(R.string.lend));
+			
+			mBalanceAmountView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
+			mBalanceAmountViewLabel = (TextView)findViewById(R.id.textView_summary_wastage_cost_status);
+			mBalanceAmountViewLabel.setText(getString(R.string.balance));
+			
 			loadTransactionList();
 			mTitle = getTitle();
 		} catch (SQLException e) {
@@ -347,6 +374,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	
 	private void loadTransactionList(){
 		try {
+			loadQuickView();
 			List<Transaction> transactionList = transactionService.getAllTransaction();
 			loadUI(transactionList, transactionService.countTransaction());
 		} catch (Exception ex) {
@@ -360,29 +388,62 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			mTransactionListdata = new ArrayList<Map<String,String>>();
 			for (Transaction transaction : transactionList) {
 				Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("name", transaction.getName());
-				infoMap.put("id", String.valueOf(transaction.getId()));
-				String info = getString(R.string.transaction_lend_amount) + ": " + transaction.getLend_amount();
-				info += getString(R.string.transaction_borrow_amount) + ": " + transaction.getBorrow_amount();
+				infoMap.put("transaction_name", transaction.getName());
+				infoMap.put("transaction_row_id", String.valueOf(transaction.getId()));
+				String transactionAmount = "";
+				if(transaction.getLend_amount()>0){
+					transactionAmount = String.valueOf(transaction.getLend_amount());
+				}else if(transaction.getBorrow_amount()>0){
+					transactionAmount = "-" + String.valueOf(transaction.getBorrow_amount());
+				}
+				infoMap.put("transaction_amount", transactionAmount);
+				
+				String datestring = "";
 				if(IUtil.isNotBlank(transaction.getCreated_date())){
 					Date date = IUtil.getDate(transaction.getCreated_date(), IUtil.DATE_FORMAT);				
-					info += ", " + date;
+					datestring += date;
 				}
-				infoMap.put("info", info);
+				infoMap.put("transaction_time", datestring);
 				mTransactionListdata.add(infoMap);
 			}
 			
 			SimpleAdapter adapter = new SimpleAdapter(
 					this, 
 					mTransactionListdata,
-					R.layout.two_item, 
-					new String[] {"name","info", "id" }, new int[] { R.id.text1, R.id.text2,R.id.text3 
+					R.layout.transaction_list_view,
+					new String[] {"transaction_row_id", "transaction_name", "transaction_amount", "transaction_time" }, 
+					new int[] { R.id.transaction_row_id, R.id.transaction_name, R.id.transaction_amount, R.id.transaction_time
 			});
 			setListAdapter(adapter);
 			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 			getListView().setItemsCanFocus(false);
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
+		}
+	}
+	
+	private void loadQuickView(){
+		try{
+			lendAmount = 0.0;
+			borrowAmount = 0.0;
+			balanceAmount = 0.0;
+			List<String[]> summaryTransaction = transactionService.getSummaryTransaction();
+			if(IUtil.isNotBlank(summaryTransaction)){
+				for(String[] trs : summaryTransaction){
+					try{
+						lendAmount = Double.valueOf(trs[0]);
+						borrowAmount = Double.valueOf(trs[1]);
+					}catch(Throwable t){
+						t.printStackTrace();
+					}
+				}
+			}
+			balanceAmount = lendAmount - borrowAmount;
+			mBalanceAmountView.setText(String.valueOf(balanceAmount.intValue()));
+			mBorrowAmountView.setText(String.valueOf(borrowAmount.intValue()));
+			mLendAmountView.setText(String.valueOf(lendAmount.intValue()));
+		}catch(Throwable t){
+			t.printStackTrace();
 		}
 	}
 

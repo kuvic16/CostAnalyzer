@@ -12,16 +12,26 @@
         android:layout_height="match_parent" />
 
     <RelativeLayout
+        android:id="@+id/relative_layout_root"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
+        
+        <RelativeLayout
+    		android:id="@+id/relative_layout_short_summary_section"
+    		android:layout_width="fill_parent"
+        	android:layout_height="wrap_content">
+        	
+            <include layout="@layout/short_status_layout"/>        	
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/textView_transaction_status"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:background="#82CAFF"
+            android:layout_below="@+id/relative_layout_short_summary_section"
+            android:background="#FFA07A"
             android:padding="5dp"
             android:paddingTop="0dp"
             android:text="@string/transaction_status"

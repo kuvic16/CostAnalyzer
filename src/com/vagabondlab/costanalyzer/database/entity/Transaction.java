@@ -10,7 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
  * Transaction entity 
  * @author shaiful islam palash
  */
-@DatabaseTable(tableName = "transaction")
+@DatabaseTable(tableName = "mtransaction")
 public class Transaction extends AbstractEntity implements Serializable{
 	
 	private static final long serialVersionUID = -2665373337324604077L;

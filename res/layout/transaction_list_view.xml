@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/relative_layout_transaction_list"
+	android:layout_width="fill_parent"
+	android:layout_height="60dip"
+	android:paddingRight="8dip"
+	android:paddingLeft="8dip"
+	android:paddingTop="5dip"
+	android:paddingBottom="5dip"
+	android:minHeight="?android:attr/listPreferredItemHeight">
+	
+    <TextView
+			android:id="@+id/transaction_row_id"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			android:layout_alignParentLeft="true"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>	
+
+    <TextView
+			android:id="@+id/transaction_name"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:textColor="#000000"
+			android:textSize="20sp"
+			android:text="Someone"
+			android:textAppearance="?android:attr/textAppearanceLarge"/>
+    
+    <TextView
+			android:id="@+id/transaction_time"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:gravity="center_vertical"
+			android:layout_below="@+id/transaction_name"
+			android:layout_alignParentLeft="true"
+			android:textColor="#000000"
+			android:textSize="12sp"
+			android:text="Productive"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+    
+    <TextView
+			android:id="@+id/transaction_amount"
+			android:layout_width="50dip"
+			android:layout_height="50dip"
+			android:gravity="center"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentRight="true"
+			android:background="@layout/list_cost_amount_percant_design"
+			android:textColor="#ffffff"
+			android:textStyle="normal"
+			android:textSize="12sp"
+			android:text="100"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+    <!-- <TextView
+			android:id="@+id/textView_transaction_type"
+			android:layout_width="50dip"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:layout_below="@+id/transaction_amount"
+			android:layout_alignLeft="@+id/transaction_amount"
+			android:textColor="#000000"
+			android:textSize="10sp"
+			android:text="@string/borrow"
+			android:textAppearance="?android:attr/textAppearanceSmall"/> -->
+</RelativeLayout>

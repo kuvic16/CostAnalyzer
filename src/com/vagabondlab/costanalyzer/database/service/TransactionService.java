@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.Where;
@@ -119,5 +120,19 @@ public class TransactionService{
 			e.printStackTrace();
 		}
 		return 0;
+	}
+	
+	public List<String[]> getSummaryTransaction(){
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("select sum(lend_amount), sum(borrow_amount) from mtransaction");
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			return results;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
