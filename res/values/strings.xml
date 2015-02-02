@@ -118,5 +118,7 @@
 	<string name="lend">Lend</string>
 	<string name="borrow">Borrow</string>
 	<string name="balance">Balance</string>
+	<string name="pay_amount">Pay amount</string>
+	<string name="take_amount">Take amount</string>
 	<string name="transaction_summary_status">Your current transaction status</string>
 </resources>

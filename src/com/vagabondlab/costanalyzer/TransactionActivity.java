@@ -9,6 +9,7 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
@@ -30,8 +33,13 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.vagabondlab.costanalyzer.database.DatabaseHelper;
+import com.vagabondlab.costanalyzer.database.entity.Cost;
 import com.vagabondlab.costanalyzer.database.entity.Transaction;
 import com.vagabondlab.costanalyzer.database.service.TransactionService;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
@@ -73,6 +81,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private Double lendAmount = 0.0;
 	private Double borrowAmount = 0.0;
 	private Double balanceAmount = 0.0;
+	private ProgressDialog mProgressDialog = null;
 
 	
 	
@@ -133,14 +142,17 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			mSummaryStatusView.setText(getString(R.string.transaction_summary_status));
 			
 			mBorrowAmountView = (TextView)findViewById(R.id.textView_summary_total_cost);
+			mBorrowAmountView.setOnClickListener(borrowAmountClickListener);
 			mBorrowAmountViewLabel = (TextView)findViewById(R.id.textView_summary_total_cost_status);
 			mBorrowAmountViewLabel.setText(getString(R.string.borrow));
 			
 			mLendAmountView = (TextView)findViewById(R.id.textView_summary_effective_cost);
+			mLendAmountView.setOnClickListener(lendAmountClickListener);
 			mLendAmountViewLabel = (TextView)findViewById(R.id.textView_summary_effective_cost_status);
 			mLendAmountViewLabel.setText(getString(R.string.lend));
 			
 			mBalanceAmountView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
+			mBalanceAmountView.setOnClickListener(balanceAmountClickListener);
 			mBalanceAmountViewLabel = (TextView)findViewById(R.id.textView_summary_wastage_cost_status);
 			mBalanceAmountViewLabel.setText(getString(R.string.balance));
 			
@@ -253,6 +265,9 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		mLendAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_lend_amount);
 		mBorrowAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_borrow_amount);
 		
+		TextView mTLALabel = (TextView)transactionFormView.findViewById(R.id.textView_transaction_lend_amount);
+		TextView mTBALabel = (TextView)transactionFormView.findViewById(R.id.textView_transaction_borrow_amount);
+		
 		Transaction transaction = transactionService.getTransactionById(selectedTransactionId);
 		if(transaction == null){
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_transaction));
@@ -261,9 +276,11 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		mName.setText(transaction.getName());
 		if(transaction.getLend_amount() > 0){
+			mTBALabel.setText(getString(R.string.take_amount));
 			mLendAmount.setText(String.valueOf(transaction.getLend_amount()));
 		}
 		if(transaction.getBorrow_amount() > 0){
+			mTLALabel.setText(getString(R.string.pay_amount));
 			mBorrowAmount.setText(String.valueOf(transaction.getBorrow_amount()));
 		}
 		
@@ -329,10 +346,30 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
     		transaction.setName(name);
     		if(IUtil.isNotBlank(lendAmount)){
     			transaction.setLend_amount(Double.parseDouble(lendAmount));
+    		}else{
+    			transaction.setLend_amount(0.0);
     		}
+    		
     		if(IUtil.isNotBlank(borrowAmount)){
     			transaction.setBorrow_amount(Double.parseDouble(borrowAmount));
+    		}else{
+    			transaction.setBorrow_amount(0.0);
     		}
+    		
+    		if(transaction.getLend_amount() > 0 && transaction.getBorrow_amount()>0){
+    			Double diff = transaction.getLend_amount() -  transaction.getBorrow_amount();
+    			if(diff==0){
+    				transaction.setLend_amount(0.0);
+    				transaction.setBorrow_amount(0.0);
+    			}else if(diff>0){
+    				transaction.setLend_amount(diff);
+    				transaction.setBorrow_amount(0.0);
+    			}else{
+    				transaction.setLend_amount(0.0);
+    				transaction.setBorrow_amount(diff*(-1));
+    			}
+    		}
+    		
     		transaction.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
     		transaction.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
     		
@@ -375,11 +412,15 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private void loadTransactionList(){
 		try {
 			loadQuickView();
-			List<Transaction> transactionList = transactionService.getAllTransaction();
-			loadUI(transactionList, transactionService.countTransaction());
+			loadListView();
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}		
+	}
+	
+	private void loadListView(){
+		List<Transaction> transactionList = transactionService.getAllTransaction();
+		loadUI(transactionList, transactionService.countTransaction());
 	}
 
 	private void loadUI(List<Transaction> transactionList, long total) {
@@ -392,9 +433,9 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 				infoMap.put("transaction_row_id", String.valueOf(transaction.getId()));
 				String transactionAmount = "";
 				if(transaction.getLend_amount()>0){
-					transactionAmount = String.valueOf(transaction.getLend_amount());
+					transactionAmount = String.valueOf(transaction.getLend_amount()) + "\n " + getString(R.string.lend);
 				}else if(transaction.getBorrow_amount()>0){
-					transactionAmount = "-" + String.valueOf(transaction.getBorrow_amount());
+					transactionAmount = "-" + String.valueOf(transaction.getBorrow_amount()) + "\n " + getString(R.string.borrow);
 				}
 				infoMap.put("transaction_amount", transactionAmount);
 				
@@ -493,6 +534,79 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			break;
 		}
 	}
+	
+	OnClickListener borrowAmountClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				YoYo.with(Techniques.ZoomIn)
+					.duration(500)
+					.interpolate(new AccelerateDecelerateInterpolator())
+					.withListener(animatorListener)
+					.playOn(mBorrowAmountView);
+				
+				//loadListView(mCurrentDate, null);
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener lendAmountClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				YoYo.with(Techniques.ZoomIn)
+					.duration(500)
+					.interpolate(new AccelerateDecelerateInterpolator())
+					.withListener(animatorListener)
+					.playOn(mLendAmountView);
+				
+//				loadListView(mCurrentDate, getString(R.string.productive));
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener balanceAmountClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			YoYo.with(Techniques.ZoomIn)
+				.duration(500)
+				.interpolate(new AccelerateDecelerateInterpolator())
+				.withListener(animatorListener)
+				.playOn(mBalanceAmountView);
+			
+//			loadListView(mCurrentDate, getString(R.string.wastage));
+		}
+	};
+	
+	AnimatorListener animatorListener = new AnimatorListener() {
+		@Override
+		public void onAnimationStart(Animator arg0) {
+			mProgressDialog = ProgressDialog.show(TransactionActivity.this, "Please wait ...", "Loading...", true);
+			mProgressDialog.setCancelable(true);
+		}
+		
+		@Override
+		public void onAnimationRepeat(Animator arg0) {
+		}
+		
+		@Override
+		public void onAnimationEnd(Animator arg0) {
+			if(mProgressDialog != null){
+				mProgressDialog.dismiss();
+			}
+		}
+		
+		@Override
+		public void onAnimationCancel(Animator arg0) {
+			if(mProgressDialog != null){
+				mProgressDialog.dismiss();
+			}
+		}
+	};
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

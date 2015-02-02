@@ -2003,6 +2003,7 @@ containing a value of this type.
         public static final int number=0x7f0b005a;
         public static final int page_top_date_text=0x7f0b004d;
         public static final int parcantage=0x7f0b0058;
+        public static final int pay_amount=0x7f0b0073;
         public static final int pick_date=0x7f0b004b;
         public static final int productive=0x7f0b0031;
         public static final int productive_cost_status=0x7f0b004f;
@@ -2015,6 +2016,7 @@ containing a value of this type.
         public static final int save_transaction_success=0x7f0b0069;
         public static final int search=0x7f0b0025;
         public static final int select_category=0x7f0b003a;
+        public static final int take_amount=0x7f0b0074;
         public static final int test=0x7f0b0020;
         /**  Category screen 
          */
@@ -2049,7 +2051,7 @@ containing a value of this type.
         public static final int transaction_name=0x7f0b0061;
         public static final int transaction_name_missing=0x7f0b0068;
         public static final int transaction_status=0x7f0b006b;
-        public static final int transaction_summary_status=0x7f0b0073;
+        public static final int transaction_summary_status=0x7f0b0075;
         public static final int type=0x7f0b0059;
         public static final int wastage=0x7f0b0032;
         public static final int wastage_cost_status=0x7f0b0050;
