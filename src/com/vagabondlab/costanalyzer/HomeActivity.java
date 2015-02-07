@@ -187,25 +187,44 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 	protected ListView getListView() {
 	    if (mListView == null) {
 	        mListView = (ListView) findViewById(android.R.id.list);
-	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
-					try{
-						View viewCostId = ((ViewGroup) v).getChildAt(2);
-						View viewCostDetails = ((ViewGroup) v).getChildAt(1);
-						View viewCostCategoryName = ((ViewGroup) viewCostDetails).getChildAt(0);
-						View viewCostAmount = ((ViewGroup) viewCostDetails).getChildAt(2);
-						
-						selectedCostId = Integer.valueOf(((TextView) viewCostId).getText().toString());
-						selectedCostName = ((TextView) viewCostCategoryName).getText().toString() + " : " + ((TextView) viewCostAmount).getText().toString();
-						
-						registerForContextMenu(mListView);
-	                    openContextMenu(mListView);
-					}catch(Throwable t){
-						t.printStackTrace();
-					}
-				}
-			});	        
+	        mListView.setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {
+	            public boolean onItemLongClick(AdapterView<?> parent, View v,int position, long id) {
+		            	try{
+							View viewCostId = ((ViewGroup) v).getChildAt(2);
+							View viewCostDetails = ((ViewGroup) v).getChildAt(1);
+							View viewCostCategoryName = ((ViewGroup) viewCostDetails).getChildAt(0);
+							View viewCostAmount = ((ViewGroup) viewCostDetails).getChildAt(2);
+							
+							selectedCostId = Integer.valueOf(((TextView) viewCostId).getText().toString());
+							selectedCostName = ((TextView) viewCostCategoryName).getText().toString() + " : " + ((TextView) viewCostAmount).getText().toString();
+							
+							registerForContextMenu(mListView);
+		                 openContextMenu(mListView);
+						}catch(Throwable t){
+							t.printStackTrace();
+						}
+	            		return true;
+	            }
+	        });
+//	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+//				@Override
+//				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
+////					try{
+////						View viewCostId = ((ViewGroup) v).getChildAt(2);
+////						View viewCostDetails = ((ViewGroup) v).getChildAt(1);
+////						View viewCostCategoryName = ((ViewGroup) viewCostDetails).getChildAt(0);
+////						View viewCostAmount = ((ViewGroup) viewCostDetails).getChildAt(2);
+////						
+////						selectedCostId = Integer.valueOf(((TextView) viewCostId).getText().toString());
+////						selectedCostName = ((TextView) viewCostCategoryName).getText().toString() + " : " + ((TextView) viewCostAmount).getText().toString();
+////						
+////						registerForContextMenu(mListView);
+////	                    openContextMenu(mListView);
+////					}catch(Throwable t){
+////						t.printStackTrace();
+////					}
+//				}
+//			});	        
 	    }
 	    return mListView;
 	}
@@ -318,7 +337,10 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 		
 		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
 		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
-		mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
+		mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);
+		Calendar calender = IUtil.getCalender(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
+		mCostDatePicker.init(calender.get(Calendar.YEAR), calender.get(Calendar.MONTH), calender.get(Calendar.DAY_OF_MONTH), null);
+		
 		loadCategorySpinner(mCategoryName);
 	
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -461,7 +483,8 @@ public class HomeActivity extends ActionBarActivity implements OnGestureListener
 		
 		if(sucess > 0){
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_cost_success, categoryName));
-			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+			//loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+			loadCostList(mCurrentDate);
 			return 1;
 		}else{
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_cost_failed));
