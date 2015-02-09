@@ -12,13 +12,14 @@
         android:id="@+id/textView_category_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:text="@string/category_name" />
 
     <Spinner 
         android:id="@+id/spinner_category_name"
     	android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_category_name"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView_category_name"
         style="@style/spinnerItemStyle"/>
     
@@ -26,6 +27,7 @@
         android:id="@+id/textView_cost_amount"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/spinner_category_name"
         android:text="@string/cost_amount" />
     
@@ -33,27 +35,38 @@
         android:id="@+id/editText_cost_amount"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_category_name"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/textView_cost_amount"
         android:ems="10"
-        android:inputType="number" >
+        android:inputType="numberDecimal" >
     </EditText>
 
     <TextView
         android:id="@+id/textView_cost_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_category_name"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/editText_cost_amount"
         android:text="@string/cost_date" />
     
-    <DatePicker
-        android:id="@+id/datePicker_cost_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" 
-        android:layout_alignLeft="@+id/textView_category_name"
-        android:calendarViewShown="false"
-        android:layout_below="@+id/textView_cost_date"/>
+    <TextView
+        android:id="@+id/textView_selected_cost_date"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView_cost_date"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:text="@string/cost_date" />
     
-    
+    <TextView
+        android:id="@+id/textView_change_date"
+        android:layout_width="60dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/textView_selected_cost_date"
+        android:layout_alignTop="@+id/textView_selected_cost_date"
+        style="@style/changeCostButtonStyle"
+        android:text="@string/change" />
+       
 </RelativeLayout>

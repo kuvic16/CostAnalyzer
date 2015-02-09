@@ -221,7 +221,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
 		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
-		mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
+		//mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
 		loadCategorySpinner(mCategoryName);
 	
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -240,7 +240,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
 		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
-		mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
+		//mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
 		loadCategorySpinner(mCategoryName);
 		
 		Cost cost = costService.getCostById(selectedCostId);

@@ -23,6 +23,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="search">Search</string>
+    <string name="change">Change</string>
     
     <!-- Category screen -->
     <string name="title_activity_category">Cost category</string>
