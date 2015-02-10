@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -62,6 +63,8 @@ public class HomeActivity extends CActivity {
 	private EditText mCostAmount;
 	private TextView mCostSelectedDate;
 	private TextView mChangeCostDateButton;
+	private Button mButtonholderAddCost;
+	private Button mButtonholderSearch;
 
 	private TextView mCostStatus;
 	
@@ -115,6 +118,11 @@ public class HomeActivity extends CActivity {
 			mWastageCostView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
 			mWastageCostView.setOnClickListener(wastageCostTouchListener);
 			mWastageCostView.setOnTouchListener(shortSummarySwipeListener);
+			
+			mButtonholderAddCost = (Button)findViewById(R.id.buttonholder_add_cost);
+			mButtonholderAddCost.setOnClickListener(buttonHolderAddCostButtonClickListener);
+			mButtonholderSearch = (Button)findViewById(R.id.buttonholder_search);
+			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
 			
 			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
 		} catch (SQLException e) {
@@ -479,7 +487,32 @@ public class HomeActivity extends CActivity {
 				t.printStackTrace();
 			}
 		}
-	};	
+	};
+	
+	OnClickListener buttonHolderAddCostButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				action = IConstant.ACTION_ADD;
+				addNewCostDialougeBox();
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener buttonHolderSearchButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				action = IConstant.ACTION_SEARCH;
+				DialogFragment newFragment = new DatePickerFragment();
+			    newFragment.show(getSupportFragmentManager(), "datePicker");
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
 	
 	// 2. Override methods
 	@Override
@@ -526,6 +559,10 @@ public class HomeActivity extends CActivity {
 			action = IConstant.ACTION_ADD;
 			addNewCostDialougeBox();
 			return true;
+		}else if(id == R.id.search){
+			action = IConstant.ACTION_SEARCH;
+			DialogFragment newFragment = new DatePickerFragment();
+		    newFragment.show(getSupportFragmentManager(), "datePicker");
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -559,7 +596,7 @@ public class HomeActivity extends CActivity {
 	@Override
 	public void nextView(){
 		YoYo.with(Techniques.SlideInRight)
-			.duration(500)
+			.duration(100)
 			.interpolate(new AccelerateDecelerateInterpolator())
 			.withListener(this)
 			.playOn(findViewById(R.id.relative_layout_root));
@@ -576,7 +613,7 @@ public class HomeActivity extends CActivity {
 	@Override
 	public void prevView(){
 		YoYo.with(Techniques.SlideInLeft)
-			.duration(500)
+			.duration(100)
 			.interpolate(new AccelerateDecelerateInterpolator())
 			.withListener(this)
 			.playOn(findViewById(R.id.relative_layout_root));
@@ -597,6 +634,15 @@ public class HomeActivity extends CActivity {
 	
 	@Override
 	public void returnDate(String date) {
-		mCostSelectedDate.setText(date);
+		if(action == IConstant.ACTION_ADD || action == IConstant.ACTION_EDIT){
+			mCostSelectedDate.setText(date);
+		}else if(action == IConstant.ACTION_SEARCH){
+			YoYo.with(Techniques.SlideInDown)
+			.duration(500)
+			.interpolate(new AccelerateDecelerateInterpolator())
+			.withListener(this)
+			.playOn(findViewById(R.id.relative_layout_root));
+			loadCostList(date);
+		}
 	}
 }

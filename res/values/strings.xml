@@ -50,7 +50,7 @@
 	
 	<!-- Cost screen -->
 	<string name="title_activity_cost">Cost history</string>
-	<string name="new_cost">new cost</string>
+	<string name="new_cost">New cost</string>
 	<string name="cost_amount">Cost Amount</string>
 	<string name="cost_date">Date</string>
 	<string name="add_new_cost">Add New Cost</string>
@@ -70,7 +70,7 @@
 	<!-- Home screen -->
 	<string name="title_home_screen">Cost analyzer</string>
 	<string name="page_top_date_text">Today %s</string>
-	<string name="total_cost">Total</string>
+	<string name="total_cost">Total Cost</string>
 	<string name="productive_cost_status">All productive cost listed below. Total cost entry: %s</string>
 	<string name="wastage_cost_status">All wastage cost listed below. Total cost entry: %s</string>
 	
