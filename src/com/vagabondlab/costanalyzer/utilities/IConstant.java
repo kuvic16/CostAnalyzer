@@ -10,6 +10,7 @@ public final class IConstant {
 	public static final String COST_TYPE = "category_type";
 	
 	public static final String CATEGORY_NAME = "name";
+	public static final String CATEGORY_TYPE = "type";
 	public static final String TRANSACTION_NAME = "name";
 	
 	

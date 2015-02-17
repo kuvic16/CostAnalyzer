@@ -24,13 +24,14 @@
     <string name="delete">Delete</string>
     <string name="search">Search</string>
     <string name="change">Change</string>
+    <string name="reload">Reload</string>
     
     <!-- Category screen -->
     <string name="title_activity_category">Cost category</string>
     <string name="cost_category">Cost category</string>
     <string name="category_name">Category Name</string>
     <string name="category_type">Category Type</string>
-    <string name="new_category">new category</string>
+    <string name="new_category">New category</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="add_new_category">Add New Category</string>

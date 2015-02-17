@@ -31,7 +31,53 @@
             android:id="@android:id/list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_above="@+id/linearLayout_buttonholder"
             android:layout_below="@+id/textView_category_status" />
+        
+        <LinearLayout
+	        android:id="@+id/linearLayout_buttonholder"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:background="@layout/design_button_group_layout"
+	        android:orientation="horizontal" >
+	        
+            <Button
+	            android:id="@+id/buttonholder_reload"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:padding="12dp"
+	            android:drawableRight="@drawable/reload"
+	            android:gravity="center"
+	            android:drawablePadding="8dp"
+	            android:text="@string/reload"
+	            android:textSize="16sp" />
+            
+	        <Button
+	            android:id="@+id/buttonholder_search"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:padding="12dp"
+	            android:drawableRight="@drawable/search"
+	            android:gravity="center"
+	            android:drawablePadding="8dp"
+	            android:text="@string/search"
+	            android:textSize="16sp" />
+	         
+	        <Button
+	            android:id="@+id/buttonholder_add_category"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:padding="12dp"
+	            android:drawableRight="@drawable/add"
+	            android:gravity="center"
+	            android:text="@string/new_category"
+	            android:textSize="16sp" />
+
+    	</LinearLayout>
     </RelativeLayout>
     
     <fragment

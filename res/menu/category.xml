@@ -8,5 +8,11 @@
         android:title="@string/new_category"
         android:icon="@drawable/add"
         app:showAsAction="withText|ifRoom"/>
+    
+    <item
+        android:id="@+id/search"
+        android:title="@string/search"
+        android:icon="@drawable/search"
+        app:showAsAction="withText|ifRoom"/>
 
 </menu>

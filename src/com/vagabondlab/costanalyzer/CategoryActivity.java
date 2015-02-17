@@ -21,8 +21,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
@@ -51,6 +53,13 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private RadioButton mProductive;
 	private RadioButton mWastage;
 	private TextView mCategoryStatus;
+	private Button mButtonholderAddCategory;
+	private Button mButtonholderSearch;
+	private Button mButtonholderReload;
+	
+	private EditText mSearchCategoryName;
+	private RadioButton mSearchProductive;
+	private RadioButton mSearchWastage;
 	
 	private List<Map<String, String>> mCategoryListdata = new ArrayList<Map<String, String>>();
 	private CharSequence mTitle;
@@ -118,6 +127,13 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		try {
 			categoryService = new CategoryService(getHelper().getCategoryDao());
 			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
+			mButtonholderAddCategory = (Button)findViewById(R.id.buttonholder_add_category);
+			mButtonholderAddCategory.setOnClickListener(buttonHolderAddCostButtonClickListener);
+			mButtonholderSearch = (Button)findViewById(R.id.buttonholder_search);
+			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
+			mButtonholderReload = (Button)findViewById(R.id.buttonholder_reload);
+			mButtonholderReload.setOnClickListener(buttonHolderReloadButtonClickListener);
+			
 			loadCategoryList();
 			mTitle = getTitle();
 		} catch (SQLException e) {
@@ -190,6 +206,9 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			action = IConstant.ACTION_ADD;
 			addNewCategoryDialougeBox();
 			return true;
+		}else if(id == R.id.search){
+			action = IConstant.ACTION_SEARCH;
+			searchCategoryDialougeBox();
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -261,6 +280,23 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		alert.show();
 	}
 	
+	@SuppressLint("InflateParams")
+	private void searchCategoryDialougeBox(){
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View categorySearchFormView = factory.inflate(R.layout.search_category_form, null);
+		mSearchCategoryName = (EditText)categorySearchFormView.findViewById(R.id.editText_search_category_name);
+		mSearchProductive = (RadioButton)categorySearchFormView.findViewById(R.id.radio_search_productive);
+		mSearchWastage = (RadioButton)categorySearchFormView.findViewById(R.id.radio_search_wastage);
+		
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setIcon(R.drawable.search)
+		     .setTitle(R.string.search)
+		     .setView(categorySearchFormView)
+		     .setPositiveButton(R.string.search, searchCategorylListener)
+		     .setNegativeButton(R.string.cancel, searchCategorylListener);
+		alert.show();
+	}
+	
 	
 	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
 		@Override
@@ -284,6 +320,19 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 				if(deleteCategory()==1){
 					break;
 				}
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
+	DialogInterface.OnClickListener searchCategorylListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				searchCategory();
+				break;
 			case DialogInterface.BUTTON_NEGATIVE: 
 				break;
 			}
@@ -343,6 +392,23 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_category_failed));
 		}
     	return 0;
+	}
+	
+	private void searchCategory(){
+		try{
+    		String categoryName = mSearchCategoryName.getText().toString().toLowerCase();
+    		String categoryType = "";
+    		if(mSearchWastage.isChecked()){
+    			categoryType = getString(R.string.wastage);
+    		}else if(mSearchProductive.isChecked()){
+    			categoryType = getString(R.string.productive);
+    		}
+    		
+    		List<Category> categoryList = categoryService.searchCategory(categoryName, categoryType);
+    		loadUI(categoryList, categoryList.size());
+    	}catch(Throwable t){
+    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, t.getMessage()));
+    	}
 	}
 	
 	private void loadCategoryList(){
@@ -440,4 +506,41 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	
+	// 1. Listener
+	OnClickListener buttonHolderAddCostButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				action = IConstant.ACTION_ADD;
+				addNewCategoryDialougeBox();
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener buttonHolderSearchButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				action = IConstant.ACTION_SEARCH;
+				searchCategoryDialougeBox();
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener buttonHolderReloadButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				loadCategoryList();
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
 }
