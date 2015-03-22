@@ -92,9 +92,9 @@ public class HomeActivity extends CActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		setTitle(getString(R.string.title_home_screen));
-
-		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
+		
+		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
 		
 		//getHelper().onUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
@@ -310,7 +310,7 @@ public class HomeActivity extends CActivity {
 					
 					Calendar costDate = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
 					infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
-					infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));
+					infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM));
 					infoMap.put("cost_category_name", cost.getCategory().getName());
 					 
 					String info = cost.getCategory().getType();

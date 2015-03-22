@@ -66,7 +66,9 @@
 	<string name="not_found_cost">Cost not found</string>
 	<string name="delete_cost_success">\"%s\" cost deleted</string>
 	<string name="delete_cost_failed">Failed to delete cost. Please try again</string>
-	<string name="pick_date">Pick Date</string>	
+	<string name="pick_date">Pick Date</string>
+	<string name="cost_start_date">Start Date</string>
+	<string name="cost_end_date">End Date</string>	
 	
 	<!-- Home screen -->
 	<string name="title_home_screen">Cost analyzer</string>
@@ -82,12 +84,21 @@
 	<!-- Weekly Report -->
 	<string name="title_weekly_report">Weekly report</string>
 	<string name="weeks">Weeks</string>
-	<string name="week">Week</string>
-	<string name="amount">Amount</string>
-	<string name="day">Day</string>
-	<string name="parcantage">Percentage</string>
+	<string name="week">week</string>
+	<string name="amount">amount</string>
+	<string name="day">day</string>
+	<string name="parcantage">percent</string>
 	<string name="type">Type</string>
 	<string name="number">no.</string>
+	
+	<string name="report_day">day</string>
+	<string name="report_productive">productive</string>
+	<string name="report_wastage">wastage</string>
+	
+	<string name="report_category">category</string>
+	<string name="report_total_cost">total cost</string>
+	<string name="report_percentage">percent</string>
+	<string name="report_total">total</string>
 	
 	<!-- Monthly Report -->
 	<string name="title_monthly_report">Monthly report</string>

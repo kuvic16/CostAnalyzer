@@ -7,4 +7,11 @@
         android:id="@+id/add_cost"
         android:title="@string/new_cost"
         app:showAsAction="withText|ifRoom"/>
+    
+    <item
+        android:id="@+id/search"
+        android:title="@string/search"
+        android:icon="@drawable/search"
+        app:showAsAction="withText|ifRoom"/>
+    
 </menu>

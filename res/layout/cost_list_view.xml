@@ -59,6 +59,7 @@
 			android:layout_marginLeft="10dip"
 			android:textColor="#000000"
 			android:text="Lunch"
+			android:textSize="18dip"
 			android:textAppearance="?android:attr/textAppearanceLarge"/>
     
     <TextView

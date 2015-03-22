@@ -10,13 +10,8 @@ import java.util.Map;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,15 +21,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HeaderViewListAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.vagabondlab.costanalyzer.database.DatabaseHelper;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
@@ -42,11 +33,9 @@ import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
 @SuppressLint("DefaultLocale")
-public class CategoryActivity extends ActionBarActivity implements
-NavigationDrawerFragment.NavigationDrawerCallbacks{
+public class CategoryActivity extends CActivity{
 	
 	private NavigationDrawerFragment mNavigationDrawerFragment;
-	private DatabaseHelper databaseHelper = null;
 	private CategoryService categoryService;
 	
 	private EditText mCategoryName;
@@ -62,165 +51,37 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private RadioButton mSearchWastage;
 	
 	private List<Map<String, String>> mCategoryListdata = new ArrayList<Map<String, String>>();
-	private CharSequence mTitle;
 	
 	private int selectedCategoryId;
 	private String selectedCategoryName;
-	
-	private final int CONTEXT_MENU_EDIT = 1;
-	private final int CONTEXT_MENU_ARCHIVE = 2;
-	private final int CONTEXT_MENU_CANCEL = 3;
 	private int action = 0;
-	private boolean firstTime = true;
-
 	
-	
-	// for listview activity
-	private ListView mListView;
-	protected ListView getListView() {
-	    if (mListView == null) {
-	        mListView = (ListView) findViewById(android.R.id.list);
-	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
-					try{
-						View idChild = ((ViewGroup) v).getChildAt(1);
-						selectedCategoryId = Integer.valueOf(((TextView) idChild).getText().toString());
-						
-						View nameChild = ((ViewGroup) v).getChildAt(0);
-						selectedCategoryName = ((TextView) nameChild).getText().toString();
-						
-						registerForContextMenu(mListView);
-	                    openContextMenu(mListView);
-					}catch(Throwable t){
-						t.printStackTrace();
-					}
-				}
-			});	        
-	    }
-	    return mListView;
-	}
-
-	protected void setListAdapter(ListAdapter adapter) {
-	    getListView().setAdapter(adapter);
-	}
-
-	protected ListAdapter getListAdapter() {
-	    ListAdapter adapter = getListView().getAdapter();
-	    if (adapter instanceof HeaderViewListAdapter) {
-	        return ((HeaderViewListAdapter)adapter).getWrappedAdapter();
-	    } else {
-	        return adapter;
-	    }
-	}
-	// end listview activity
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.activity_category);
+		setTitle(getString(R.string.cost_category));
+		mTitle = getTitle();
 		
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_category);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_category,(DrawerLayout) findViewById(R.id.drawer_layout_category));
-		setTitle(getString(R.string.cost_category));
 		
 		try {
 			categoryService = new CategoryService(getHelper().getCategoryDao());
 			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
 			mButtonholderAddCategory = (Button)findViewById(R.id.buttonholder_add_category);
-			mButtonholderAddCategory.setOnClickListener(buttonHolderAddCostButtonClickListener);
+			mButtonholderAddCategory.setOnClickListener(buttonHolderAddCategoryButtonClickListener);
 			mButtonholderSearch = (Button)findViewById(R.id.buttonholder_search);
 			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
 			mButtonholderReload = (Button)findViewById(R.id.buttonholder_reload);
 			mButtonholderReload.setOnClickListener(buttonHolderReloadButtonClickListener);
 			
 			loadCategoryList();
-			mTitle = getTitle();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	protected void onDestroy() {
-		setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-		super.onDestroy();
-		if (databaseHelper != null) {
-			OpenHelperManager.releaseHelper();
-			databaseHelper = null;
-		}
-	}
-	
-	@Override
-	protected void onStop() {
-	    setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-	    super.onStop();
-	}
-	
-	private DatabaseHelper getHelper() {
-		if (databaseHelper == null) {
-			databaseHelper = OpenHelperManager.getHelper(this,DatabaseHelper.class);
-		}
-		return databaseHelper;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.category, menu);
-		restoreActionBar();
-		return true;
-	}
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-		// Context menu
-		menu.setHeaderTitle(selectedCategoryName);
-		menu.add(Menu.NONE, CONTEXT_MENU_EDIT, Menu.NONE, R.string.edit);
-		menu.add(Menu.NONE, CONTEXT_MENU_ARCHIVE, Menu.NONE, R.string.delete);
-		menu.add(Menu.NONE, CONTEXT_MENU_CANCEL, Menu.NONE, R.string.cancel);
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case CONTEXT_MENU_EDIT: {
-			action = IConstant.ACTION_EDIT;
-			editCategoryDialougeBox();
-		}
-			break;
-		case CONTEXT_MENU_ARCHIVE: {
-			action = IConstant.ACTION_DELETE;
-			deleteCategoryDialougeBox();
-		}
-			break;
-		}
-
-		return super.onContextItemSelected(item);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.add_category) {
-			action = IConstant.ACTION_ADD;
-			addNewCategoryDialougeBox();
-			return true;
-		}else if(id == R.id.search){
-			action = IConstant.ACTION_SEARCH;
-			searchCategoryDialougeBox();
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@SuppressWarnings("deprecation")
-	public void restoreActionBar() {
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setTitle(mTitle);
-	}
-	
 	
 	@SuppressLint("InflateParams")
 	private void addNewCategoryDialougeBox(){
@@ -296,48 +157,6 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		     .setNegativeButton(R.string.cancel, searchCategorylListener);
 		alert.show();
 	}
-	
-	
-	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int i) {
-			switch (i) {
-			case DialogInterface.BUTTON_POSITIVE:
-				if(saveCategory()==1){
-					break;
-				}
-			case DialogInterface.BUTTON_NEGATIVE: 
-				break;
-			}
-		}
-	};
-	
-	DialogInterface.OnClickListener deleteCancelListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int i) {
-			switch (i) {
-			case DialogInterface.BUTTON_POSITIVE:
-				if(deleteCategory()==1){
-					break;
-				}
-			case DialogInterface.BUTTON_NEGATIVE: 
-				break;
-			}
-		}
-	};
-	
-	DialogInterface.OnClickListener searchCategorylListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int i) {
-			switch (i) {
-			case DialogInterface.BUTTON_POSITIVE:
-				searchCategory();
-				break;
-			case DialogInterface.BUTTON_NEGATIVE: 
-				break;
-			}
-		}
-	};
 	
 	private int saveCategory(){
 		if(IUtil.isNotBlank(mCategoryName.getText())){
@@ -451,65 +270,49 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		}
 	}
 
-	@Override
-	public void onNavigationDrawerItemSelected(int position) {
-		if(firstTime){
-			firstTime = false;
-			return;
-		}
-		
-		switch (position) {
-		case 0:
-			Intent i = new Intent(getApplicationContext(),HomeActivity.class);
-			startActivity(i);
-			break;
-		case 1:
-			i = new Intent(getApplicationContext(),CategoryActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 2:
-			i = new Intent(getApplicationContext(),CostActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 3:
-			i = new Intent(getApplicationContext(),DailyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 4:
-			i = new Intent(getApplicationContext(),WeeklyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 5:
-			i = new Intent(getApplicationContext(),MonthlyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 6:
-			i = new Intent(getApplicationContext(),YearlyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 7:
-			i = new Intent(getApplicationContext(),TotalReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 8:
-			i = new Intent(getApplicationContext(),TransactionActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		}
-	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK:
-			this.finish();
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-	
-	
 	// 1. Listener
-	OnClickListener buttonHolderAddCostButtonClickListener = new OnClickListener() {
+	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				if(saveCategory()==1){
+					break;
+				}
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
+	DialogInterface.OnClickListener deleteCancelListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				if(deleteCategory()==1){
+					break;
+				}
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
+	DialogInterface.OnClickListener searchCategorylListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				searchCategory();
+				break;
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
+	OnClickListener buttonHolderAddCategoryButtonClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			try{
@@ -543,4 +346,79 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			}
 		}
 	};
+	
+	
+	// 2. Override methods
+	@Override
+	public ListView getListView() {
+	    if (mListView == null) {
+	        mListView = (ListView) findViewById(android.R.id.list);
+	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
+					try{
+						View idChild = ((ViewGroup) v).getChildAt(1);
+						selectedCategoryId = Integer.valueOf(((TextView) idChild).getText().toString());
+						
+						View nameChild = ((ViewGroup) v).getChildAt(0);
+						selectedCategoryName = ((TextView) nameChild).getText().toString();
+						
+						registerForContextMenu(mListView);
+	                    openContextMenu(mListView);
+					}catch(Throwable t){
+						t.printStackTrace();
+					}
+				}
+			});	        
+	    }
+	    return mListView;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.category, menu);
+		restoreActionBar();
+		return true;
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case IConstant.CONTEXT_MENU_EDIT: {
+			action = IConstant.ACTION_EDIT;
+			editCategoryDialougeBox();
+		}
+			break;
+		case IConstant.CONTEXT_MENU_ARCHIVE: {
+			action = IConstant.ACTION_DELETE;
+			deleteCategoryDialougeBox();
+		}
+			break;
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.add_category) {
+			action = IConstant.ACTION_ADD;
+			addNewCategoryDialougeBox();
+			return true;
+		}else if(id == R.id.search){
+			action = IConstant.ACTION_SEARCH;
+			searchCategoryDialougeBox();
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void nextView() {
+	}
+
+	@Override
+	public void prevView() {
+	}
+	
+
 }

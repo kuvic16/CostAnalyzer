@@ -31,7 +31,36 @@
             android:id="@android:id/list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_above="@+id/linearLayout_buttonholder"
             android:layout_below="@+id/textView_cost_status" />
+        
+        <LinearLayout
+	        android:id="@+id/linearLayout_buttonholder"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:background="@layout/design_button_group_layout"
+	        android:orientation="horizontal" >
+	        
+            <Button
+	            android:id="@+id/buttonholder_reload"
+	            android:drawableRight="@drawable/reload"
+	            android:text="@string/reload"
+	            style="@style/groupButtonStyle" />
+            
+	        <Button
+	            android:id="@+id/buttonholder_search"
+	            android:drawableRight="@drawable/search"
+	            android:text="@string/search"
+	            style="@style/groupButtonStyle" />
+	         
+	        <Button
+	            android:id="@+id/buttonholder_add_cost"
+	            android:drawableRight="@drawable/add"
+	            android:text="@string/new_cost"
+	            style="@style/groupButtonStyle" />
+
+    	</LinearLayout>
     </RelativeLayout>
     
     <fragment

@@ -33,8 +33,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:paddingTop="0dp"
-                android:text="@string/weeks"
-                android:textSize="15sp" />
+                android:textSize="12sp" />
 
             <ListView
                 android:id="@android:id/list"

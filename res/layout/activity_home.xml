@@ -53,26 +53,15 @@
 	        
 	        <Button
 	            android:id="@+id/buttonholder_search"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:padding="12dp"
 	            android:drawableRight="@drawable/search"
-	            android:gravity="center"
-	            android:drawablePadding="8dp"
 	            android:text="@string/search"
-	            android:textSize="16sp" />
+	            style="@style/groupButtonStyle" />
 	         
 	        <Button
 	            android:id="@+id/buttonholder_add_cost"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_weight="1"
-	            android:padding="12dp"
 	            android:drawableRight="@drawable/add"
-	            android:gravity="center"
 	            android:text="@string/new_cost"
-	            android:textSize="16sp" />
+	            style="@style/groupButtonStyle" />
 
     	</LinearLayout>
     </RelativeLayout>

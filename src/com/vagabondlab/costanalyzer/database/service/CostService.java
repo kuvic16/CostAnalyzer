@@ -61,7 +61,7 @@ public class CostService{
 		try {
 			QueryBuilder<Cost, Integer> builder = em.queryBuilder();
 			builder.orderBy(IConstant.COST_DATE, false);
-			builder.limit(30L);
+			builder.limit(100L);
 			List<Cost> costList = em.query(builder.prepare());
 			return costList;
 		} catch (SQLException e) {
@@ -325,28 +325,12 @@ public class CostService{
 		try {
 			QueryBuilder<Cost, Integer> builder = em.queryBuilder();
 			builder.orderBy(IConstant.CREATED_DATE, false);
-			builder.limit(30L);
+			builder.limit(100L);
 			Where<Cost, Integer> where = builder.where();
 
-			//boolean needAnd = false;
 			if (IUtil.isNotBlank(costDate)) {
 				where.like(IConstant.COST_DATE, costDate + "%");
-				//needAnd = true;
 			}
-
-			// if(IUtil.isNotBlank(name)){
-			// if(needAnd){
-			// where.and();
-			// }
-			// where.like(Category.MEMBER_NAME, name + "%");
-			// needAnd = true;
-			// }
-
-//			if (needAnd) {
-//				where.and();
-//			}
-			// where.eq(Category.REGISTERED,
-			// true).and().isNull(Category.DEATH_DATE);
 
 			costList = em.query(builder.prepare());
 			return costList;
@@ -354,5 +338,62 @@ public class CostService{
 			e.printStackTrace();
 		}
 		return costList;
+	}
+	
+	public List<String[]> searchCost(String category, String type, String startDate, String endDate) {
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("select co.id, ca.name, ca.type, co.amount, co.date, co.created_date from cost as co join category ca on co.category_id=ca.id ");
+			
+			boolean andNeed = false;
+			if(IUtil.isNotBlank(category)){
+				jql.append(" where ");
+				jql.append(" ca.name = '").append(category).append("'");
+				andNeed = true;
+			}
+			
+			if(IUtil.isNotBlank(type)){
+				if(andNeed){
+					jql.append(" and ");
+				}else{
+					jql.append(" where ");
+				}
+				jql.append(" ca.type = '").append(type).append("'");
+				andNeed = true;
+			}
+			
+			if(IUtil.isNotBlank(startDate)){
+				if(andNeed){
+					jql.append(" and ");
+				}else{
+					jql.append(" where ");
+				}
+				jql.append(" co.date >= '").append(startDate).append("'");
+				andNeed = true;
+			}
+			
+			if(IUtil.isNotBlank(endDate)){
+				if(andNeed){
+					jql.append(" and ");
+				}else{
+					jql.append(" where ");
+				}
+				jql.append(" co.date <= '").append(endDate).append("'");
+				andNeed = true;
+			}
+			
+			jql.append(" order by co.date desc ");
+			if(andNeed == false){
+				jql.append(" limit 100 ");
+			}
+			
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			return results;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }

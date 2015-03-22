@@ -150,7 +150,7 @@ public final class IUtil {
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, 1);
         while (c.get(Calendar.MONTH) == month) {
-                dates = new ArrayList<String>();
+              dates = new ArrayList<String>();
               while (c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY) {
                 c.add(Calendar.DAY_OF_MONTH, -1);
               }

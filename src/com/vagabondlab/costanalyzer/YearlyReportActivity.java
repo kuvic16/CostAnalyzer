@@ -299,12 +299,11 @@ public class YearlyReportActivity extends ActionBarActivity implements OnGesture
 			table.addView(ViewUtil.getWeekDayTableHeader(this));
 			for(String[] cost : costList){
 				TableRow tr = new TableRow(this);
-				tr.setPadding(5, 1, 5, 1);
 				int month = Integer.valueOf(cost[0]);
 				tr.addView(ViewUtil.getTableColumn(this, IUtil.theMonth(month), Gravity.LEFT));
+				tr.addView(ViewUtil.getTableColumn(this, cost[3], Gravity.CENTER));
 				tr.addView(ViewUtil.getTableColumn(this, cost[1], Gravity.CENTER));
 				tr.addView(ViewUtil.getTableColumn(this, cost[2], Gravity.CENTER));
-				tr.addView(ViewUtil.getTableColumn(this, cost[3], Gravity.CENTER));
 				table.addView(tr);
 				table.addView(ViewUtil.getDividerView(getApplicationContext()));
 			}

@@ -86,7 +86,7 @@ public class CategoryService{
 		try {
 			QueryBuilder<Category, Integer> builder = em.queryBuilder();
 			builder.orderBy(IConstant.CREATED_DATE, false);
-			builder.limit(30L);
+			builder.limit(100L);
 			List<Category> categoryList = em.query(builder.prepare());
 			return categoryList;
 		} catch (SQLException e) {

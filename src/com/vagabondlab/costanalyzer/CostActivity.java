@@ -11,51 +11,57 @@ import java.util.Map;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HeaderViewListAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.vagabondlab.costanalyzer.database.DatabaseHelper;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.entity.Cost;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
 import com.vagabondlab.costanalyzer.database.service.CostService;
+import com.vagabondlab.costanalyzer.utilities.DatePickerFragment;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
 @SuppressLint("DefaultLocale")
-public class CostActivity extends ActionBarActivity implements
-NavigationDrawerFragment.NavigationDrawerCallbacks{
+public class CostActivity extends CActivity {
 	
 	private NavigationDrawerFragment mNavigationDrawerFragment;
-	private DatabaseHelper databaseHelper = null;
 	private CategoryService categoryService;
 	private CostService costService;
 	
 	private Spinner mCategoryName;
 	private EditText mCostAmount;
-	private DatePicker mCostDatePicker;
+	private TextView mCostSelectedDate;
+	private TextView mChangeCostDateButton;
+	
+	private Spinner mSearchCategoryName;
+	private RadioButton mSearchProductive;
+	private RadioButton mSearchWastage;
+	private TextView mSearchStartDate;
+	private TextView mSearchEndDate;
+	private TextView mSearchStartDateButton;
+	private TextView mSearchEndDateButton;
+	
+	private Button mButtonholderAddCost;
+	private Button mButtonholderSearch;
+	private Button mButtonholderReload;
 
 	private TextView mCostStatus;
 	
@@ -66,153 +72,38 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	private int selectedCostId;
 	private String selectedCostName;
 	
-	private final int CONTEXT_MENU_EDIT = 1;
-	private final int CONTEXT_MENU_ARCHIVE = 2;
-	private final int CONTEXT_MENU_CANCEL = 3;
 	private int action = 0;
-	private boolean firstTime = true;
-	private CharSequence mTitle;
+	private String mCurrentDate;
 
-	
-	
-	// for listview activity
-	private ListView mListView;
-	protected ListView getListView() {
-	    if (mListView == null) {
-	        mListView = (ListView) findViewById(android.R.id.list);
-	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
-					try{
-						View viewCostId = ((ViewGroup) v).getChildAt(2);
-						View viewCostDetails = ((ViewGroup) v).getChildAt(1);
-						View viewCostCategoryName = ((ViewGroup) viewCostDetails).getChildAt(0);
-						View viewCostAmount = ((ViewGroup) viewCostDetails).getChildAt(2);
-						
-						selectedCostId = Integer.valueOf(((TextView) viewCostId).getText().toString());
-						selectedCostName = ((TextView) viewCostCategoryName).getText().toString() + " : " + ((TextView) viewCostAmount).getText().toString();
-						
-						registerForContextMenu(mListView);
-	                    openContextMenu(mListView);
-					}catch(Throwable t){
-						t.printStackTrace();
-					}
-				}
-			});	        
-	    }
-	    return mListView;
-	}
-
-	protected void setListAdapter(ListAdapter adapter) {
-	    getListView().setAdapter(adapter);
-	}
-
-	protected ListAdapter getListAdapter() {
-	    ListAdapter adapter = getListView().getAdapter();
-	    if (adapter instanceof HeaderViewListAdapter) {
-	        return ((HeaderViewListAdapter)adapter).getWrappedAdapter();
-	    } else {
-	        return adapter;
-	    }
-	}
-	// end listview activity
-	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.activity_cost);
 		setTitle(getString(R.string.title_activity_cost));
+		mTitle = getTitle();
 		
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_cost);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_cost,(DrawerLayout) findViewById(R.id.drawer_layout_cost));
+		
 		try { 
 			categoryService = new CategoryService(getHelper().getCategoryDao());
 			costService = new CostService(getHelper().getCostDao());
 			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
+			
+			mButtonholderAddCost = (Button)findViewById(R.id.buttonholder_add_cost);
+			mButtonholderAddCost.setOnClickListener(buttonHolderAddCostButtonClickListener);
+			mButtonholderSearch = (Button)findViewById(R.id.buttonholder_search);
+			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
+			mButtonholderReload = (Button)findViewById(R.id.buttonholder_reload);
+			mButtonholderReload.setOnClickListener(buttonHolderReloadButtonClickListener);
+			
 			loadCostList();
-			mTitle = getTitle();
+			mCurrentDate = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	@Override
-	protected void onDestroy() {
-		setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-		super.onDestroy();
-		if (databaseHelper != null) {
-			OpenHelperManager.releaseHelper();
-			databaseHelper = null;
-		}
-	}
-	
-	@Override
-	protected void onStop() {
-	    setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-	    super.onStop();
-	}
-	
-	private DatabaseHelper getHelper() {
-		if (databaseHelper == null) {
-			databaseHelper = OpenHelperManager.getHelper(this,DatabaseHelper.class);
-		}
-		return databaseHelper;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.cost, menu);
-		restoreActionBar();
-		return true;
-	}
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-		// Context menu
-		menu.setHeaderTitle(selectedCostName);
-		menu.add(Menu.NONE, CONTEXT_MENU_EDIT, Menu.NONE, R.string.edit);
-		menu.add(Menu.NONE, CONTEXT_MENU_ARCHIVE, Menu.NONE, R.string.delete);
-		menu.add(Menu.NONE, CONTEXT_MENU_CANCEL, Menu.NONE, R.string.cancel);
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case CONTEXT_MENU_EDIT: {
-			action = IConstant.ACTION_EDIT;
-			editCostDialougeBox();
-		}
-			break;
-		case CONTEXT_MENU_ARCHIVE: {
-			action = IConstant.ACTION_DELETE;
-			deleteCostDialougeBox();
-		}
-			break;
-		}
-
-		return super.onContextItemSelected(item);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.add_cost) {
-			action = IConstant.ACTION_ADD;
-			addNewCostDialougeBox();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@SuppressWarnings("deprecation")
-	public void restoreActionBar() {
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setTitle(mTitle);
-	}
-	
 	
 	@SuppressLint("InflateParams")
 	private void addNewCostDialougeBox(){
@@ -221,7 +112,12 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
 		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
-		//mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
+		mCostSelectedDate = (TextView)costFormView.findViewById(R.id.textView_selected_cost_date);
+		mCostSelectedDate.setText(mCurrentDate);
+		
+		mChangeCostDateButton = (TextView)costFormView.findViewById(R.id.textView_change_date);
+		mChangeCostDateButton.setOnClickListener(changeDateButtonTouchListener);
+		
 		loadCategorySpinner(mCategoryName);
 	
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -240,7 +136,10 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
 		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
-		//mCostDatePicker = (DatePicker)costFormView.findViewById(R.id.datePicker_cost_date);		
+		mCostSelectedDate = (TextView)costFormView.findViewById(R.id.textView_selected_cost_date);
+		mChangeCostDateButton = (TextView)costFormView.findViewById(R.id.textView_change_date);
+		mChangeCostDateButton.setOnClickListener(changeDateButtonTouchListener);
+		
 		loadCategorySpinner(mCategoryName);
 		
 		Cost cost = costService.getCostById(selectedCostId);
@@ -252,8 +151,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		mCategoryName.setSelection(spinnerAdapter.getPosition(cost.getCategory().getName()));
 		mCostAmount.setText(String.valueOf(cost.getAmount()));
-		Calendar calender = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
-		mCostDatePicker.init(calender.get(Calendar.YEAR), calender.get(Calendar.MONTH), calender.get(Calendar.DAY_OF_MONTH), null);
+		mCostSelectedDate.setText(cost.getDate());
 		
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -276,33 +174,33 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	}
 	
 	
-	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int i) {
-			switch (i) {
-			case DialogInterface.BUTTON_POSITIVE:
-				if(saveCost()==1){
-					break;
-				}
-			case DialogInterface.BUTTON_NEGATIVE: 
-				break;
-			}
-		}
-	};
-	
-	DialogInterface.OnClickListener deleteCancelListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int i) {
-			switch (i) {
-			case DialogInterface.BUTTON_POSITIVE:
-				if(deleteCost()==1){
-					break;
-				}
-			case DialogInterface.BUTTON_NEGATIVE: 
-				break;
-			}
-		}
-	};
+	@SuppressLint("InflateParams")
+	private void searchCategoryDialougeBox(){
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View categorySearchFormView = factory.inflate(R.layout.search_cost_form, null);
+		mSearchCategoryName = (Spinner)categorySearchFormView.findViewById(R.id.spinner_search_category_name);
+		mSearchProductive = (RadioButton)categorySearchFormView.findViewById(R.id.radio_search_productive);
+		mSearchWastage = (RadioButton)categorySearchFormView.findViewById(R.id.radio_search_wastage);
+		mSearchStartDate =(TextView)categorySearchFormView.findViewById(R.id.textView_selected_cost_start_date);
+		mSearchEndDate =(TextView)categorySearchFormView.findViewById(R.id.textView_selected_cost_end_date);
+		mSearchStartDateButton =(TextView)categorySearchFormView.findViewById(R.id.textView_change_start_date);
+		mSearchEndDateButton =(TextView)categorySearchFormView.findViewById(R.id.textView_change_end_date);
+		
+		mSearchStartDateButton.setOnClickListener(changeSearchStartDateButtonTouchListener);
+		mSearchEndDateButton.setOnClickListener(changeSearchEndDateButtonTouchListener);
+		
+		loadCategorySpinner(mSearchCategoryName);
+		mSearchStartDate.setText(mCurrentDate);
+		mSearchEndDate.setText(mCurrentDate);
+		
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setIcon(R.drawable.search)
+		     .setTitle(R.string.search)
+		     .setView(categorySearchFormView)
+		     .setPositiveButton(R.string.search, searchCostListener)
+		     .setNegativeButton(R.string.cancel, searchCostListener);
+		alert.show();
+	}
 	
 	private int saveCost(){
 		
@@ -319,7 +217,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		} 
 		
 		Double costAmount = Double.valueOf(mCostAmount.getText().toString());
-		String costDate = IUtil.getDateFromDatePicker(mCostDatePicker, IUtil.DATE_FORMAT_YYYY_MM_DD);
+		String costDate = mCostSelectedDate.getText().toString();
+		mCurrentDate = costDate;
 		
 		Cost cost = new Cost();
 		if(action == IConstant.ACTION_EDIT){
@@ -367,34 +266,35 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	
 	private void loadCostList(){
 		try {
-			List<Cost> costList = costService.getAllCost();
+			List<String[]> costList = costService.searchCost(null, null, null, null);
 			loadUI(costList, costService.countCost()); 
 		} catch (Exception ex) {
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}		
 	}
 
-	private void loadUI(List<Cost> costList, long total) {
+	private void loadUI(List<String[]> costList, long total) {
 		try {
 			mCostStatus.setText(getString(R.string.cost_status, total));
 			mCostListdata = new ArrayList<Map<String,String>>();
-			for (Cost cost : costList) {
+			for (String[] cost : costList) {
 				Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("id", String.valueOf(cost.getId()));
+				infoMap.put("id", String.valueOf(cost[0]));
 				
-				categoryService.refreash(cost.getCategory());
-				Calendar costDate = IUtil.getCalender(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD);
+				Calendar costDate = IUtil.getCalender(cost[4], IUtil.DATE_FORMAT_YYYY_MM_DD);
 				infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
-				infoMap.put("cost_month", IUtil.changeDateFormat(cost.getDate(), IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));
-				infoMap.put("cost_category_name", cost.getCategory().getName());
+				infoMap.put("cost_month", IUtil.changeDateFormat(cost[4], IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));
+				infoMap.put("cost_category_name", cost[1]);
 				
-				String info = cost.getCategory().getType();
-				if(IUtil.isNotBlank(cost.getCreated_date())){
-					Date date = IUtil.getDate(cost.getCreated_date(), IUtil.DATE_FORMAT);
+				String info = cost[2];
+				if(IUtil.isNotBlank(cost[5])){
+					Date date = IUtil.getDate(cost[5], IUtil.DATE_FORMAT);
 					info += "\nadded on " + date;
 				}
 				infoMap.put("cost_category_type_and_time", info);
-				infoMap.put("cost_amount", String.valueOf(cost.getAmount()));
+				infoMap.put("cost_amount", String.valueOf(cost[3]));
+//				infoMap.put("cost_amount", String.format("%.1f", cost[3]));
+
 				mCostListdata.add(infoMap);
 			}
 			
@@ -438,60 +338,230 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		}
 	}
 	
+	private void searchCost(){
+		try{
+    		String categoryName = mSearchCategoryName.getSelectedItem().toString();
+    		if(categoryName.equalsIgnoreCase(getString(R.string.select_category))){
+    			categoryName = "";
+    		}
+    		
+    		String categoryType = "";
+    		if(mSearchWastage.isChecked()){
+    			categoryType = getString(R.string.wastage);
+    		}else if(mSearchProductive.isChecked()){
+    			categoryType = getString(R.string.productive);
+    		}
+    		String startDate = mSearchStartDate.getText().toString();
+    		String endDate = mSearchEndDate.getText().toString();
+    		
+    		List<String[]> costList = costService.searchCost(categoryName, categoryType, startDate, endDate);
+    		loadUI(costList, costList.size());
+    	}catch(Throwable t){
+    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, t.getMessage()));
+    	}
+	}
+	
+	
+	// 1. Listener
+	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				if(saveCost()==1){
+					break;
+				}
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
+	DialogInterface.OnClickListener deleteCancelListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				if(deleteCost()==1){
+					break;
+				}
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
+	DialogInterface.OnClickListener searchCostListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				searchCost();
+				break;
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
+	OnClickListener buttonHolderAddCostButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				action = IConstant.ACTION_ADD;
+				addNewCostDialougeBox();
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener buttonHolderSearchButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				action = IConstant.ACTION_SEARCH;
+				searchCategoryDialougeBox();
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener buttonHolderReloadButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				loadCostList();
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener changeDateButtonTouchListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				DialogFragment newFragment = new DatePickerFragment();
+			    newFragment.show(getSupportFragmentManager(), "datePicker");
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener changeSearchStartDateButtonTouchListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				action = IConstant.ACTION_SEARCH_START_DATE;
+				DialogFragment newFragment = new DatePickerFragment();
+			    newFragment.show(getSupportFragmentManager(), "datePicker");
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener changeSearchEndDateButtonTouchListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				action = IConstant.ACTION_SEARCH_END_DATE;
+				DialogFragment newFragment = new DatePickerFragment();
+			    newFragment.show(getSupportFragmentManager(), "datePicker");
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	
+	// 2. Override methods
 	@Override
-	public void onNavigationDrawerItemSelected(int position) {
-		if(firstTime){
-			firstTime = false;
-			return;
-		}
-		
-		switch (position) {
-		case 0:
-			Intent i = new Intent(getApplicationContext(),HomeActivity.class);
-			startActivity(i);
-			break;
-		case 1:
-			i = new Intent(getApplicationContext(),CategoryActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 2:
-			i = new Intent(getApplicationContext(),CostActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 3:
-			i = new Intent(getApplicationContext(),DailyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 4:
-			i = new Intent(getApplicationContext(),WeeklyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 5:
-			i = new Intent(getApplicationContext(),MonthlyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 6:
-			i = new Intent(getApplicationContext(),YearlyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 7:
-			i = new Intent(getApplicationContext(),TotalReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 8:
-			i = new Intent(getApplicationContext(),TransactionActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		}
+	public ListView getListView() {
+	    if (mListView == null) {
+	        mListView = (ListView) findViewById(android.R.id.list);
+	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
+					try{
+						View viewCostId = ((ViewGroup) v).getChildAt(2);
+						View viewCostDetails = ((ViewGroup) v).getChildAt(1);
+						View viewCostCategoryName = ((ViewGroup) viewCostDetails).getChildAt(0);
+						View viewCostAmount = ((ViewGroup) viewCostDetails).getChildAt(2);
+						
+						selectedCostId = Integer.valueOf(((TextView) viewCostId).getText().toString());
+						selectedCostName = ((TextView) viewCostCategoryName).getText().toString() + " : " + ((TextView) viewCostAmount).getText().toString();
+						
+						registerForContextMenu(mListView);
+	                    openContextMenu(mListView);
+					}catch(Throwable t){
+						t.printStackTrace();
+					}
+				}
+			});	        
+	    }
+	    return mListView;
 	}
 	
 	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK:
-			this.finish();
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.cost, menu);
+		restoreActionBar();
+		return true;
+	}
+	
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case IConstant.CONTEXT_MENU_EDIT: {
+			action = IConstant.ACTION_EDIT;
+			editCostDialougeBox();
 		}
-		return super.onKeyDown(keyCode, event);
+			break;
+		case IConstant.CONTEXT_MENU_ARCHIVE: {
+			action = IConstant.ACTION_DELETE;
+			deleteCostDialougeBox();
+		}
+			break;
+		}
+
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.add_cost) {
+			action = IConstant.ACTION_ADD;
+			addNewCostDialougeBox();
+			return true;
+		}else if(id == R.id.search){
+			action = IConstant.ACTION_SEARCH;
+			searchCategoryDialougeBox();
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void returnDate(String date) {
+		if(action == IConstant.ACTION_ADD || action == IConstant.ACTION_EDIT){
+			mCostSelectedDate.setText(date);
+		}else if(action == IConstant.ACTION_SEARCH_START_DATE){
+			mSearchStartDate.setText(date);
+		}else if(action == IConstant.ACTION_SEARCH_END_DATE){
+			mSearchEndDate.setText(date);
+		}
+	}
+
+	@Override
+	public void nextView() {
+	}
+
+	@Override
+	public void prevView() {
 	}
 	
 }

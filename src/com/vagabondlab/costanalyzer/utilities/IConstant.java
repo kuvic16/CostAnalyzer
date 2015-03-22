@@ -18,6 +18,8 @@ public final class IConstant {
 	public static final int ACTION_EDIT = 2;
 	public static final int ACTION_DELETE = 3;
 	public static final int ACTION_SEARCH = 4;
+	public static final int ACTION_SEARCH_START_DATE = 5;
+	public static final int ACTION_SEARCH_END_DATE = 6;
 	public static final int CONTEXT_MENU_EDIT = 1;
 	public static final int CONTEXT_MENU_ARCHIVE = 2;
 	public static final int CONTEXT_MENU_CANCEL = 3;
