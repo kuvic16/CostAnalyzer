@@ -65,5 +65,10 @@
             android:configChanges="orientation"
             android:label="@string/title_activity_transaction" >
         </activity>
+        <activity
+            android:name=".BackupActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_backup_screen" >
+        </activity>
     </application>
 </manifest>

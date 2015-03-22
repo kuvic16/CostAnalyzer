@@ -53,7 +53,7 @@ import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
 @SuppressLint("ClickableViewAccessibility")
-public class HomeActivity extends CActivity {
+public class BackupActivity extends CActivity {
 
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private CategoryService categoryService;
@@ -90,8 +90,8 @@ public class HomeActivity extends CActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_home);
-		setTitle(getString(R.string.title_home_screen));
+		setContentView(R.layout.activity_backup);
+		setTitle(getString(R.string.title_backup_screen));
 		mTitle = getTitle();
 		
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -100,32 +100,32 @@ public class HomeActivity extends CActivity {
 		//getHelper().onUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
 		
 		try { 
-			categoryService = new CategoryService(getHelper().getCategoryDao());
-			costService = new CostService(getHelper().getCostDao());
-			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
-			mGestureDetector = new GestureDetector(this);
-			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
-			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
-			
-			mTotalCostView = (TextView)findViewById(R.id.textView_summary_total_cost);
-			mTotalCostView.setOnClickListener(totalCostTouchListener);
-			mTotalCostView.setOnTouchListener(shortSummarySwipeListener);
-			
-			mProductiveCostView = (TextView)findViewById(R.id.textView_summary_effective_cost);
-			mProductiveCostView.setOnClickListener(productiveCostTouchListener);
-			mProductiveCostView.setOnTouchListener(shortSummarySwipeListener);
-			
-			mWastageCostView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
-			mWastageCostView.setOnClickListener(wastageCostTouchListener);
-			mWastageCostView.setOnTouchListener(shortSummarySwipeListener);
-			
-			mButtonholderAddCost = (Button)findViewById(R.id.buttonholder_add_cost);
-			mButtonholderAddCost.setOnClickListener(buttonHolderAddCostButtonClickListener);
-			mButtonholderSearch = (Button)findViewById(R.id.buttonholder_search);
-			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
-			
-			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
-		} catch (SQLException e) {
+//			categoryService = new CategoryService(getHelper().getCategoryDao());
+//			costService = new CostService(getHelper().getCostDao());
+//			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
+//			mGestureDetector = new GestureDetector(this);
+//			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
+//			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
+//			
+//			mTotalCostView = (TextView)findViewById(R.id.textView_summary_total_cost);
+//			mTotalCostView.setOnClickListener(totalCostTouchListener);
+//			mTotalCostView.setOnTouchListener(shortSummarySwipeListener);
+//			
+//			mProductiveCostView = (TextView)findViewById(R.id.textView_summary_effective_cost);
+//			mProductiveCostView.setOnClickListener(productiveCostTouchListener);
+//			mProductiveCostView.setOnTouchListener(shortSummarySwipeListener);
+//			
+//			mWastageCostView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
+//			mWastageCostView.setOnClickListener(wastageCostTouchListener);
+//			mWastageCostView.setOnTouchListener(shortSummarySwipeListener);
+//			
+//			mButtonholderAddCost = (Button)findViewById(R.id.buttonholder_add_cost);
+//			mButtonholderAddCost.setOnClickListener(buttonHolderAddCostButtonClickListener);
+//			mButtonholderSearch = (Button)findViewById(R.id.buttonholder_search);
+//			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
+//			
+//			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -437,7 +437,7 @@ public class HomeActivity extends CActivity {
 				YoYo.with(Techniques.ZoomIn)
 					.duration(500)
 					.interpolate(new AccelerateDecelerateInterpolator())
-					.withListener(HomeActivity.this)
+					.withListener(BackupActivity.this)
 					.playOn(mTotalCostView);
 				
 				loadListView(mCurrentDate, null);
@@ -454,7 +454,7 @@ public class HomeActivity extends CActivity {
 				YoYo.with(Techniques.ZoomIn)
 					.duration(500)
 					.interpolate(new AccelerateDecelerateInterpolator())
-					.withListener(HomeActivity.this)
+					.withListener(BackupActivity.this)
 					.playOn(mProductiveCostView);
 				
 				loadListView(mCurrentDate, getString(R.string.productive));
@@ -470,7 +470,7 @@ public class HomeActivity extends CActivity {
 			YoYo.with(Techniques.ZoomIn)
 				.duration(500)
 				.interpolate(new AccelerateDecelerateInterpolator())
-				.withListener(HomeActivity.this)
+				.withListener(BackupActivity.this)
 				.playOn(mWastageCostView);
 			
 			loadListView(mCurrentDate, getString(R.string.wastage));
@@ -516,76 +516,6 @@ public class HomeActivity extends CActivity {
 	
 	// 2. Override methods
 	@Override
-	public ListView getListView() {
-	    if (mListView == null) {
-	        mListView = (ListView) findViewById(android.R.id.list);
-	        mListView.setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {
-	            public boolean onItemLongClick(AdapterView<?> parent, View v,int position, long id) {
-		            	try{
-							View viewCostId = ((ViewGroup) v).getChildAt(2);
-							View viewCostDetails = ((ViewGroup) v).getChildAt(1);
-							View viewCostCategoryName = ((ViewGroup) viewCostDetails).getChildAt(0);
-							View viewCostAmount = ((ViewGroup) viewCostDetails).getChildAt(2);
-							
-							selectedCostId = Integer.valueOf(((TextView) viewCostId).getText().toString());
-							selectedCostName = ((TextView) viewCostCategoryName).getText().toString() + " : " + ((TextView) viewCostAmount).getText().toString();
-							
-							registerForContextMenu(mListView);
-							openContextMenu(mListView);
-						}catch(Throwable t){
-							t.printStackTrace();
-						}
-	            		return true;
-	            }
-	        });
-	    }
-	    return mListView;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!mNavigationDrawerFragment.isDrawerOpen()) {
-			getMenuInflater().inflate(R.menu.home, menu);
-			restoreActionBar();
-			return true;
-		}
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.add_cost) {
-			action = IConstant.ACTION_ADD;
-			addNewCostDialougeBox();
-			return true;
-		}else if(id == R.id.search){
-			action = IConstant.ACTION_SEARCH;
-			DialogFragment newFragment = new DatePickerFragment();
-		    newFragment.show(getSupportFragmentManager(), "datePicker");
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case IConstant.CONTEXT_MENU_EDIT: {
-			action = IConstant.ACTION_EDIT;
-			editCostDialougeBox();
-		}
-			break;
-		case IConstant.CONTEXT_MENU_ARCHIVE: {
-			action = IConstant.ACTION_DELETE;
-			deleteCostDialougeBox();
-		}
-			break;
-		}
-
-		return super.onContextItemSelected(item);
-	}
-	
-	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	    if(requestCode==IConstant.PARENT_ACTIVITY_REQUEST_CODE){
 	    	firstTime = true;
@@ -594,55 +524,17 @@ public class HomeActivity extends CActivity {
 	}
 	
 	@Override
-	public void nextView(){
-		YoYo.with(Techniques.SlideInRight)
-			.duration(500)
-			.interpolate(new AccelerateDecelerateInterpolator())
-			.withListener(this)
-			.playOn(findViewById(R.id.relative_layout_root));
-		
-		Date date = IUtil.getDate(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
-		DateTime dateTime = new DateTime(date);
-		dateTime = dateTime.plusDays(-1);
-		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
-		String newDate = fmt.print(dateTime);
-		loadCostList(newDate);
-		
+	public void nextView(){		
 	}
 	
 	@Override
-	public void prevView(){
-		YoYo.with(Techniques.SlideInLeft)
-			.duration(500)
-			.interpolate(new AccelerateDecelerateInterpolator())
-			.withListener(this)
-			.playOn(findViewById(R.id.relative_layout_root));
-		
-		Date date = IUtil.getDate(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
-		DateTime dateTime = new DateTime(date);
-		dateTime = dateTime.plusDays(1);
-		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
-		String newDate = fmt.print(dateTime);
-		loadCostList(newDate);
+	public void prevView(){		
+	}
+
+	@Override
+	public ListView getListView() {
+		return null;
 	}
 	
-	@Override
-	public void onAnimationStart(Animator arg0) {
-		mProgressDialog = ProgressDialog.show(HomeActivity.this, "Please wait ...", "Loading...", true);
-		mProgressDialog.setCancelable(true);
-	}
 	
-	@Override
-	public void returnDate(String date) {
-		if(action == IConstant.ACTION_ADD || action == IConstant.ACTION_EDIT){
-			mCostSelectedDate.setText(date);
-		}else if(action == IConstant.ACTION_SEARCH){
-			YoYo.with(Techniques.SlideInDown)
-			.duration(500)
-			.interpolate(new AccelerateDecelerateInterpolator())
-			.withListener(this)
-			.playOn(findViewById(R.id.relative_layout_root));
-			loadCostList(date);
-		}
-	}
 }

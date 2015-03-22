@@ -11,8 +11,9 @@
     <string name="main_menu7">Yearly report</string>
     <string name="main_menu8">Total report</string>
     <string name="main_menu9">My Transaction</string>
-    <string name="main_menu10">Help</string>
-    <string name="main_menu11">About VLab</string>
+    <string name="main_menu10">Backup/Restore</string>
+    <string name="main_menu11">Help</string>
+    <string name="main_menu12">About VLab</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -112,7 +113,7 @@
 	<string name="title_total_report">Total report</string>
 	
 	<!-- Transaction screen -->
-    <string name="title_activity_transaction">My Transaction</string>
+	<string name="title_activity_transaction">My Transaction</string>
     <string name="transaction_name">Transaction with whom?</string>
     <string name="transaction_lend_amount">Lend amount</string>
     <string name="transaction_borrow_amount">Borrow amount</string>
@@ -134,4 +135,14 @@
 	<string name="pay_amount">Pay amount</string>
 	<string name="take_amount">Take amount</string>
 	<string name="transaction_summary_status">Your current transaction status</string>
+	
+	<!-- Backup/Restore screen -->
+	<string name="title_backup_screen">Backup/Restore</string>
+	<string name="backup_screen_top_text">Your overall activities</string>
+	<string name="backup_screen_total_cost_enry_label">Total cost entry</string>
+	<string name="backup_screen_total_category_enry_label">Total category entry</string>
+	<string name="zero">0</string>
+	<string name="backup_screen_clear_button_label">Clean all information</string>
+	<string name="backup_screen_backup_button_label">Backup full database</string>
+	<string name="backup_screen_restore_button_label">Restore full database</string>
 </resources>

@@ -138,6 +138,10 @@ public abstract class CActivity extends ActionBarActivity implements OnGestureLi
 			i = new Intent(getApplicationContext(),TransactionActivity.class);
 			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 			break;
+		case 9:
+			i = new Intent(getApplicationContext(),BackupActivity.class);
+			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
+			break;	
 		}
 	}
 	
