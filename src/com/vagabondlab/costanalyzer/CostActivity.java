@@ -283,7 +283,7 @@ public class CostActivity extends CActivity {
 				
 				Calendar costDate = IUtil.getCalender(cost[4], IUtil.DATE_FORMAT_YYYY_MM_DD);
 				infoMap.put("cost_day", String.valueOf(costDate.get(Calendar.DAY_OF_MONTH)));
-				infoMap.put("cost_month", IUtil.changeDateFormat(cost[4], IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM) + " " + String.valueOf(costDate.get(Calendar.YEAR)));
+				infoMap.put("cost_month", IUtil.changeDateFormat(cost[4], IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_MMM));
 				infoMap.put("cost_category_name", cost[1]);
 				
 				String info = cost[2];
