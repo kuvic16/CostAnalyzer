@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:id="@+id/relative_layout_category_wise_cost_list"
 	android:layout_width="fill_parent"
-	android:layout_height="60dip"
+	android:layout_height="65dip"
 	android:paddingRight="8dip"
 	android:paddingLeft="8dip"
 	android:paddingTop="5dip"
@@ -18,7 +18,7 @@
 			android:layout_alignParentTop="true"
 			android:layout_alignParentLeft="true"
 			android:textColor="#000000"
-			android:textSize="20sp"
+			android:textSize="18sp"
 			android:text="Lunch"
 			android:textAppearance="?android:attr/textAppearanceLarge"/>
     
@@ -30,14 +30,14 @@
 			android:layout_below="@+id/cost_category_name"
 			android:layout_alignParentLeft="true"
 			android:textColor="#000000"
-			android:textSize="12sp"
+			android:textSize="10sp"
 			android:text="Productive"
 			android:textAppearance="?android:attr/textAppearanceSmall"/>
     
     <TextView
 			android:id="@+id/cost_amount"
 			android:layout_width="50dip"
-			android:layout_height="fill_parent"
+			android:layout_height="50dip"
 			android:gravity="center"
 			android:layout_alignParentTop="true"
 			android:layout_toLeftOf="@+id/cost_amount_percent"
@@ -51,7 +51,7 @@
     <TextView
 			android:id="@+id/cost_amount_percent"
 			android:layout_width="50dip"
-			android:layout_height="fill_parent"
+			android:layout_height="50dip"
 			android:gravity="center"
 			android:layout_alignParentTop="true"
 			android:layout_alignParentRight="true"
