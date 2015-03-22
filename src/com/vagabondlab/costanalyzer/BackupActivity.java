@@ -59,12 +59,17 @@ public class BackupActivity extends CActivity {
 	private CategoryService categoryService;
 	private CostService costService;
 	
+	private TextView mTotalCostEntry;
+	private TextView mTotalCategoryEntry;
+	
 	private Spinner mCategoryName;
 	private EditText mCostAmount;
 	private TextView mCostSelectedDate;
 	private TextView mChangeCostDateButton;
 	private Button mButtonholderAddCost;
 	private Button mButtonholderSearch;
+	
+	
 
 	private TextView mCostStatus;
 	
@@ -100,8 +105,15 @@ public class BackupActivity extends CActivity {
 		//getHelper().onUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
 		
 		try { 
-//			categoryService = new CategoryService(getHelper().getCategoryDao());
-//			costService = new CostService(getHelper().getCostDao());
+			categoryService = new CategoryService(getHelper().getCategoryDao());
+			costService = new CostService(getHelper().getCostDao());
+			
+			mTotalCostEntry = (TextView)findViewById(R.id.textView_total_cost_entry);
+			mTotalCostEntry.setText(String.valueOf(categoryService.countCategory()));
+			
+			mTotalCategoryEntry = (TextView)findViewById(R.id.textView_total_category_entry);
+			mTotalCategoryEntry.setText(String.valueOf(costService.countCost()));
+			
 //			mCostStatus = (TextView)findViewById(R.id.textView_cost_status);
 //			mGestureDetector = new GestureDetector(this);
 //			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);

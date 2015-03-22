@@ -74,21 +74,21 @@
         <Button
             android:id="@+id/button_clear"
             style="@style/backupButtonStyle"
-            android:drawableRight="@drawable/search"
+            android:drawableRight="@drawable/clean"
             android:layout_below="@+id/relative_layout_summary"
             android:text="@string/backup_screen_clear_button_label" />
         
         <Button
             android:id="@+id/button_backup"
             style="@style/backupButtonStyle"
-            android:drawableRight="@drawable/search"
+            android:drawableRight="@drawable/backup"
             android:layout_below="@+id/button_clear"
             android:text="@string/backup_screen_backup_button_label" />
         
         <Button
             android:id="@+id/button_restore"
             style="@style/backupButtonStyle"
-            android:drawableRight="@drawable/search"
+            android:drawableRight="@drawable/restore"
             android:layout_below="@+id/button_backup"
             android:text="@string/backup_screen_restore_button_label" />
         

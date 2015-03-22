@@ -1639,13 +1639,21 @@ containing a value of this type.
         public static final int abc_textfield_search_default_mtrl_alpha=0x7f020031;
         public static final int abc_textfield_search_material=0x7f020032;
         public static final int add=0x7f020033;
-        public static final int delete=0x7f020034;
-        public static final int drawer_shadow=0x7f020035;
-        public static final int edit=0x7f020036;
-        public static final int ic_drawer=0x7f020037;
-        public static final int ic_launcher=0x7f020038;
-        public static final int reload=0x7f020039;
-        public static final int search=0x7f02003a;
+        public static final int addnew=0x7f020034;
+        public static final int back=0x7f020035;
+        public static final int backup=0x7f020036;
+        public static final int clean=0x7f020037;
+        public static final int delete=0x7f020038;
+        public static final int download=0x7f020039;
+        public static final int drawer_shadow=0x7f02003a;
+        public static final int edit=0x7f02003b;
+        public static final int find=0x7f02003c;
+        public static final int ic_drawer=0x7f02003d;
+        public static final int ic_launcher=0x7f02003e;
+        public static final int reload=0x7f02003f;
+        public static final int restore=0x7f020040;
+        public static final int search=0x7f020041;
+        public static final int upload=0x7f020042;
     }
     public static final class id {
         public static final int action_bar=0x7f060031;

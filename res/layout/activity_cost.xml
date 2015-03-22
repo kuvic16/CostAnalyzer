@@ -44,19 +44,19 @@
 	        
             <Button
 	            android:id="@+id/buttonholder_reload"
-	            android:drawableRight="@drawable/reload"
+	            android:drawableRight="@drawable/back"
 	            android:text="@string/reload"
 	            style="@style/groupButtonStyle" />
             
 	        <Button
 	            android:id="@+id/buttonholder_search"
-	            android:drawableRight="@drawable/search"
+	            android:drawableRight="@drawable/find"
 	            android:text="@string/search"
 	            style="@style/groupButtonStyle" />
 	         
 	        <Button
 	            android:id="@+id/buttonholder_add_cost"
-	            android:drawableRight="@drawable/add"
+	            android:drawableRight="@drawable/addnew"
 	            android:text="@string/new_cost"
 	            style="@style/groupButtonStyle" />
 
