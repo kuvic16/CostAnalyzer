@@ -93,7 +93,7 @@ public class CategoryActivity extends CActivity{
 		
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.add)
+		alert.setIcon(R.drawable.addnew)
 		     .setTitle(R.string.add_new_category)
 		     .setView(categoryFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
@@ -123,7 +123,7 @@ public class CategoryActivity extends CActivity{
 		}
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.edit)
+		alert.setIcon(R.drawable.editnew)
 		     .setTitle(R.string.edit_category)
 		     .setView(categoryFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
@@ -133,7 +133,7 @@ public class CategoryActivity extends CActivity{
 	
 	private void deleteCategoryDialougeBox(){
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.delete)
+		alert.setIcon(R.drawable.clean)
 		     .setTitle(R.string.delete_category)
 		     .setMessage(getString(R.string.delete_category_are_u_sure, selectedCategoryName))
 		     .setPositiveButton(R.string.delete, deleteCancelListener)

@@ -249,7 +249,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		mBorrowAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_borrow_amount);
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.add)
+		alert.setIcon(R.drawable.addnew)
 		     .setTitle(R.string.new_transaction)
 		     .setView(transactionFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
@@ -286,7 +286,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.edit)
+		alert.setIcon(R.drawable.editnew)
 		     .setTitle(R.string.edit_transaction)
 		     .setView(transactionFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
@@ -296,7 +296,7 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 	
 	private void deleteCategoryDialougeBox(){
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.delete)
+		alert.setIcon(R.drawable.clean)
 		     .setTitle(R.string.delete_transaction)
 		     .setMessage(getString(R.string.delete_transaction_are_u_sure, selectedTransactionName))
 		     .setPositiveButton(R.string.delete, deleteCancelListener)

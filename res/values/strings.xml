@@ -26,6 +26,9 @@
     <string name="search">Search</string>
     <string name="change">Change</string>
     <string name="reload">Reload</string>
+    <string name="clean">Clean</string>
+    <string name="backup">Backup</string>
+    <string name="restore">Restore</string>
     
     <!-- Category screen -->
     <string name="title_activity_category">Cost category</string>
@@ -142,7 +145,13 @@
 	<string name="backup_screen_total_cost_enry_label">Total cost entry</string>
 	<string name="backup_screen_total_category_enry_label">Total category entry</string>
 	<string name="zero">0</string>
-	<string name="backup_screen_clear_button_label">Clean all information</string>
-	<string name="backup_screen_backup_button_label">Backup full database</string>
-	<string name="backup_screen_restore_button_label">Restore full database</string>
+	<string name="backup_screen_clear_button_label">Clean</string>
+	<string name="backup_screen_backup_button_label">Backup</string>
+	<string name="backup_screen_restore_button_label">Restore</string>
+	<string name="backup_screen_clear_title">Clean all information</string>
+	<string name="backup_screen_backup_title">Backup full database</string>
+	<string name="backup_screen_restore_title">Restore full database</string>
+	<string name="backup_screen_clear_details">Are you sure to clean all information?</string>
+	<string name="backup_screen_backup_details">Are you sure to backup database?</string>
+	<string name="backup_screen_restore_details">Are you sure to restore database?</string>
 </resources>

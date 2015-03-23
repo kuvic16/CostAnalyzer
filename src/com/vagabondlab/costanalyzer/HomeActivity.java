@@ -146,7 +146,7 @@ public class HomeActivity extends CActivity {
 		loadCategorySpinner(mCategoryName);
 	
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.add)
+		alert.setIcon(R.drawable.addnew)
 		     .setTitle(R.string.add_new_cost)
 		     .setView(costFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
@@ -179,7 +179,7 @@ public class HomeActivity extends CActivity {
 		mCostSelectedDate.setText(cost.getDate());
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.edit)
+		alert.setIcon(R.drawable.editnew)
 		     .setTitle(R.string.edit_cost)
 		     .setView(costFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
@@ -189,7 +189,7 @@ public class HomeActivity extends CActivity {
 	
 	private void deleteCostDialougeBox(){
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.delete)
+		alert.setIcon(R.drawable.clean)
 		     .setTitle(R.string.delete_cost)
 		     .setMessage(getString(R.string.delete_cost_are_u_sure, selectedCostName))
 		     .setPositiveButton(R.string.delete, deleteCancelListener)
