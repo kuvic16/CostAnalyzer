@@ -2,7 +2,9 @@ package com.vagabondlab.costanalyzer.utilities;
 
 import com.vagabondlab.costanalyzer.R;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -75,6 +77,25 @@ public final class ViewUtil {
 		header.addView(getTableColumn(context, context.getString(R.string.total_cost), Gravity.CENTER));
 		header.addView(getTableColumn(context, context.getString(R.string.parcantage), Gravity.CENTER));
 		return header;
+	}
+	
+	@SuppressWarnings("deprecation")
+	public static void createDialogWithOKButton(Context context,  String title, String message) {
+		AlertDialog mAlertDialog = new AlertDialog.Builder(context).create();
+		mAlertDialog.setTitle(title);
+		mAlertDialog.setMessage(message);
+		DialogInterface.OnClickListener dialogYesNoListener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int i) {
+				switch (i) {
+				case DialogInterface.BUTTON_POSITIVE:
+					break;
+				}
+			}
+		};
+		mAlertDialog.setCancelable(false);
+		mAlertDialog.setButton(context.getString(R.string.ok) , dialogYesNoListener);
+		mAlertDialog.show();
 	}
 
 }

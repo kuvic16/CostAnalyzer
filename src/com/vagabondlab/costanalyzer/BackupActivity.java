@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
 import com.vagabondlab.costanalyzer.database.service.CostService;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
+import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
 @SuppressLint("ClickableViewAccessibility")
@@ -125,7 +126,7 @@ public class BackupActivity extends CActivity {
 
 			if (sd.canWrite()) {
 				String currentDBPath = "//data//com.vagabondlab.costanalyzer//databases//costassistant.db";
-				String backupDBPath = "ca.db";
+				String backupDBPath = "CostAnalyzer_" + IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD) + ".db";
 				File currentDB = new File(data, currentDBPath);
 				File backupDB = new File(sd, backupDBPath);
 
@@ -135,9 +136,13 @@ public class BackupActivity extends CActivity {
 					dst.transferFrom(src, 0, src.size());
 					src.close();
 					dst.close();
+					ViewUtil.createDialogWithOKButton(this, getString(R.string.backup_successful_message_title), getString(R.string.backup_successful_message_details, backupDB.getPath()));
+				}else{
+					ViewUtil.showMessage(getApplicationContext(), getString(R.string.system_db_not_found));
 				}
 			}
 		} catch (Exception e) {
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.backup_failed));
 		}
 	}
 	

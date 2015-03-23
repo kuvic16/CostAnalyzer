@@ -29,6 +29,7 @@
     <string name="clean">Clean</string>
     <string name="backup">Backup</string>
     <string name="restore">Restore</string>
+    <string name="ok">OK</string>
     
     <!-- Category screen -->
     <string name="title_activity_category">Cost category</string>
@@ -154,4 +155,9 @@
 	<string name="backup_screen_clear_details">Are you sure to clean all information?</string>
 	<string name="backup_screen_backup_details">Are you sure to backup database?</string>
 	<string name="backup_screen_restore_details">Are you sure to restore database?</string>
+	<string name="system_db_not_found">Oops! Cost analyzer database not found</string>
+	
+	<string name="backup_successful_message_title">Backup successful</string>
+	<string name="backup_successful_message_details">Backup database location: %s</string>
+	<string name="backup_failed">Backup failed!</string>
 </resources>
