@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="30dip"
+	android:gravity="center"
+	android:minHeight="?android:attr/listPreferredItemHeight">
+
+    
+    <TextView
+			android:id="@+id/file_name"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:gravity="left"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentRight="true"
+			android:textColor="#000000"
+			android:textStyle="normal"
+			android:text="home/"
+			android:paddingLeft="5dip"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>
+    <TextView
+			android:id="@+id/folder_list_row_id"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:visibility="gone"
+			android:layout_below="@+id/file_name"
+			android:layout_alignParentLeft="true"
+			android:textAppearance="?android:attr/textAppearanceSmall"/>	
+</RelativeLayout>
