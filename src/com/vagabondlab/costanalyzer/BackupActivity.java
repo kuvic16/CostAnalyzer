@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,12 +15,14 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,7 +41,7 @@ import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
 @SuppressLint("ClickableViewAccessibility")
-public class BackupActivity extends CActivity {
+public class BackupActivity extends CActivity{
 
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private CategoryService categoryService;
@@ -51,9 +54,10 @@ public class BackupActivity extends CActivity {
 	private Button mButtonBackup;
 	private Button mButtonRestore;
 	
+	private AlertDialog.Builder mFolderAlert;
 	private View mFolderView; 
-	private String path;
-	private List<Map<String, String>> mFolderListdata = new ArrayList<Map<String, String>>();
+	private String parentpath;
+	private List<Map<String, Object>> mFolderListdata = new ArrayList<Map<String, Object>>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,54 +125,67 @@ public class BackupActivity extends CActivity {
 	private void openFolderDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
 		mFolderView = factory.inflate(R.layout.browse_folder_form, null);
-		loadFolderUI();
-		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.folder)
-		     .setTitle(R.string.root)
+		loadFolderUI(File.separator);
+		mFolderAlert = new AlertDialog.Builder(this);
+		mFolderAlert.setIcon(R.drawable.folder)
+		     .setTitle(R.string.select_db_file)
 		     .setView(mFolderView)
 		     .setPositiveButton(R.string.select, null)
 		     .setNegativeButton(R.string.cancel, null);
-		alert.show();
+		mFolderAlert.show();
 	}
 	
-	private void loadFolderUI(){
-		path = "/";
-	    if (getIntent().hasExtra("path")) {
-	      path = getIntent().getStringExtra("path");
+	private void loadFolderUI(String _path){
+		parentpath = _path;
+		if (getIntent().hasExtra("path")) {
+			_path = getIntent().getStringExtra("path");
 	    }
-	    setTitle(path);
-
-	    mFolderListdata = new ArrayList<Map<String,String>>();
-	    // Read all files sorted into the values-array
-	    //List values = new ArrayList<>();
-	    File dir = new File(path);
+		
+	    mFolderListdata = new ArrayList<Map<String,Object>>();
+	    if(!_path.equalsIgnoreCase(File.separator)){
+	    	//back button
+	    	Map<String, Object> infoMap = new HashMap<String, Object>(3);
+			infoMap.put("file_name", getString(R.string.parent_folder));
+			infoMap.put("file_image", R.drawable.back);
+			mFolderListdata.add(infoMap);
+	    }
+	    
+	    File dir = new File(_path);
+	    File subdir = null;
 	    if (!dir.canRead()) {
 	      setTitle(getTitle() + " (inaccessible)");
 	    }
 	    String[] list = dir.list();
-	    if (list != null) {
-	      for (String file : list) {
-	        if (!file.startsWith(".")) {
-	        	Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("file_name", file);
-				mFolderListdata.add(infoMap);
-	          //values.add(file);
-	        }
-	      }
-	    }
-	    //Collections.sort(values);
+		if (list != null) {
+			for (String file : list) {
+				if (!file.startsWith(".")) {
+					Map<String, Object> infoMap = new HashMap<String, Object>(3);
+					infoMap.put("file_name", file);
+					if (dir.getPath().endsWith(File.separator)) {
+						subdir = new File(dir.getPath() + file + File.separator);
+					} else {
+						subdir = new File(dir.getPath() + File.separator + file
+								+ File.separator);
+					}
 
-	    // Put the data into the list
-//	    ArrayAdapter adapter = new ArrayAdapter(this,
-//	        android.R.layout.simple_list_item_2, android.R.id.text1, values);
-	    
+					if (subdir.isDirectory()) {
+						infoMap.put("file_image", R.drawable.folder);
+					} else {
+						infoMap.put("file_image", R.drawable.file);
+					}
+
+					mFolderListdata.add(infoMap);
+				}
+			}
+		}
+
 	    SimpleAdapter adapter = new SimpleAdapter( 
 				this, 
 				mFolderListdata,
 				R.layout.folder_list_view, 
-				new String[] {"file_name" }, 
-				new int[] { R.id.file_name 
-		});
+				new String[] {"file_name", "file_image" }, 
+				new int[] { R.id.file_name , R.id.file_image }
+		);
 	    setListAdapter(adapter);
 	}
 	
@@ -306,26 +323,32 @@ public class BackupActivity extends CActivity {
 	public ListView getListView() {
 		if (mListView == null) {
 	        mListView = (ListView) mFolderView.findViewById(android.R.id.list);
-	        mListView.setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {
-	            public boolean onItemLongClick(AdapterView<?> parent, View v,int position, long id) {
-//	            	String filename = (String) getListAdapter().getItem(position);
-//	                if (path.endsWith(File.separator)) {
-//	                  filename = path + filename;
-//	                } else {
-//	                  filename = path + File.separator + filename;
-//	                }
-//	                if (new File(filename).isDirectory()) {
-//	                  Intent intent = new Intent(getApplicationContext(), AboutActivity.class);
-//	                  intent.putExtra("path", filename);
-//	                  startActivity(intent);
-//	                } else {
-//	                  Toast.makeText(getApplicationContext(), filename + " is not a directory", Toast.LENGTH_LONG).show();
-//	                }
-	                return true;
+	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+	            public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
+	            	View viewFileName = ((ViewGroup) v).getChildAt(1);
+					String filename = ((TextView) viewFileName).getText().toString();
+					if(filename.equalsIgnoreCase(getString(R.string.parent_folder))){
+						filename = parentpath;
+						loadFolderUI(new File(filename).getParent());
+					}else{
+		            	if (parentpath.endsWith(File.separator)) {
+		                  filename = parentpath + filename + File.separator;
+		                } else {
+		                  filename = parentpath + File.separator + filename + File.separator;
+		                }
+						if (new File(filename).isDirectory()) {
+							loadFolderUI(filename);
+						} else {
+							Toast.makeText(getApplicationContext(),
+									filename + " is not a directory",
+									Toast.LENGTH_LONG).show();
+						}
+					}
+	                
+	                
 	            }
 	        });
 	    }
 	    return mListView;
 	}
-	
 }
