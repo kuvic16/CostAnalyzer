@@ -127,10 +127,10 @@ public class BackupActivity extends CActivity{
 		mFolderView = factory.inflate(R.layout.browse_folder_form, null);
 		loadFolderUI(File.separator);
 		mFolderAlert = new AlertDialog.Builder(this);
-		mFolderAlert.setIcon(R.drawable.folder)
+		mFolderAlert.setIcon(R.drawable.db)
 		     .setTitle(R.string.select_db_file)
 		     .setView(mFolderView)
-		     .setPositiveButton(R.string.select, null)
+		     //.setPositiveButton(R.string.select, null)
 		     .setNegativeButton(R.string.cancel, null);
 		mFolderAlert.show();
 	}
@@ -164,14 +164,17 @@ public class BackupActivity extends CActivity{
 					if (dir.getPath().endsWith(File.separator)) {
 						subdir = new File(dir.getPath() + file + File.separator);
 					} else {
-						subdir = new File(dir.getPath() + File.separator + file
-								+ File.separator);
+						subdir = new File(dir.getPath() + File.separator + file + File.separator);
 					}
 
 					if (subdir.isDirectory()) {
 						infoMap.put("file_image", R.drawable.folder);
 					} else {
-						infoMap.put("file_image", R.drawable.file);
+						if(isDBFile(subdir.getPath())){
+							infoMap.put("file_image", R.drawable.db);
+						}else{
+							infoMap.put("file_image", R.drawable.file);
+						}
 					}
 
 					mFolderListdata.add(infoMap);
@@ -225,6 +228,18 @@ public class BackupActivity extends CActivity{
 		
 	}
 	
+	
+	private boolean isDBFile(String filename){
+		String extension = "";
+		int i = filename.lastIndexOf('.');
+		if (i > 0) {
+		    extension = filename.substring(i+1);
+		}
+		if(extension.equalsIgnoreCase("db")){
+			return true;
+		}
+		return false;
+	}
 	
 	// 1. Listener
 	DialogInterface.OnClickListener cleanCancelListener = new DialogInterface.OnClickListener() {
@@ -336,12 +351,15 @@ public class BackupActivity extends CActivity{
 		                } else {
 		                  filename = parentpath + File.separator + filename + File.separator;
 		                }
-						if (new File(filename).isDirectory()) {
+		            	File newfile = new File(filename); 
+						if (newfile.isDirectory()) {
 							loadFolderUI(filename);
 						} else {
-							Toast.makeText(getApplicationContext(),
-									filename + " is not a directory",
-									Toast.LENGTH_LONG).show();
+							if(isDBFile(newfile.getPath())){
+								
+							}else{
+								ViewUtil.showMessage(getApplicationContext(), getString(R.string.wrong_file));
+							}
 						}
 					}
 	                

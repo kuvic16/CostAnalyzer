@@ -160,6 +160,7 @@
 	<string name="root">/</string>
 	<string name="select_db_file">Select database</string>
 	<string name="parent_folder">Parent folder</string>
+	<string name="wrong_file">Wrong file! Please select db file</string>
 	
 	<string name="backup_successful_message_title">Backup successful</string>
 	<string name="backup_successful_message_details">Backup database location: %s</string>

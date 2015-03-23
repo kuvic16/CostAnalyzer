@@ -1643,20 +1643,21 @@ containing a value of this type.
         public static final int back=0x7f020035;
         public static final int backup=0x7f020036;
         public static final int clean=0x7f020037;
-        public static final int delete=0x7f020038;
-        public static final int download=0x7f020039;
-        public static final int drawer_shadow=0x7f02003a;
-        public static final int edit=0x7f02003b;
-        public static final int editnew=0x7f02003c;
-        public static final int file=0x7f02003d;
-        public static final int find=0x7f02003e;
-        public static final int folder=0x7f02003f;
-        public static final int ic_drawer=0x7f020040;
-        public static final int ic_launcher=0x7f020041;
-        public static final int reload=0x7f020042;
-        public static final int restore=0x7f020043;
-        public static final int search=0x7f020044;
-        public static final int upload=0x7f020045;
+        public static final int db=0x7f020038;
+        public static final int delete=0x7f020039;
+        public static final int download=0x7f02003a;
+        public static final int drawer_shadow=0x7f02003b;
+        public static final int edit=0x7f02003c;
+        public static final int editnew=0x7f02003d;
+        public static final int file=0x7f02003e;
+        public static final int find=0x7f02003f;
+        public static final int folder=0x7f020040;
+        public static final int ic_drawer=0x7f020041;
+        public static final int ic_launcher=0x7f020042;
+        public static final int reload=0x7f020043;
+        public static final int restore=0x7f020044;
+        public static final int search=0x7f020045;
+        public static final int upload=0x7f020046;
     }
     public static final class id {
         public static final int action_bar=0x7f060031;
@@ -1994,7 +1995,7 @@ containing a value of this type.
         public static final int amount=0x7f0b0060;
         public static final int app_name=0x7f0b0010;
         public static final int backup=0x7f0b002a;
-        public static final int backup_failed=0x7f0b009b;
+        public static final int backup_failed=0x7f0b009c;
         public static final int backup_screen_backup_button_label=0x7f0b008d;
         public static final int backup_screen_backup_details=0x7f0b0093;
         public static final int backup_screen_backup_title=0x7f0b0090;
@@ -2007,8 +2008,8 @@ containing a value of this type.
         public static final int backup_screen_top_text=0x7f0b0088;
         public static final int backup_screen_total_category_enry_label=0x7f0b008a;
         public static final int backup_screen_total_cost_enry_label=0x7f0b0089;
-        public static final int backup_successful_message_details=0x7f0b009a;
-        public static final int backup_successful_message_title=0x7f0b0099;
+        public static final int backup_successful_message_details=0x7f0b009b;
+        public static final int backup_successful_message_title=0x7f0b009a;
         public static final int balance=0x7f0b0083;
         public static final int borrow=0x7f0b0082;
         public static final int cancel=0x7f0b0034;
@@ -2106,7 +2107,7 @@ containing a value of this type.
         public static final int test=0x7f0b0021;
         /**  About screen 
          */
-        public static final int title_about_screen=0x7f0b009c;
+        public static final int title_about_screen=0x7f0b009d;
         /**  Category screen 
          */
         public static final int title_activity_category=0x7f0b002e;
@@ -2149,6 +2150,7 @@ containing a value of this type.
         public static final int wastage_cost_status=0x7f0b005a;
         public static final int week=0x7f0b005f;
         public static final int weeks=0x7f0b005e;
+        public static final int wrong_file=0x7f0b0099;
         public static final int zero=0x7f0b008b;
     }
     public static final class style {
