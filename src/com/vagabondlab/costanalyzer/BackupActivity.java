@@ -76,8 +76,8 @@ public class BackupActivity extends CActivity{
 			mTotalCostEntry = (TextView)findViewById(R.id.textView_total_cost_entry);
 			mTotalCostEntry.setText(String.valueOf(costService.countCost()));
 			
-			mTotalTransactionEntry = (TextView)findViewById(R.id.textView_total_transaction_entry);
-			mTotalTransactionEntry.setText(String.valueOf(transactionService.countTransaction()));
+			//mTotalTransactionEntry = (TextView)findViewById(R.id.textView_total_transaction_entry);
+			//mTotalTransactionEntry.setText(String.valueOf(transactionService.countTransaction()));
 			
 			mButtonClear = (Button)findViewById(R.id.button_clear);
 			mButtonBackup = (Button)findViewById(R.id.button_backup);
@@ -94,7 +94,7 @@ public class BackupActivity extends CActivity{
 	private void init(){
 		mTotalCategoryEntry.setText(String.valueOf(categoryService.countCategory()));
 		mTotalCostEntry.setText(String.valueOf(costService.countCost()));
-		mTotalTransactionEntry.setText(String.valueOf(transactionService.countTransaction()));
+		//mTotalTransactionEntry.setText(String.valueOf(transactionService.countTransaction()));
 		
 		
 		mButtonClear = (Button)findViewById(R.id.button_clear);
@@ -104,7 +104,6 @@ public class BackupActivity extends CActivity{
 		mButtonClear.setOnClickListener(buttonCleanClickListener);
 		mButtonBackup.setOnClickListener(buttonBackupClickListener);
 		mButtonRestore.setOnClickListener(buttonRestoreClickListener);
-		mListView = null;
 	}
 	
 		
@@ -139,6 +138,7 @@ public class BackupActivity extends CActivity{
 	}
 	
 	private void openFolderDialougeBox(){
+		mListView = null;
 		LayoutInflater factory = LayoutInflater.from(this);
 		mFolderView = factory.inflate(R.layout.browse_folder_form, null);
 		loadFolderUI(File.separator);
@@ -147,7 +147,7 @@ public class BackupActivity extends CActivity{
 		     .setTitle(R.string.select_db_file)
 		     .setView(mFolderView)
 		     //.setPositiveButton(R.string.select, null)
-		     .setNegativeButton(R.string.cancel, null);
+		     .setNegativeButton(R.string.cancel, folderDialogCancelListener);
 		mFolderAlert.show();
 	}
 	
@@ -323,15 +323,15 @@ public class BackupActivity extends CActivity{
 		}
 	};
 	
-//	DialogInterface.OnClickListener folderDialogCancelListener = new DialogInterface.OnClickListener() {
-//		@Override
-//		public void onClick(DialogInterface dialog, int i) {
-//			switch (i) {
-//			case DialogInterface.BUTTON_NEGATIVE: 
-//				break;
-//			}
-//		}
-//	};
+	DialogInterface.OnClickListener folderDialogCancelListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
 	
 	
 	OnClickListener buttonCleanClickListener = new OnClickListener() {
@@ -361,6 +361,7 @@ public class BackupActivity extends CActivity{
 		public void onClick(View v) {
 			try{
 				restoreDialougeBox();
+				//openFolderDialougeBox();
 			}catch(Throwable t){
 				t.printStackTrace();
 			}
