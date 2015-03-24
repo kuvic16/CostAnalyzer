@@ -71,13 +71,8 @@ public class BackupActivity extends CActivity{
 			transactionService = new TransactionService(getHelper().getTransactionDao());
 			
 			mTotalCategoryEntry = (TextView)findViewById(R.id.textView_total_category_entry);
-			mTotalCategoryEntry.setText(String.valueOf(categoryService.countCategory()));
-			
 			mTotalCostEntry = (TextView)findViewById(R.id.textView_total_cost_entry);
-			mTotalCostEntry.setText(String.valueOf(costService.countCost()));
-			
-			//mTotalTransactionEntry = (TextView)findViewById(R.id.textView_total_transaction_entry);
-			//mTotalTransactionEntry.setText(String.valueOf(transactionService.countTransaction()));
+			mTotalTransactionEntry = (TextView)findViewById(R.id.textView_total_transaction_entry);
 			
 			mButtonClear = (Button)findViewById(R.id.button_clear);
 			mButtonBackup = (Button)findViewById(R.id.button_backup);
@@ -86,6 +81,8 @@ public class BackupActivity extends CActivity{
 			mButtonClear.setOnClickListener(buttonCleanClickListener);
 			mButtonBackup.setOnClickListener(buttonBackupClickListener);
 			mButtonRestore.setOnClickListener(buttonRestoreClickListener);
+			
+			init();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -94,16 +91,7 @@ public class BackupActivity extends CActivity{
 	private void init(){
 		mTotalCategoryEntry.setText(String.valueOf(categoryService.countCategory()));
 		mTotalCostEntry.setText(String.valueOf(costService.countCost()));
-		//mTotalTransactionEntry.setText(String.valueOf(transactionService.countTransaction()));
-		
-		
-		mButtonClear = (Button)findViewById(R.id.button_clear);
-		mButtonBackup = (Button)findViewById(R.id.button_backup);
-		mButtonRestore = (Button)findViewById(R.id.button_restore);
-		
-		mButtonClear.setOnClickListener(buttonCleanClickListener);
-		mButtonBackup.setOnClickListener(buttonBackupClickListener);
-		mButtonRestore.setOnClickListener(buttonRestoreClickListener);
+		mTotalTransactionEntry.setText(String.valueOf(transactionService.countTransaction()));				
 	}
 	
 		

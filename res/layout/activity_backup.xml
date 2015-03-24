@@ -15,19 +15,27 @@
         android:id="@+id/relative_layout_top"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#dddddd"
+        android:background="#ffffff"
         android:orientation="vertical" >
         
         <TextView
         	android:id="@+id/textView_summary_status"
         	android:text="@string/backup_screen_top_text"
-        	style="@style/textViewSummaryStatusStyle"/>
+        	android:background="#FFA07A"
+        	android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center"
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:textColor="#000000"
+			android:textAppearance="?android:attr/textAppearanceSmall" />
         
         <RelativeLayout
-	        android:id="@+id/relative_layout_summary"
-	        style="@style/relativeLayoutSummaryStyle"
-	        android:layout_height="150dip"
-	        android:layout_below="@+id/textView_summary_status" >
+            android:id="@+id/relative_layout_summary"
+            style="@style/relativeLayoutSummaryStyle"
+            android:layout_height="150dip"
+            android:layout_below="@+id/textView_summary_status"
+            android:background="#82CAFF" >
 	
 	        <TextView
 	            android:id="@+id/textView_total_cost_entry"
@@ -70,7 +78,7 @@
 	            android:layout_toRightOf="@id/textView_total_cost_entry"
 	            android:text="@string/backup_screen_total_category_enry_label" />
 	        
-	        <!-- <TextView
+	        <TextView
 	            android:id="@+id/textView_total_transaction_entry"
 	            android:layout_height="wrap_content"
 	            android:layout_width="fill_parent"
@@ -78,7 +86,7 @@
 	            android:gravity="center"
 	            android:paddingTop="15dip"
 	            android:textAppearance="?android:attr/textAppearanceLarge"
-	            android:layout_below="@+id/textView_total_transaction_entry_label" />
+	            android:layout_below="@+id/textView_total_category_entry_label" />
 	
 	        <TextView
 	            android:id="@+id/textView_total_transaction_entry_label"
@@ -89,7 +97,7 @@
 				android:textAppearance="?android:attr/textAppearanceSmall"
 	            android:layout_alignLeft="@+id/textView_total_transaction_entry"
 	            android:layout_below="@+id/textView_total_transaction_entry"
-	            android:text="@string/backup_screen_total_category_enry_label" />   -->
+	            android:text="@string/backup_screen_total_transaction_enry_label" />  
     	</RelativeLayout>
     	
         <Button
