@@ -11,6 +11,7 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -49,7 +50,6 @@ public class BackupActivity extends CActivity{
 	private Button mButtonBackup;
 	private Button mButtonRestore;
 	
-	private AlertDialog.Builder mFolderAlert;
 	private AlertDialog mFolderDialog;
 	private View mFolderView; 
 	private String parentpath;
@@ -137,18 +137,56 @@ public class BackupActivity extends CActivity{
 		mFolderDialog = alert.show();
 	}
 	
-	private void openFolderDialougeBox(){
+	private void openSelectDBFolderDialougeBox(){
 		mListView = null;
 		LayoutInflater factory = LayoutInflater.from(this);
 		mFolderView = factory.inflate(R.layout.browse_folder_form, null);
 		loadFolderUI(File.separator);
-		mFolderAlert = new AlertDialog.Builder(this);
-		mFolderAlert.setIcon(R.drawable.db)
+		AlertDialog.Builder folderBuilder = new AlertDialog.Builder(this);
+		folderBuilder.setIcon(R.drawable.db)
 		     .setTitle(R.string.select_db_file)
 		     .setView(mFolderView)
-		     //.setPositiveButton(R.string.select, null)
 		     .setNegativeButton(R.string.cancel, folderDialogCancelListener);
-		mFolderAlert.show();
+		
+		mFolderDialog = folderBuilder.create();
+		mFolderDialog.show();
+	}
+	
+	private void openSelectFolderDialougeBox(){
+		mListView = null;
+		LayoutInflater factory = LayoutInflater.from(this);
+		mFolderView = factory.inflate(R.layout.browse_folder_form, null);
+		loadFolderUI(File.separator);
+		AlertDialog.Builder folderBuilder = new AlertDialog.Builder(this);
+		folderBuilder.setIcon(R.drawable.folder)
+		     .setTitle(R.string.select_folder)
+		     .setView(mFolderView)
+		     .setPositiveButton(R.string.select, folderDialogCancelListener)
+		     .setNegativeButton(R.string.cancel, folderDialogCancelListener);
+		
+		mFolderDialog = folderBuilder.create();
+		mFolderDialog.show();
+	}
+	
+	private void createOKDialog(Context context,  String title, String message) {
+		AlertDialog mAlertDialog = new AlertDialog.Builder(context).create();
+		mAlertDialog.setTitle(title);
+		mAlertDialog.setMessage(message);
+		DialogInterface.OnClickListener dialogYesNoListener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int i) {
+				switch (i) {
+				case DialogInterface.BUTTON_POSITIVE:
+					//close folder dialog box
+					init();
+					mFolderDialog.dismiss();
+					break;
+				}
+			}
+		};
+		mAlertDialog.setCancelable(false);
+		mAlertDialog.setButton(context.getString(R.string.ok) , dialogYesNoListener);
+		mAlertDialog.show();
 	}
 	
 	private void loadFolderUI(String _path){
@@ -218,16 +256,16 @@ public class BackupActivity extends CActivity{
 		}
 	}
 	
-	private void backupDatabase() {
+	private void backupDatabase(String _folder_path) {
 		try {
 			File sd = Environment.getExternalStorageDirectory();
 			File data = Environment.getDataDirectory();
 
 			if (sd.canWrite()) {
 				String currentDBPath = "//data//com.vagabondlab.costanalyzer//databases//costassistant.db";
-				String backupDBPath = "CostAnalyzer_" + IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD) + ".db";
+				String backupDBPath = _folder_path + "CostAnalyzer_" + IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD) + ".db";
 				File currentDB = new File(data, currentDBPath);
-				File backupDB = new File(sd, backupDBPath);
+				File backupDB = new File(backupDBPath);
 
 				if (currentDB.exists()) {
 					FileChannel src = new FileInputStream(currentDB).getChannel();
@@ -258,8 +296,7 @@ public class BackupActivity extends CActivity{
 				dst.transferFrom(src, 0, src.size());
 				src.close();
 				dst.close();
-				ViewUtil.createDialogWithOKButton(this, getString(R.string.restore_successful_message_title), "");
-				init();
+				createOKDialog(this, getString(R.string.restore_successful_message_title), getString(R.string.restore_successful_message_details));				
 			}else{
 				ViewUtil.showMessage(getApplicationContext(), getString(R.string.selected_db_not_found));
 			}
@@ -302,7 +339,8 @@ public class BackupActivity extends CActivity{
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
-				backupDatabase();
+				//backupDatabase();
+				openSelectFolderDialougeBox();
 				break;
 			case DialogInterface.BUTTON_NEGATIVE: 
 				break;
@@ -315,7 +353,7 @@ public class BackupActivity extends CActivity{
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
-				openFolderDialougeBox();
+				openSelectDBFolderDialougeBox();
 				break;
 			case DialogInterface.BUTTON_NEGATIVE: 
 				break;
@@ -327,6 +365,10 @@ public class BackupActivity extends CActivity{
 		@Override
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				backupDatabase(parentpath);
+				//ViewUtil.showMessage(getApplicationContext(), parentpath);
+				break;
 			case DialogInterface.BUTTON_NEGATIVE: 
 				break;
 			}
@@ -408,9 +450,6 @@ public class BackupActivity extends CActivity{
 							loadFolderUI(filename);
 						} else {
 							if(isDBFile(newfile.getPath())){
-								if(mFolderDialog != null && mFolderDialog.isShowing()){
-									mFolderDialog.dismiss();
-								}
 								restoreDatabase(newfile.getPath());
 							}else{
 								ViewUtil.showMessage(getApplicationContext(), getString(R.string.wrong_file));

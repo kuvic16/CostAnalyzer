@@ -161,6 +161,7 @@
 	<string name="selected_db_not_found">Oops! Selected database not found</string>
 	<string name="root">/</string>
 	<string name="select_db_file">Select database</string>
+	<string name="select_folder">Select folder to save database</string>
 	<string name="parent_folder">Parent folder</string>
 	<string name="wrong_file">Wrong file! Please select db file</string>
 	
@@ -169,6 +170,7 @@
 	<string name="backup_failed">Backup failed!</string>
 	
 	<string name="restore_successful_message_title">Restore successful</string>
+	<string name="restore_successful_message_details">Database restored successfully. Please check your transaction.</string>
 	<string name="restore_failed">Restore failed!</string>
 	
 	<!-- About screen -->
