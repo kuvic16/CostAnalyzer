@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +13,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.DrawerLayout;
@@ -24,18 +21,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.vagabondlab.costanalyzer.database.entity.Cost;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
 import com.vagabondlab.costanalyzer.database.service.CostService;
+import com.vagabondlab.costanalyzer.database.service.TransactionService;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
@@ -46,15 +39,18 @@ public class BackupActivity extends CActivity{
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private CategoryService categoryService;
 	private CostService costService;
+	private TransactionService transactionService;
 	
 	private TextView mTotalCostEntry;
 	private TextView mTotalCategoryEntry;
+	private TextView mTotalTransactionEntry;
 	
 	private Button mButtonClear;
 	private Button mButtonBackup;
 	private Button mButtonRestore;
 	
 	private AlertDialog.Builder mFolderAlert;
+	private AlertDialog mFolderDialog;
 	private View mFolderView; 
 	private String parentpath;
 	private List<Map<String, Object>> mFolderListdata = new ArrayList<Map<String, Object>>();
@@ -72,12 +68,16 @@ public class BackupActivity extends CActivity{
 		try { 
 			categoryService = new CategoryService(getHelper().getCategoryDao());
 			costService = new CostService(getHelper().getCostDao());
+			transactionService = new TransactionService(getHelper().getTransactionDao());
 			
 			mTotalCategoryEntry = (TextView)findViewById(R.id.textView_total_category_entry);
 			mTotalCategoryEntry.setText(String.valueOf(categoryService.countCategory()));
 			
 			mTotalCostEntry = (TextView)findViewById(R.id.textView_total_cost_entry);
 			mTotalCostEntry.setText(String.valueOf(costService.countCost()));
+			
+			mTotalTransactionEntry = (TextView)findViewById(R.id.textView_total_transaction_entry);
+			mTotalTransactionEntry.setText(String.valueOf(transactionService.countTransaction()));
 			
 			mButtonClear = (Button)findViewById(R.id.button_clear);
 			mButtonBackup = (Button)findViewById(R.id.button_backup);
@@ -89,6 +89,22 @@ public class BackupActivity extends CActivity{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void init(){
+		mTotalCategoryEntry.setText(String.valueOf(categoryService.countCategory()));
+		mTotalCostEntry.setText(String.valueOf(costService.countCost()));
+		mTotalTransactionEntry.setText(String.valueOf(transactionService.countTransaction()));
+		
+		
+		mButtonClear = (Button)findViewById(R.id.button_clear);
+		mButtonBackup = (Button)findViewById(R.id.button_backup);
+		mButtonRestore = (Button)findViewById(R.id.button_restore);
+		
+		mButtonClear.setOnClickListener(buttonCleanClickListener);
+		mButtonBackup.setOnClickListener(buttonBackupClickListener);
+		mButtonRestore.setOnClickListener(buttonRestoreClickListener);
+		mListView = null;
 	}
 	
 		
@@ -119,7 +135,7 @@ public class BackupActivity extends CActivity{
 		     .setMessage(getString(R.string.backup_screen_restore_details))
 		     .setPositiveButton(R.string.restore, restoreCancelListener)
 		     .setNegativeButton(R.string.cancel, restoreCancelListener);
-		alert.show();
+		mFolderDialog = alert.show();
 	}
 	
 	private void openFolderDialougeBox(){
@@ -194,7 +210,12 @@ public class BackupActivity extends CActivity{
 	
 	
 	private void cleanAll(){
-		
+		try{
+			getHelper().onUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
+			init();
+		}catch(Throwable t){
+			
+		}
 	}
 	
 	private void backupDatabase() {
@@ -224,8 +245,29 @@ public class BackupActivity extends CActivity{
 		}
 	}
 	
-	private void restoreDatabase(){
-		
+	private void restoreDatabase(String backupDBPath){
+		try {
+			File data = Environment.getDataDirectory();
+			String currentDBPath = "//data//com.vagabondlab.costanalyzer//databases//costassistant.db";
+			File currentDB = new File(data, currentDBPath);
+			File backupDB = new File(backupDBPath);
+
+			if (backupDB.exists()) {
+				FileChannel src = new FileInputStream(backupDB).getChannel();
+				FileChannel dst = new FileOutputStream(currentDB).getChannel();
+				dst.transferFrom(src, 0, src.size());
+				src.close();
+				dst.close();
+				ViewUtil.createDialogWithOKButton(this, getString(R.string.restore_successful_message_title), "");
+				init();
+			}else{
+				ViewUtil.showMessage(getApplicationContext(), getString(R.string.selected_db_not_found));
+			}
+		} catch (Exception e) {
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.restore_failed));
+		}finally{
+			
+		}
 	}
 	
 	
@@ -273,7 +315,6 @@ public class BackupActivity extends CActivity{
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
-//				restoreDatabase();
 				openFolderDialougeBox();
 				break;
 			case DialogInterface.BUTTON_NEGATIVE: 
@@ -281,6 +322,16 @@ public class BackupActivity extends CActivity{
 			}
 		}
 	};
+	
+//	DialogInterface.OnClickListener folderDialogCancelListener = new DialogInterface.OnClickListener() {
+//		@Override
+//		public void onClick(DialogInterface dialog, int i) {
+//			switch (i) {
+//			case DialogInterface.BUTTON_NEGATIVE: 
+//				break;
+//			}
+//		}
+//	};
 	
 	
 	OnClickListener buttonCleanClickListener = new OnClickListener() {
@@ -356,7 +407,10 @@ public class BackupActivity extends CActivity{
 							loadFolderUI(filename);
 						} else {
 							if(isDBFile(newfile.getPath())){
-								
+								if(mFolderDialog != null && mFolderDialog.isShowing()){
+									mFolderDialog.dismiss();
+								}
+								restoreDatabase(newfile.getPath());
 							}else{
 								ViewUtil.showMessage(getApplicationContext(), getString(R.string.wrong_file));
 							}

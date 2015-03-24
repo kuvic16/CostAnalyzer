@@ -146,6 +146,7 @@
 	<string name="backup_screen_top_text">Your overall activities</string>
 	<string name="backup_screen_total_cost_enry_label">Total cost entry</string>
 	<string name="backup_screen_total_category_enry_label">Total category entry</string>
+	<string name="backup_screen_total_transaction_enry_label">Total transaction entry</string>
 	<string name="zero">0</string>
 	<string name="backup_screen_clear_button_label">Clean</string>
 	<string name="backup_screen_backup_button_label">Backup</string>
@@ -157,6 +158,7 @@
 	<string name="backup_screen_backup_details">Are you sure to backup database?</string>
 	<string name="backup_screen_restore_details">Are you sure to restore database?</string>
 	<string name="system_db_not_found">Oops! Cost analyzer database not found</string>
+	<string name="selected_db_not_found">Oops! Selected database not found</string>
 	<string name="root">/</string>
 	<string name="select_db_file">Select database</string>
 	<string name="parent_folder">Parent folder</string>
@@ -165,6 +167,9 @@
 	<string name="backup_successful_message_title">Backup successful</string>
 	<string name="backup_successful_message_details">Backup database location: %s</string>
 	<string name="backup_failed">Backup failed!</string>
+	
+	<string name="restore_successful_message_title">Restore successful</string>
+	<string name="restore_failed">Restore failed!</string>
 	
 	<!-- About screen -->
 	<string name="title_about_screen">About</string>
