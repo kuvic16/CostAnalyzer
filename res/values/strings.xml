@@ -175,4 +175,31 @@
 	
 	<!-- About screen -->
 	<string name="title_about_screen">About</string>
+	
+	<!-- Help screen -->
+	<string name="title_help_screen">Help</string>
+	<string name="help_1_title">What is Cost analyzer?</string>
+	<string name="help_1_details">
+	    Cost analyzer is tiny application for keep tracking personal daily cost information.
+	    Cost can be effective or wastage. Very easy to review daily, weekly, monthly, yearly 
+	    cost information. Which will help to planning day to day cost activities. 
+	</string>
+	<string name="help_2_title">What is Cost category?</string>
+	<string name="help_2_details">
+	    Cost category is  cost tag. Example: Transport, Breakfast, Lunch, Bazar etc
+	    It is required before adding cost amount
+	</string>
+	<string name="help_3_title">Add Cost amount</string>
+	<string name="help_3_details">
+	    Add cost amount based on cost category
+	</string>
+	<string name="help_4_title">What is My Transaction?</string>
+	<string name="help_4_details">
+	    My transaction is used for keep tracking your lend or borrow amount from others. 
+	    Which will help you to remember your transaction with surrounding peoples.
+	</string>
+	<string name="help_5_title">Cost Report</string>
+	<string name="help_5_details">
+	    Cost analyzer provides Daily, Weekly, Monthly, Yearly, All time Report.
+	</string>
 </resources>

@@ -4,126 +4,130 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     tools:context="com.vagabondlab.costanalyzer.BackupActivity" >
 
     <FrameLayout
-        android:id="@+id/container" 
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <RelativeLayout
-        android:id="@+id/relative_layout_top"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="#ffffff"
-        android:orientation="vertical" >
-        
-        <TextView
-        	android:id="@+id/textView_summary_status"
-        	android:text="@string/backup_screen_top_text"
-        	android:background="#FFA07A"
-        	android:layout_width="fill_parent"
-		    android:layout_height="wrap_content"
-		    android:gravity="center"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentLeft="true"
-			android:textColor="#000000"
-			android:textAppearance="?android:attr/textAppearanceSmall" />
-        
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
         <RelativeLayout
-            android:id="@+id/relative_layout_summary"
-            style="@style/relativeLayoutSummaryStyle"
-            android:layout_height="150dip"
-            android:layout_below="@+id/textView_summary_status"
-            android:background="#82CAFF" >
-	
-	        <TextView
-	            android:id="@+id/textView_total_cost_entry"
-	            android:layout_height="wrap_content"
-	            android:layout_width="130dip"
-	            android:text="@string/zero"
-	            android:gravity="center"
-	            android:textAppearance="?android:attr/textAppearanceLarge"
-	            android:layout_alignParentLeft="true" />
-	
-	       <TextView
-	            android:id="@+id/textView_total_cost_entry_label"
-	            android:layout_width="130dip"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:textColor="#000000"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-	            android:layout_alignParentLeft="true"
-	            android:layout_below="@+id/textView_total_cost_entry"
-	            android:text="@string/backup_screen_total_cost_enry_label" />
-	
-	       <TextView
-	            android:id="@+id/textView_total_category_entry"
-	            android:layout_height="wrap_content"
-	            android:layout_width="130dip"
-	            android:text="@string/zero"
-	            android:gravity="center"
-	            android:textAppearance="?android:attr/textAppearanceLarge"
-	            android:layout_toRightOf="@id/textView_total_cost_entry"/>
-	
-	        <TextView
-	            android:id="@+id/textView_total_category_entry_label"
-	            android:layout_width="130dip"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:textColor="#000000"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-	            android:layout_alignLeft="@+id/textView_total_category_entry"
-	            android:layout_below="@+id/textView_total_category_entry"
-	            android:layout_toRightOf="@id/textView_total_cost_entry"
-	            android:text="@string/backup_screen_total_category_enry_label" />
-	        
-	        <TextView
-	            android:id="@+id/textView_total_transaction_entry"
-	            android:layout_height="wrap_content"
-	            android:layout_width="fill_parent"
-	            android:text="@string/zero"
-	            android:gravity="center"
-	            android:paddingTop="15dip"
-	            android:textAppearance="?android:attr/textAppearanceLarge"
-	            android:layout_below="@+id/textView_total_category_entry_label" />
-	
-	        <TextView
-	            android:id="@+id/textView_total_transaction_entry_label"
-	            android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:gravity="center"
-				android:textColor="#000000"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-	            android:layout_alignLeft="@+id/textView_total_transaction_entry"
-	            android:layout_below="@+id/textView_total_transaction_entry"
-	            android:text="@string/backup_screen_total_transaction_enry_label" />  
-    	</RelativeLayout>
-    	
-        <Button
-            android:id="@+id/button_clear"
-            style="@style/backupButtonStyle"
-            android:drawableRight="@drawable/clean"
-            android:layout_below="@+id/relative_layout_summary"
-            android:text="@string/backup_screen_clear_button_label" />
-        
-        <Button
-            android:id="@+id/button_backup"
-            style="@style/backupButtonStyle"
-            android:drawableRight="@drawable/backup"
-            android:layout_below="@+id/button_clear"
-            android:text="@string/backup_screen_backup_button_label" />
-        
-        <Button
-            android:id="@+id/button_restore"
-            style="@style/backupButtonStyle"
-            android:drawableRight="@drawable/restore"
-            android:layout_below="@+id/button_backup"
-            android:text="@string/backup_screen_restore_button_label" />
-        
-</RelativeLayout>
-    
-    
+            android:id="@+id/relative_layout_top"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffffff"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView_summary_status"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:background="#FFA07A"
+                android:gravity="center"
+                android:text="@string/backup_screen_top_text"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <RelativeLayout
+                android:id="@+id/relative_layout_summary"
+                style="@style/relativeLayoutSummaryStyle"
+                android:layout_height="150dip"
+                android:layout_below="@+id/textView_summary_status"
+                android:background="#82CAFF" >
+
+                <TextView
+                    android:id="@+id/textView_total_cost_entry"
+                    android:layout_width="130dip"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center"
+                    android:text="@string/zero"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/textView_total_cost_entry_label"
+                    android:layout_width="130dip"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/textView_total_cost_entry"
+                    android:gravity="center"
+                    android:text="@string/backup_screen_total_cost_enry_label"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/textView_total_category_entry"
+                    android:layout_width="130dip"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/textView_total_cost_entry"
+                    android:gravity="center"
+                    android:text="@string/zero"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/textView_total_category_entry_label"
+                    android:layout_width="130dip"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/textView_total_category_entry"
+                    android:layout_below="@+id/textView_total_category_entry"
+                    android:layout_toRightOf="@id/textView_total_cost_entry"
+                    android:gravity="center"
+                    android:text="@string/backup_screen_total_category_enry_label"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#000000" />
+
+                <TextView
+                    android:id="@+id/textView_total_transaction_entry"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_total_category_entry_label"
+                    android:gravity="center"
+                    android:paddingTop="15dip"
+                    android:text="@string/zero"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/textView_total_transaction_entry_label"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/textView_total_transaction_entry"
+                    android:layout_below="@+id/textView_total_transaction_entry"
+                    android:gravity="center"
+                    android:text="@string/backup_screen_total_transaction_enry_label"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="#000000" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/button_clear"
+                style="@style/backupButtonStyle"
+                android:layout_below="@+id/relative_layout_summary"
+                android:drawableRight="@drawable/clean"
+                android:text="@string/backup_screen_clear_button_label" />
+
+            <Button
+                android:id="@+id/button_backup"
+                style="@style/backupButtonStyle"
+                android:layout_below="@+id/button_clear"
+                android:drawableRight="@drawable/backup"
+                android:text="@string/backup_screen_backup_button_label" />
+
+            <Button
+                android:id="@+id/button_restore"
+                style="@style/backupButtonStyle"
+                android:layout_below="@+id/button_backup"
+                android:drawableRight="@drawable/restore"
+                android:text="@string/backup_screen_restore_button_label" />
+        </RelativeLayout>
+    </ScrollView>
+
     <fragment
         android:id="@+id/navigation_drawer"
         android:name="com.vagabondlab.costanalyzer.NavigationDrawerFragment"

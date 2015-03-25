@@ -75,5 +75,10 @@
             android:configChanges="orientation"
             android:label="@string/title_about_screen" >
         </activity>
+        <activity
+            android:name=".HelpActivity"
+            android:configChanges="orientation"
+            android:label="@string/title_help_screen" >
+        </activity>
     </application>
 </manifest>

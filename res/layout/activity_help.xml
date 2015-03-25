@@ -1,0 +1,148 @@
+<!-- A DrawerLayout is intended to be used as the top-level content view using match_parent for both width and height to consume the full space available. -->
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context="com.vagabondlab.costanalyzer.HelpActivity" >
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/textView_h1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#82CAFF"
+                android:gravity="left"
+                android:paddingLeft="5dip"
+                android:text="@string/help_1_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/textView_h1_details"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:paddingBottom="10dip"
+                android:paddingLeft="5dip"
+                android:text="@string/help_1_details"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/textView_h2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#82CAFF"
+                android:gravity="left"
+                android:paddingLeft="5dip"
+                android:text="@string/help_2_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/textView_h2_details"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:paddingBottom="10dip"
+                android:paddingLeft="5dip"
+                android:text="@string/help_2_details"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/textView_h3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#82CAFF"
+                android:gravity="left"
+                android:paddingLeft="5dip"
+                android:text="@string/help_3_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/textView_h3_details"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:paddingBottom="10dip"
+                android:paddingLeft="5dip"
+                android:text="@string/help_3_details"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/textView_h4"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#82CAFF"
+                android:gravity="left"
+                android:paddingLeft="5dip"
+                android:text="@string/help_4_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/textView_h4_details"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:paddingBottom="10dip"
+                android:paddingLeft="5dip"
+                android:text="@string/help_4_details"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/textView_h5"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#82CAFF"
+                android:gravity="left"
+                android:paddingLeft="5dip"
+                android:text="@string/help_5_title"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/textView_h5_details"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:gravity="left"
+                android:paddingLeft="5dip"
+                android:text="@string/help_5_details"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+        </LinearLayout>
+    </ScrollView>
+
+    <fragment
+        android:id="@+id/navigation_drawer"
+        android:name="com.vagabondlab.costanalyzer.NavigationDrawerFragment"
+        android:layout_width="@dimen/navigation_drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        tools:layout="@layout/fragment_navigation_drawer" />
+
+</android.support.v4.widget.DrawerLayout>
