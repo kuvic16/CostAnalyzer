@@ -2057,22 +2057,25 @@ containing a value of this type.
         public static final int delete_transaction_are_u_sure=0x7f0b0078;
         public static final int delete_transaction_failed=0x7f0b0080;
         public static final int delete_transaction_success=0x7f0b007f;
+        public static final int developed_by=0x7f0b00a5;
+        public static final int developed_by_label=0x7f0b00a4;
+        public static final int developed_org=0x7f0b00a6;
         public static final int edit=0x7f0b0024;
         public static final int edit_category=0x7f0b0036;
         public static final int edit_cost=0x7f0b0048;
         public static final int edit_transaction=0x7f0b0076;
         public static final int error=0x7f0b0023;
         public static final int hello_world=0x7f0b0022;
-        public static final int help_1_details=0x7f0b00a6;
-        public static final int help_1_title=0x7f0b00a5;
-        public static final int help_2_details=0x7f0b00a8;
-        public static final int help_2_title=0x7f0b00a7;
-        public static final int help_3_details=0x7f0b00aa;
-        public static final int help_3_title=0x7f0b00a9;
-        public static final int help_4_details=0x7f0b00ac;
-        public static final int help_4_title=0x7f0b00ab;
-        public static final int help_5_details=0x7f0b00ae;
-        public static final int help_5_title=0x7f0b00ad;
+        public static final int help_1_details=0x7f0b00aa;
+        public static final int help_1_title=0x7f0b00a9;
+        public static final int help_2_details=0x7f0b00ac;
+        public static final int help_2_title=0x7f0b00ab;
+        public static final int help_3_details=0x7f0b00ae;
+        public static final int help_3_title=0x7f0b00ad;
+        public static final int help_4_details=0x7f0b00b0;
+        public static final int help_4_title=0x7f0b00af;
+        public static final int help_5_details=0x7f0b00b2;
+        public static final int help_5_title=0x7f0b00b1;
         public static final int lend=0x7f0b0081;
         public static final int main_menu1=0x7f0b0011;
         public static final int main_menu10=0x7f0b001a;
@@ -2131,6 +2134,7 @@ containing a value of this type.
         public static final int select_db_file=0x7f0b0099;
         public static final int select_folder=0x7f0b009a;
         public static final int selected_db_not_found=0x7f0b0097;
+        public static final int special_thanks_label=0x7f0b00a7;
         public static final int system_db_not_found=0x7f0b0096;
         public static final int take_amount=0x7f0b0085;
         public static final int test=0x7f0b0021;
@@ -2154,7 +2158,7 @@ containing a value of this type.
         public static final int title_daily_report=0x7f0b005b;
         /**  Help screen 
          */
-        public static final int title_help_screen=0x7f0b00a4;
+        public static final int title_help_screen=0x7f0b00a8;
         /**  Home screen 
          */
         public static final int title_home_screen=0x7f0b0056;

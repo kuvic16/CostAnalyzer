@@ -11,15 +11,158 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-
-        <ListView
-            android:id="@android:id/list"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#82CAFF"
+                android:gravity="left"
+                android:paddingLeft="5dip"
+                android:text="@string/developed_by_label"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingLeft="5dip"
+                android:paddingTop="5dip"
+                android:text="@string/developed_by"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:paddingBottom="15dip"
+                android:paddingLeft="5dip"
+                android:text="@string/developed_org"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFA07A"
+                android:gravity="left"
+                android:paddingLeft="5dip"
+                android:text="@string/special_thanks_label"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#000000" />
+
+           <ScrollView
+        		android:layout_width="match_parent"
+        		android:layout_height="match_parent" >
+
+           	    <TableLayout
+	                android:layout_width="match_parent"
+	                android:layout_height="wrap_content"
+	                android:stretchColumns="1" >
+	
+	            	<TableRow>
+	                    <TextView android:padding="3dip" android:text="Md. Shafi Zaman" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Sanchay Kumar Shil" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Amit Kumar Mandal" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Rokib Hasan" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Atanu Chatarjee" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="K.H. Moshiur Rahman Ashik" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Alip Kumar Saha" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Ruhul Amin Robin" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Mamun Khan Boney" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Khurram Alam" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Golam Sorowar" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Shahinur Islam Mithun" />
+	                </TableRow>
+	                <View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+	                
+	                <TableRow>
+	                    <TextView android:padding="3dip" android:text="Syed Ekramuddin Emon" />
+	                </TableRow>
+	                <View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+	                
+	                <TableRow>
+	                    <TextView android:padding="3dip" android:text="Saiful Islam Raju" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Alamgir Kabir Hira" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Shoumen Das" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Nadwat Munir Nadim" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Hasanuzzaman Rana" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+					
+					<TableRow>
+	                    <TextView android:padding="3dip" android:text="Riad Karim" />
+	                </TableRow>
+					<View android:layout_width="fill_parent" android:layout_height="0.2dp" android:background="@android:color/darker_gray" android:visibility="visible" />
+	            </TableLayout>
+            </ScrollView>
+        </LinearLayout>
+    
 
     <fragment
         android:id="@+id/navigation_drawer"

@@ -13,7 +13,7 @@
     <string name="main_menu9">My Transaction</string>
     <string name="main_menu10">Backup/Restore</string>
     <string name="main_menu11">Help</string>
-    <string name="main_menu12">About</string>
+    <string name="main_menu12">About Team</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
@@ -174,7 +174,12 @@
 	<string name="restore_failed">Restore failed!</string>
 	
 	<!-- About screen -->
-	<string name="title_about_screen">About</string>
+	<string name="title_about_screen">About Team</string>
+	<string name="developed_by_label">Idea, Design and Developed by</string>
+	<string name="developed_by">Shaiful Islam Palash</string>
+	<string name="developed_org">Founder of VagabondLab</string>
+	<string name="special_thanks_label">Special thanks for suggestion and inspiration</string>
+	
 	
 	<!-- Help screen -->
 	<string name="title_help_screen">Help</string>
