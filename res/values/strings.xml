@@ -180,13 +180,13 @@
 	<string name="title_help_screen">Help</string>
 	<string name="help_1_title">What is Cost analyzer?</string>
 	<string name="help_1_details">
-	    Cost analyzer is tiny application for keep tracking personal daily cost information.
-	    Cost can be effective or wastage. Very easy to review daily, weekly, monthly, yearly 
+	    Cost analyzer is tiny, simple application for keep tracking personal daily effective and wastage cost information.
+	    Very easy to review cost and daily, weekly, monthly, yearly 
 	    cost information. Which will help to planning day to day cost activities. 
 	</string>
 	<string name="help_2_title">What is Cost category?</string>
 	<string name="help_2_details">
-	    Cost category is  cost tag. Example: Transport, Breakfast, Lunch, Bazar etc
+	    Cost category is  cost tag which can be effective or wastage. Example: Transport, Breakfast, Lunch, Bazar etc. 
 	    It is required before adding cost amount
 	</string>
 	<string name="help_3_title">Add Cost amount</string>
