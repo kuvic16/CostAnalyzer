@@ -401,11 +401,12 @@ public class CategoryActivity extends CActivity{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.add_category) {
-			action = IConstant.ACTION_ADD;
-			addNewCategoryDialougeBox();
-			return true;
-		}else if(id == R.id.search){
+//		if (id == R.id.add_category) {
+//			action = IConstant.ACTION_ADD;
+//			addNewCategoryDialougeBox();
+//			return true;
+//		}else 
+		if(id == R.id.search){
 			action = IConstant.ACTION_SEARCH;
 			searchCategoryDialougeBox();
 		}

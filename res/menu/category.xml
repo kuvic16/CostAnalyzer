@@ -3,11 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.vagabondlab.costanalyzer.CategoryActivity" >
 
-    <item
+    <!-- <item
         android:id="@+id/add_category"
         android:title="@string/new_category"
         android:icon="@drawable/add"
-        app:showAsAction="withText|ifRoom"/>
+        app:showAsAction="withText|ifRoom"/> -->
     
     <item
         android:id="@+id/search"

@@ -41,7 +41,30 @@
             android:id="@android:id/list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_above="@+id/linearLayout_buttonholder"
             android:layout_below="@+id/textView_transaction_status" />
+        
+        <LinearLayout
+	        android:id="@+id/linearLayout_buttonholder"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:background="@layout/design_button_group_layout"
+	        android:orientation="horizontal" >
+	        
+	        <Button
+	            android:id="@+id/buttonholder_search"
+	            android:drawableRight="@drawable/find"
+	            android:text="@string/search"
+	            style="@style/groupButtonStyle" />
+	         
+	        <Button
+	            android:id="@+id/buttonholder_add_transaction"
+	            android:drawableRight="@drawable/addnew"
+	            android:text="@string/new_transaction"
+	            style="@style/groupButtonStyle" />
+
+    	</LinearLayout>
     </RelativeLayout>
     
     <fragment

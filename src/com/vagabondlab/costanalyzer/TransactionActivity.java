@@ -11,35 +11,22 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.HeaderViewListAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
-import com.vagabondlab.costanalyzer.database.DatabaseHelper;
-import com.vagabondlab.costanalyzer.database.entity.Cost;
 import com.vagabondlab.costanalyzer.database.entity.Transaction;
 import com.vagabondlab.costanalyzer.database.service.TransactionService;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
@@ -47,29 +34,23 @@ import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
 @SuppressLint("DefaultLocale")
-public class TransactionActivity extends ActionBarActivity implements
-NavigationDrawerFragment.NavigationDrawerCallbacks{
+public class TransactionActivity extends CActivity{
 	
 	private NavigationDrawerFragment mNavigationDrawerFragment;
-	private DatabaseHelper databaseHelper = null;
 	private TransactionService transactionService;
 	
 	private EditText mName;
 	private EditText mLendAmount;
 	private EditText mBorrowAmount;
 	private TextView mTransactionStatus;
+	private Button mButtonholderAddTransaction;
+	private Button mButtonholderSearch;
 	
 	private List<Map<String, String>> mTransactionListdata = new ArrayList<Map<String, String>>();
-	private CharSequence mTitle;
-	
 	private int selectedTransactionId;
 	private String selectedTransactionName;
 	
-	private final int CONTEXT_MENU_EDIT = 1;
-	private final int CONTEXT_MENU_ARCHIVE = 2;
-	private final int CONTEXT_MENU_CANCEL = 3;
 	private int action = 0;
-	private boolean firstTime = true;
 	
 	private TextView mSummaryStatusView;
 	private TextView mBalanceAmountView;
@@ -85,46 +66,6 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 
 	
 	
-	// for listview activity
-	private ListView mListView;
-	protected ListView getListView() {
-	    if (mListView == null) {
-	        mListView = (ListView) findViewById(android.R.id.list);
-	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
-				@Override
-				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
-					try{
-						View idChild = ((ViewGroup) v).getChildAt(0);
-						selectedTransactionId = Integer.valueOf(((TextView) idChild).getText().toString());
-						
-						View nameChild = ((ViewGroup) v).getChildAt(1);
-						selectedTransactionName = ((TextView) nameChild).getText().toString();
-						
-						registerForContextMenu(mListView);
-	                    openContextMenu(mListView);
-					}catch(Throwable t){
-						t.printStackTrace();
-					}
-				}
-			});	        
-	    }
-	    return mListView;
-	}
-
-	protected void setListAdapter(ListAdapter adapter) {
-	    getListView().setAdapter(adapter);
-	}
-
-	protected ListAdapter getListAdapter() {
-	    ListAdapter adapter = getListView().getAdapter();
-	    if (adapter instanceof HeaderViewListAdapter) {
-	        return ((HeaderViewListAdapter)adapter).getWrappedAdapter();
-	    } else {
-	        return adapter;
-	    }
-	}
-	// end listview activity
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
@@ -133,7 +74,6 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_transaction);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_transaction,(DrawerLayout) findViewById(R.id.drawer_layout_transaction));
 		setTitle(getString(R.string.title_activity_transaction));
-		//getHelper().onTransactionUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 0, 1);
 		try {
 			transactionService = new TransactionService(getHelper().getTransactionDao());
 			mTransactionStatus = (TextView)findViewById(R.id.textView_transaction_status);
@@ -142,19 +82,21 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			mSummaryStatusView.setText(getString(R.string.transaction_summary_status));
 			
 			mBorrowAmountView = (TextView)findViewById(R.id.textView_summary_total_cost);
-			mBorrowAmountView.setOnClickListener(borrowAmountClickListener);
 			mBorrowAmountViewLabel = (TextView)findViewById(R.id.textView_summary_total_cost_status);
 			mBorrowAmountViewLabel.setText(getString(R.string.borrow));
 			
 			mLendAmountView = (TextView)findViewById(R.id.textView_summary_effective_cost);
-			mLendAmountView.setOnClickListener(lendAmountClickListener);
 			mLendAmountViewLabel = (TextView)findViewById(R.id.textView_summary_effective_cost_status);
 			mLendAmountViewLabel.setText(getString(R.string.lend));
 			
 			mBalanceAmountView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
-			mBalanceAmountView.setOnClickListener(balanceAmountClickListener);
 			mBalanceAmountViewLabel = (TextView)findViewById(R.id.textView_summary_wastage_cost_status);
 			mBalanceAmountViewLabel.setText(getString(R.string.balance));
+			
+			mButtonholderAddTransaction = (Button)findViewById(R.id.buttonholder_add_transaction);
+			mButtonholderAddTransaction.setOnClickListener(buttonHolderAddTransactionButtonClickListener);
+			mButtonholderSearch = (Button)findViewById(R.id.buttonholder_search);
+			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
 			
 			loadTransactionList();
 			mTitle = getTitle();
@@ -163,85 +105,8 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		}
 	}
 	
-	@Override
-	protected void onDestroy() {
-		setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-		super.onDestroy();
-		if (databaseHelper != null) {
-			OpenHelperManager.releaseHelper();
-			databaseHelper = null;
-		}
-	}
-	
-	@Override
-	protected void onStop() {
-	    setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-	    super.onStop();
-	}
-	
-	private DatabaseHelper getHelper() {
-		if (databaseHelper == null) {
-			databaseHelper = OpenHelperManager.getHelper(this,DatabaseHelper.class);
-		}
-		return databaseHelper;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.category, menu);
-		restoreActionBar();
-		return true;
-	}
-	
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-		// Context menu
-		menu.setHeaderTitle(selectedTransactionName);
-		menu.add(Menu.NONE, CONTEXT_MENU_EDIT, Menu.NONE, R.string.edit);
-		menu.add(Menu.NONE, CONTEXT_MENU_ARCHIVE, Menu.NONE, R.string.delete);
-		menu.add(Menu.NONE, CONTEXT_MENU_CANCEL, Menu.NONE, R.string.cancel);
-	}
-	
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case CONTEXT_MENU_EDIT: {
-			action = IConstant.ACTION_EDIT;
-			editCategoryDialougeBox();
-		}
-			break;
-		case CONTEXT_MENU_ARCHIVE: {
-			action = IConstant.ACTION_DELETE;
-			deleteCategoryDialougeBox();
-		}
-			break;
-		}
-		return super.onContextItemSelected(item);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.add_category) {
-			action = IConstant.ACTION_ADD;
-			addNewCategoryDialougeBox();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@SuppressWarnings("deprecation")
-	public void restoreActionBar() {
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setTitle(mTitle);
-	}
-	
-	
 	@SuppressLint("InflateParams")
-	private void addNewCategoryDialougeBox(){
+	private void addNewTransactionDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View transactionFormView = factory.inflate(R.layout.form_transaction, null);
 		mName = (EditText)transactionFormView.findViewById(R.id.editText_transaction_name);
@@ -303,35 +168,6 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		     .setNegativeButton(R.string.cancel, deleteCancelListener);
 		alert.show();
 	}
-	
-	
-	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int i) {
-			switch (i) {
-			case DialogInterface.BUTTON_POSITIVE:
-				if(saveTransaction()==1){
-					break;
-				}
-			case DialogInterface.BUTTON_NEGATIVE: 
-				break;
-			}
-		}
-	};
-	
-	DialogInterface.OnClickListener deleteCancelListener = new DialogInterface.OnClickListener() {
-		@Override
-		public void onClick(DialogInterface dialog, int i) {
-			switch (i) {
-			case DialogInterface.BUTTON_POSITIVE:
-				if(deleteTransaction()==1){
-					break;
-				}
-			case DialogInterface.BUTTON_NEGATIVE: 
-				break;
-			}
-		}
-	};
 	
 	private int saveTransaction(){
 		if(IUtil.isNotBlank(mName.getText())){
@@ -488,125 +324,120 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 		}
 	}
 
+	// 1. Listener
+	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				if(saveTransaction()==1){
+					break;
+				}
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
+	DialogInterface.OnClickListener deleteCancelListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				if(deleteTransaction()==1){
+					break;
+				}
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
+	OnClickListener buttonHolderAddTransactionButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				action = IConstant.ACTION_ADD;
+				addNewTransactionDialougeBox();
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	OnClickListener buttonHolderSearchButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				action = IConstant.ACTION_SEARCH;
+//				DialogFragment newFragment = new DatePickerFragment();
+//			    newFragment.show(getSupportFragmentManager(), "datePicker");
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	// 2. Override methods
 	@Override
-	public void onNavigationDrawerItemSelected(int position) {
-		if(firstTime){
-			firstTime = false;
-			return;
-		}
-		
-		switch (position) {
-		case 0:
-			Intent i = new Intent(getApplicationContext(),HomeActivity.class);
-			startActivity(i);
-			break;
-		case 1:
-			i = new Intent(getApplicationContext(),TransactionActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 2:
-			i = new Intent(getApplicationContext(),CostActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 3:
-			i = new Intent(getApplicationContext(),DailyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 4:
-			i = new Intent(getApplicationContext(),WeeklyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 5:
-			i = new Intent(getApplicationContext(),MonthlyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 6:
-			i = new Intent(getApplicationContext(),YearlyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 7:
-			i = new Intent(getApplicationContext(),TotalReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 8:
-			i = new Intent(getApplicationContext(),TransactionActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		}
+	public ListView getListView() {
+	    if (mListView == null) {
+	        mListView = (ListView) findViewById(android.R.id.list);
+	        mListView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View v,int position, long id) {
+					try{
+						View idChild = ((ViewGroup) v).getChildAt(0);
+						selectedTransactionId = Integer.valueOf(((TextView) idChild).getText().toString());
+						
+						View nameChild = ((ViewGroup) v).getChildAt(1);
+						selectedTransactionName = ((TextView) nameChild).getText().toString();
+						
+						registerForContextMenu(mListView);
+	                    openContextMenu(mListView);
+					}catch(Throwable t){
+						t.printStackTrace();
+					}
+				}
+			});	        
+	    }
+	    return mListView;
 	}
 	
-	OnClickListener borrowAmountClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			try{
-				YoYo.with(Techniques.ZoomIn)
-					.duration(500)
-					.interpolate(new AccelerateDecelerateInterpolator())
-					.withListener(animatorListener)
-					.playOn(mBorrowAmountView);
-				
-				//loadListView(mCurrentDate, null);
-			}catch(Throwable t){
-				t.printStackTrace();
-			}
-		}
-	};
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.category, menu);
+		restoreActionBar();
+		return true;
+	}
 	
-	OnClickListener lendAmountClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			try{
-				YoYo.with(Techniques.ZoomIn)
-					.duration(500)
-					.interpolate(new AccelerateDecelerateInterpolator())
-					.withListener(animatorListener)
-					.playOn(mLendAmountView);
-				
-//				loadListView(mCurrentDate, getString(R.string.productive));
-			}catch(Throwable t){
-				t.printStackTrace();
-			}
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case IConstant.CONTEXT_MENU_EDIT: {
+			action = IConstant.ACTION_EDIT;
+			editCategoryDialougeBox();
 		}
-	};
-	
-	OnClickListener balanceAmountClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			YoYo.with(Techniques.ZoomIn)
-				.duration(500)
-				.interpolate(new AccelerateDecelerateInterpolator())
-				.withListener(animatorListener)
-				.playOn(mBalanceAmountView);
+			break;
+		case IConstant.CONTEXT_MENU_ARCHIVE: {
+			action = IConstant.ACTION_DELETE;
+			deleteCategoryDialougeBox();
+		}
+			break;
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.search) {
+			action = IConstant.ACTION_SEARCH;
 			
-//			loadListView(mCurrentDate, getString(R.string.wastage));
+			return true;
 		}
-	};
-	
-	AnimatorListener animatorListener = new AnimatorListener() {
-		@Override
-		public void onAnimationStart(Animator arg0) {
-			mProgressDialog = ProgressDialog.show(TransactionActivity.this, "Please wait ...", "Loading...", true);
-			mProgressDialog.setCancelable(true);
-		}
-		
-		@Override
-		public void onAnimationRepeat(Animator arg0) {
-		}
-		
-		@Override
-		public void onAnimationEnd(Animator arg0) {
-			if(mProgressDialog != null){
-				mProgressDialog.dismiss();
-			}
-		}
-		
-		@Override
-		public void onAnimationCancel(Animator arg0) {
-			if(mProgressDialog != null){
-				mProgressDialog.dismiss();
-			}
-		}
-	};
+		return super.onOptionsItemSelected(item);
+	}
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -615,5 +446,13 @@ NavigationDrawerFragment.NavigationDrawerCallbacks{
 			this.finish();
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void nextView() {
+	}
+
+	@Override
+	public void prevView() {
 	}
 }
