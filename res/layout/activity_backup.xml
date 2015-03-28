@@ -13,6 +13,7 @@
         android:layout_height="match_parent" />
 
     <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
@@ -48,8 +49,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:gravity="center"
-                    android:text="@string/zero"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:text="@string/zero"                    
+    				android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
                     android:id="@+id/textView_total_cost_entry_label"
@@ -127,6 +128,26 @@
                 android:text="@string/backup_screen_restore_button_label" />
         </RelativeLayout>
     </ScrollView>
+    <!-- <LinearLayout
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_alignParentBottom="true"
+	        android:background="@layout/design_button_group_layout"
+	        android:orientation="horizontal" >
+	        
+	        <Button
+	            android:id="@+id/buttonholder_search"
+	            android:drawableRight="@drawable/find"
+	            android:text="@string/search"
+	            style="@style/groupButtonStyle" />
+	         
+	        <Button
+	            android:id="@+id/buttonholder_add_cost"
+	            android:drawableRight="@drawable/addnew"
+	            android:text="@string/new_cost"
+	            style="@style/groupButtonStyle" />
+
+    	</LinearLayout> -->
 
     <fragment
         android:id="@+id/navigation_drawer"

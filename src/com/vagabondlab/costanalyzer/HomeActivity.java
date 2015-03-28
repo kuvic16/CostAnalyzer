@@ -420,6 +420,9 @@ public class HomeActivity extends CActivity {
 	OnTouchListener shortSummarySwipeListener = new OnTouchListener() {
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
+			if(mProgressDialog != null){
+				mProgressDialog.dismiss();
+			}
 			if (mGestureDetector.onTouchEvent(event)) {
 				return false;
 			} else {
