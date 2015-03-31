@@ -63,6 +63,7 @@ public class HomeActivity extends CActivity {
 	private EditText mCostAmount;
 	private TextView mCostSelectedDate;
 	private TextView mChangeCostDateButton;
+	private TextView mAddCostCategoryButton;
 	private Button mButtonholderAddCost;
 	private Button mButtonholderSearch;
 
@@ -136,10 +137,12 @@ public class HomeActivity extends CActivity {
 		mCategoryName = (Spinner)costFormView.findViewById(R.id.spinner_category_name);
 		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
 		mCostSelectedDate = (TextView)costFormView.findViewById(R.id.textView_selected_cost_date);
+		mAddCostCategoryButton= (TextView)costFormView.findViewById(R.id.textView_add_category);
 		mCostSelectedDate.setText(mCurrentDate);
-		
 		mChangeCostDateButton = (TextView)costFormView.findViewById(R.id.textView_change_date);
-		mChangeCostDateButton.setOnClickListener(changeDateButtonTouchListener);
+		
+		mChangeCostDateButton.setOnClickListener(changeDateButtonClickListener);
+		mAddCostCategoryButton.setOnClickListener(addCategoryButtonClickListener);
 		
 		loadCategorySpinner(mCategoryName);
 	
@@ -161,7 +164,10 @@ public class HomeActivity extends CActivity {
 		mCostAmount = (EditText)costFormView.findViewById(R.id.editText_cost_amount);
 		mCostSelectedDate = (TextView)costFormView.findViewById(R.id.textView_selected_cost_date);
 		mChangeCostDateButton = (TextView)costFormView.findViewById(R.id.textView_change_date);
-		mChangeCostDateButton.setOnClickListener(changeDateButtonTouchListener);
+		mAddCostCategoryButton= (TextView)costFormView.findViewById(R.id.textView_add_category);
+		
+		mChangeCostDateButton.setOnClickListener(changeDateButtonClickListener);
+		mAddCostCategoryButton.setOnClickListener(addCategoryButtonClickListener);
 		
 		loadCategorySpinner(mCategoryName);
 		
@@ -435,6 +441,9 @@ public class HomeActivity extends CActivity {
 		@Override
 		public void onClick(View v) {
 			try{
+				if(mProgressDialog != null){
+					mProgressDialog.dismiss();
+				}
 				YoYo.with(Techniques.ZoomIn)
 					.duration(500)
 					.interpolate(new AccelerateDecelerateInterpolator())
@@ -452,6 +461,9 @@ public class HomeActivity extends CActivity {
 		@Override
 		public void onClick(View v) {
 			try{
+				if(mProgressDialog != null){
+					mProgressDialog.dismiss();
+				}
 				YoYo.with(Techniques.ZoomIn)
 					.duration(500)
 					.interpolate(new AccelerateDecelerateInterpolator())
@@ -468,6 +480,9 @@ public class HomeActivity extends CActivity {
 	OnClickListener wastageCostTouchListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
+			if(mProgressDialog != null){
+				mProgressDialog.dismiss();
+			}
 			YoYo.with(Techniques.ZoomIn)
 				.duration(500)
 				.interpolate(new AccelerateDecelerateInterpolator())
@@ -478,7 +493,7 @@ public class HomeActivity extends CActivity {
 		}
 	};
 	
-	OnClickListener changeDateButtonTouchListener = new OnClickListener() {
+	OnClickListener changeDateButtonClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			try{
@@ -514,6 +529,32 @@ public class HomeActivity extends CActivity {
 			}
 		}
 	};
+	
+	OnClickListener addCategoryButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				Intent i = new Intent(getApplicationContext(),CategoryActivity.class);
+				startActivityForResult(i, IConstant.HOME_ACTIVITY_ADD_CATEGORYREQUEST_CODE);
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
+	Spinner.OnItemSelectedListener categoryItemSelectListener = new Spinner.OnItemSelectedListener() {
+
+		@Override
+		public void onItemSelected(AdapterView<?> parent, View view,int position, long id) {
+		}
+
+		@Override
+		public void onNothingSelected(AdapterView<?> parent) {
+			
+		}
+		
+	};
+	
 	
 	// 2. Override methods
 	@Override
@@ -591,6 +632,10 @@ public class HomeActivity extends CActivity {
 	    if(requestCode==IConstant.PARENT_ACTIVITY_REQUEST_CODE){
 	    	firstTime = true;
 	    	onNavigationDrawerItemSelected(0);
+	    }else if(requestCode == IConstant.HOME_ACTIVITY_ADD_CATEGORYREQUEST_CODE){
+	    	if(mCategoryName != null){
+	    		loadCategorySpinner(mCategoryName);
+	    	}
 	    }
 	}
 	

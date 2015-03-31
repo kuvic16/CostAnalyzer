@@ -12,35 +12,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <ScrollView
-        android:id="@+id/scrollview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    <RelativeLayout
+        android:id="@+id/relative_layout_top"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:orientation="vertical" >
 
-        <RelativeLayout
-            android:id="@+id/relative_layout_top"
+        <TextView
+            android:id="@+id/textView_summary_status"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:orientation="vertical" >
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="#FFA07A"
+            android:gravity="center"
+            android:text="@string/backup_screen_top_text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#000000" />
 
-            <TextView
-                android:id="@+id/textView_summary_status"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:background="#FFA07A"
-                android:gravity="center"
-                android:text="@string/backup_screen_top_text"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#000000" />
+        <ScrollView
+            android:id="@+id/scrollview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/textView_summary_status" >
 
             <RelativeLayout
                 android:id="@+id/relative_layout_summary"
                 style="@style/relativeLayoutSummaryStyle"
                 android:layout_height="150dip"
-                android:layout_below="@+id/textView_summary_status"
                 android:background="#82CAFF" >
 
                 <TextView
@@ -49,8 +49,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:gravity="center"
-                    android:text="@string/zero"                    
-    				android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:text="@string/zero"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
                     android:id="@+id/textView_total_cost_entry_label"
@@ -104,50 +104,104 @@
                     android:text="@string/backup_screen_total_transaction_enry_label"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#000000" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView_total_transaction_entry_label"
+                    android:layout_marginTop="10dip"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#D8D8D8"
+                        android:gravity="left"
+                        android:paddingLeft="5dip"
+                        android:text="@string/help_6_title"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:gravity="left"
+                        android:paddingBottom="10dip"
+                        android:paddingLeft="5dip"
+                        android:text="@string/help_6_details"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#000000" />
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#D8D8D8"
+                        android:gravity="left"
+                        android:paddingLeft="5dip"
+                        android:text="@string/help_7_title"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:gravity="left"
+                        android:paddingBottom="10dip"
+                        android:paddingLeft="5dip"
+                        android:text="@string/help_7_details"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#000000" />
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#D8D8D8"
+                        android:gravity="left"
+                        android:paddingLeft="5dip"
+                        android:text="@string/help_8_title"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:gravity="left"
+                        android:paddingBottom="10dip"
+                        android:paddingLeft="5dip"
+                        android:text="@string/help_8_details"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="#000000" />
+                </LinearLayout>
             </RelativeLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@layout/design_button_group_layout"
+            android:orientation="horizontal" >
 
             <Button
                 android:id="@+id/button_clear"
-                style="@style/backupButtonStyle"
-                android:layout_below="@+id/relative_layout_summary"
+                style="@style/groupButtonStyle"
                 android:drawableRight="@drawable/clean"
                 android:text="@string/backup_screen_clear_button_label" />
 
             <Button
                 android:id="@+id/button_backup"
-                style="@style/backupButtonStyle"
-                android:layout_below="@+id/button_clear"
+                style="@style/groupButtonStyle"
                 android:drawableRight="@drawable/backup"
                 android:text="@string/backup_screen_backup_button_label" />
 
             <Button
                 android:id="@+id/button_restore"
-                style="@style/backupButtonStyle"
-                android:layout_below="@+id/button_backup"
+                style="@style/groupButtonStyle"
                 android:drawableRight="@drawable/restore"
                 android:text="@string/backup_screen_restore_button_label" />
-        </RelativeLayout>
-    </ScrollView>
-    <!-- <LinearLayout
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:layout_alignParentBottom="true"
-	        android:background="@layout/design_button_group_layout"
-	        android:orientation="horizontal" >
-	        
-	        <Button
-	            android:id="@+id/buttonholder_search"
-	            android:drawableRight="@drawable/find"
-	            android:text="@string/search"
-	            style="@style/groupButtonStyle" />
-	         
-	        <Button
-	            android:id="@+id/buttonholder_add_cost"
-	            android:drawableRight="@drawable/addnew"
-	            android:text="@string/new_cost"
-	            style="@style/groupButtonStyle" />
-
-    	</LinearLayout> -->
+        </LinearLayout>
+    </RelativeLayout>
 
     <fragment
         android:id="@+id/navigation_drawer"

@@ -2,6 +2,7 @@ package com.vagabondlab.costanalyzer.utilities;
 
 public final class IConstant {
 	public static final int PARENT_ACTIVITY_REQUEST_CODE = 99;
+	public static final int HOME_ACTIVITY_ADD_CATEGORYREQUEST_CODE = 100;
 	
 	public static final String CREATED_DATE = "created_date";
 	public static final String LAST_MODIFIED_DATE = "last_modified_date";

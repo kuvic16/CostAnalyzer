@@ -11,6 +11,7 @@ import java.util.Map;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
@@ -50,6 +51,7 @@ public class CostActivity extends CActivity {
 	private EditText mCostAmount;
 	private TextView mCostSelectedDate;
 	private TextView mChangeCostDateButton;
+	private TextView mAddCostCategoryButton;
 	
 	private Spinner mSearchCategoryName;
 	private RadioButton mSearchProductive;
@@ -118,6 +120,10 @@ public class CostActivity extends CActivity {
 		mChangeCostDateButton = (TextView)costFormView.findViewById(R.id.textView_change_date);
 		mChangeCostDateButton.setOnClickListener(changeDateButtonTouchListener);
 		
+		mAddCostCategoryButton= (TextView)costFormView.findViewById(R.id.textView_add_category);
+		mAddCostCategoryButton.setOnClickListener(addCategoryButtonClickListener);
+		
+		
 		loadCategorySpinner(mCategoryName);
 	
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -139,6 +145,9 @@ public class CostActivity extends CActivity {
 		mCostSelectedDate = (TextView)costFormView.findViewById(R.id.textView_selected_cost_date);
 		mChangeCostDateButton = (TextView)costFormView.findViewById(R.id.textView_change_date);
 		mChangeCostDateButton.setOnClickListener(changeDateButtonTouchListener);
+		
+		mAddCostCategoryButton= (TextView)costFormView.findViewById(R.id.textView_add_category);
+		mAddCostCategoryButton.setOnClickListener(addCategoryButtonClickListener);
 		
 		loadCategorySpinner(mCategoryName);
 		
@@ -477,6 +486,17 @@ public class CostActivity extends CActivity {
 		}
 	};
 	
+	OnClickListener addCategoryButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				Intent i = new Intent(getApplicationContext(),CategoryActivity.class);
+				startActivityForResult(i, IConstant.HOME_ACTIVITY_ADD_CATEGORYREQUEST_CODE);
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
 	
 	// 2. Override methods
 	@Override
@@ -562,6 +582,18 @@ public class CostActivity extends CActivity {
 
 	@Override
 	public void prevView() {
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if(requestCode==IConstant.PARENT_ACTIVITY_REQUEST_CODE){
+	    	firstTime = true;
+	    	onNavigationDrawerItemSelected(0);
+	    }else if(requestCode == IConstant.HOME_ACTIVITY_ADD_CATEGORYREQUEST_CODE){
+	    	if(mCategoryName != null){
+	    		loadCategorySpinner(mCategoryName);
+	    	}
+	    }
 	}
 	
 }

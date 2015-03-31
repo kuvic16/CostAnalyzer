@@ -95,7 +95,7 @@
   	
   	<!-- 2. Home screen -->
   	<style name="changeCostButtonStyle">
-    	<item name="android:background">@layout/design_change_cost_button</item>
+    	<item name="android:background">@drawable/button_selector</item>
     	<item name="android:textColor">#000000</item>
     	<item name="android:textSize">12sp</item>
     	<item name="android:padding">2dp</item>

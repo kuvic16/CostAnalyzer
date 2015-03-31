@@ -13,11 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.util.DisplayMetrics;
 import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -32,30 +29,21 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.Animator.AnimatorListener;
-import com.vagabondlab.costanalyzer.database.DatabaseHelper;
 import com.vagabondlab.costanalyzer.database.service.CostService;
 import com.vagabondlab.costanalyzer.utilities.DatePickerFragment;
-import com.vagabondlab.costanalyzer.utilities.DatePickerFragment.DateSetListener;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
-
-@SuppressLint({ "ClickableViewAccessibility", "DefaultLocale" })
-public class YearlyReportActivity extends ActionBarActivity implements OnGestureListener, NavigationDrawerFragment.NavigationDrawerCallbacks, DateSetListener
-																		{
+@SuppressLint("ClickableViewAccessibility")
+public class YearlyReportActivity extends CActivity{
 
 	private NavigationDrawerFragment mNavigationDrawerFragment;
-	private DatabaseHelper databaseHelper = null;
 	private CostService costService;
 	private TextView mCategoryWiseCostStatus;
 	private TextView mMonthWiseCostStatus;
 	
-	private CharSequence mTitle;
-	private boolean firstTime = true;
 	private GestureDetector mGestureDetector;
 	private RelativeLayout mRLShortSummary;
 	private DateTime mCurrentDate;
@@ -77,9 +65,9 @@ public class YearlyReportActivity extends ActionBarActivity implements OnGesture
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_yearly_report);
 		setTitle(getString(R.string.title_yearly_report));
-
-		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mTitle = getTitle();
+		
+		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer,(DrawerLayout) findViewById(R.id.drawer_layout));
 		
 		try { 
@@ -110,115 +98,6 @@ public class YearlyReportActivity extends ActionBarActivity implements OnGesture
 		}
 	}
 	
-	@Override
-	public void onNavigationDrawerItemSelected(int position) {
-		if(firstTime){
-			firstTime = false;
-			return;
-		}
-		
-		switch (position) {
-		case 0:
-			Intent i = new Intent(getApplicationContext(),HomeActivity.class);
-			startActivity(i);
-			break;
-		case 1:
-			i = new Intent(getApplicationContext(),CategoryActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 2:
-			i = new Intent(getApplicationContext(),CostActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 3:
-			i = new Intent(getApplicationContext(),DailyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 4:
-			i = new Intent(getApplicationContext(),WeeklyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 5:
-			i = new Intent(getApplicationContext(),MonthlyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 6:
-			i = new Intent(getApplicationContext(),YearlyReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 7:
-			i = new Intent(getApplicationContext(),TotalReportActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		case 8:
-			i = new Intent(getApplicationContext(),TransactionActivity.class);
-			startActivityForResult(i, IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-			break;
-		}
-	}
-	
-	@Override
-	protected void onDestroy() {
-		setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-		super.onDestroy();
-		if (databaseHelper != null) {
-			OpenHelperManager.releaseHelper();
-			databaseHelper = null;
-		}
-	}
-	
-	@Override
-	protected void onStop() {
-	    setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
-	    super.onStop();
-	}
-	
-	private DatabaseHelper getHelper() {
-		if (databaseHelper == null) {
-			databaseHelper = OpenHelperManager.getHelper(this,DatabaseHelper.class);
-		}
-		return databaseHelper;
-	}
-
-	@SuppressWarnings("deprecation")
-	public void restoreActionBar() {
-		ActionBar actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-		actionBar.setDisplayShowTitleEnabled(true);
-		actionBar.setTitle(mTitle);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		if (!mNavigationDrawerFragment.isDrawerOpen()) {
-			getMenuInflater().inflate(R.menu.report, menu);
-			restoreActionBar();
-			return true;
-		}
-		return super.onCreateOptionsMenu(menu);
-	}
-	
-	
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		if (id == R.id.search) {
-			DialogFragment newFragment = new DatePickerFragment();
-		    newFragment.show(getSupportFragmentManager(), "datePicker");
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if(requestCode==IConstant.PARENT_ACTIVITY_REQUEST_CODE){
-	    	firstTime = true;
-	    	onNavigationDrawerItemSelected(0);
-	    }
-	}
-	
-		
 	private void loadCostList(DateTime date){
 		try {
 			mCurrentDate =  date;
@@ -313,9 +192,14 @@ public class YearlyReportActivity extends ActionBarActivity implements OnGesture
 		}
 	}
 	
+	
+	// 1. Listener
 	OnTouchListener shortSummarySwipeListener = new OnTouchListener() {
 		@Override
 		public boolean onTouch(View v, MotionEvent event) {
+			if(mProgressDialog != null){
+				mProgressDialog.dismiss();
+			}
 			if (mGestureDetector.onTouchEvent(event)) {
 				return false;
 			} else {
@@ -323,122 +207,94 @@ public class YearlyReportActivity extends ActionBarActivity implements OnGesture
 			}
 		}
 	};
-
+	
+	// 2. override
 	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,float velocityY) {
-			DisplayMetrics dm = new DisplayMetrics();
-			getWindowManager().getDefaultDisplay().getMetrics(dm);
-			int xPixelLimit = (int) (dm.xdpi * .25);
-			int yPixelLimit = (int) (dm.ydpi * .25);
-
-		
-			if ((Math.abs(e1.getX() - e2.getX()) > xPixelLimit && Math.abs(e1
-					.getY() - e2.getY()) < yPixelLimit)
-					|| Math.abs(e1.getX() - e2.getX()) > xPixelLimit * 2) {
-				if (velocityX > 0) {
-					if (e1.getX() > e2.getX()) {
-						nextView();
-					} else {
-						prevView();
-					}
-				} else {
-					if (e1.getX() < e2.getX()) {
-						prevView();
-					} else {
-						nextView();
-					}
-				}
-				return true;
-			}
-		return false;
-	}
-
-	@Override
-	public boolean onDown(MotionEvent e) {
-		return false;
-	}
-
-	@Override
-	public void onShowPress(MotionEvent e) {
-		
-	}
-
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		return false;
-	}
-
-	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,float distanceY) {
-		return false;
-	}
-
-	@Override
-	public void onLongPress(MotionEvent e) {
-		
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (!mNavigationDrawerFragment.isDrawerOpen()) {
+			getMenuInflater().inflate(R.menu.report, menu);
+			restoreActionBar();
+			return true;
+		}
+		return super.onCreateOptionsMenu(menu);
 	}
 	
-	private void nextView(){
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.search) {
+			DialogFragment newFragment = new DatePickerFragment();
+		    newFragment.show(getSupportFragmentManager(), "datePicker");
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	    if(requestCode==IConstant.PARENT_ACTIVITY_REQUEST_CODE){
+	    	firstTime = true;
+	    	onNavigationDrawerItemSelected(0);
+	    }
+	}
+	
+	@Override
+	public void nextView(){
 		YoYo.with(Techniques.SlideInRight)
 			.duration(500)
 			.interpolate(new AccelerateDecelerateInterpolator())
-			.withListener(animatorListener)
+			.withListener(this)
 			.playOn(findViewById(R.id.relative_layout_root));
 		
-		DateTime prevDate = mCurrentDate.plusMonths(-1);
+		DateTime prevDate = mCurrentDate.plusYears(-1);
 		loadCostList(prevDate);
 		
 	}
 	
-	private void prevView(){
+	@Override
+	public void prevView(){
 		YoYo.with(Techniques.SlideInLeft)
 			.duration(500)
 			.interpolate(new AccelerateDecelerateInterpolator())
-			.withListener(animatorListener)
+			.withListener(this)
 			.playOn(findViewById(R.id.relative_layout_root));
 		
-		DateTime nextDate = mCurrentDate.plusMonths(1);
+		DateTime nextDate = mCurrentDate.plusYears(1);
 		loadCostList(nextDate);
 	}
 	
-	AnimatorListener animatorListener = new AnimatorListener() {
-		
-		@Override
-		public void onAnimationStart(Animator arg0) {
-			mProgressDialog = ProgressDialog.show(YearlyReportActivity.this, "Please wait ...", "Loading...", true);
-			mProgressDialog.setCancelable(true);
+	@Override
+	public void onAnimationStart(Animator arg0) {
+		mProgressDialog = ProgressDialog.show(YearlyReportActivity.this, "Please wait ...", "Loading...", true);
+		mProgressDialog.setCancelable(true);
+	}
+	
+	@Override
+	public void onAnimationEnd(Animator arg0) {
+		if(mProgressDialog != null){
+			mProgressDialog.dismiss();
 		}
-		
-		@Override
-		public void onAnimationRepeat(Animator arg0) {
-			// TODO Auto-generated method stub
-			
+	}
+	
+	@Override
+	public void onAnimationCancel(Animator arg0) {
+		if(mProgressDialog != null){
+			mProgressDialog.dismiss();
 		}
-		
-		@Override
-		public void onAnimationEnd(Animator arg0) {
-			if(mProgressDialog != null){
-				mProgressDialog.dismiss();
-			}
-		}
-		
-		@Override
-		public void onAnimationCancel(Animator arg0) {
-			if(mProgressDialog != null){
-				mProgressDialog.dismiss();
-			}
-		}
-	};
-
+	}
+	
 	@Override
 	public void returnDate(String date) {
 		YoYo.with(Techniques.SlideInDown)
 		.duration(500)
 		.interpolate(new AccelerateDecelerateInterpolator())
-		.withListener(animatorListener)
+		.withListener(this)
 		.playOn(findViewById(R.id.relative_layout_root));
 		
 		loadCostList(dateFormatter.parseDateTime(date));
 	}
-	
+
+	@Override
+	public ListView getListView() {
+		return null;
+	}
 }

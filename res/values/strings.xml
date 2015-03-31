@@ -41,6 +41,7 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="add_new_category">Add New Category</string>
+    <string name="add_new">Add New</string>
     <string name="edit_category">Edit Category</string>
     <string name="delete_category">Delete Category</string>
     <string name="delete_category_are_u_sure">Are you sure to delete \"%s\" category</string>
@@ -206,5 +207,17 @@
 	<string name="help_5_title">Cost Report</string>
 	<string name="help_5_details">
 	    Cost analyzer provides Daily, Weekly, Monthly, Yearly, All time Report.
+	</string>
+	<string name="help_6_title">What will Clean do?</string>
+	<string name="help_6_details">
+	    All data will be erased if you choose Clean option. So, please make sure the Clean operation.
+	</string>
+	<string name="help_7_title">Backup</string>
+	<string name="help_7_details">
+	    It will give you an option to select folder to save the database.
+	</string>
+	<string name="help_8_title">Restore</string>
+	<string name="help_8_details">
+	    It will give you an option to restore the database by selecting backup database.
 	</string>
 </resources>
