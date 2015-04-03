@@ -9,6 +9,13 @@ import com.j256.ormlite.table.DatabaseTable;
 /**
  * Transaction entity 
  * @author shaiful islam palash
+ * riad bhai - 100
+ * mithun bhai - 33150-500
+ * sorowar - 1000
+ * shafi - 12800
+ * raju bhai - 1000
+ * emon bhai - 18000
+ * 
  */
 @DatabaseTable(tableName = "mtransaction")
 public class Transaction extends AbstractEntity implements Serializable{
@@ -18,7 +25,7 @@ public class Transaction extends AbstractEntity implements Serializable{
 	@DatabaseField(generatedId = true)
 	int id;
 	
-	@DatabaseField(canBeNull = false, unique=true)
+	@DatabaseField(canBeNull = false)
     private String name;
 
 	@DatabaseField(dataType =  DataType.DOUBLE)
@@ -26,6 +33,9 @@ public class Transaction extends AbstractEntity implements Serializable{
 	
 	@DatabaseField(dataType =  DataType.DOUBLE)
 	private double borrow_amount;
+	
+	@DatabaseField(index = true)
+	private String date ;
 	
 	public int getId() {
 		return id;
@@ -57,5 +67,14 @@ public class Transaction extends AbstractEntity implements Serializable{
 
 	public void setBorrow_amount(double borrow_amount) {
 		this.borrow_amount = borrow_amount;
-	}	
+	}
+
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+	
 }

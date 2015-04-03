@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import android.database.sqlite.SQLiteConstraintException;
+
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
 import com.j256.ormlite.stmt.QueryBuilder;
@@ -32,7 +34,10 @@ public class TransactionService{
 	public int createTransaction(Transaction transaction){
 		try {
 			return em.create(transaction);
-		} catch (SQLException e) {
+		} catch (SQLException e) { 
+			if(e.getCause().getCause() instanceof SQLiteConstraintException){
+				return -1;
+			}
 			e.printStackTrace();
 		}
 		return 0;

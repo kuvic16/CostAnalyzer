@@ -41,7 +41,8 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="add_new_category">Add New Category</string>
-    <string name="add_new">Add New</string>
+    <string name="add_new">add category</string>
+    <string name="transaction_date">Transaction Date</string>
     <string name="edit_category">Edit Category</string>
     <string name="delete_category">Delete Category</string>
     <string name="delete_category_are_u_sure">Are you sure to delete \"%s\" category</string>
@@ -130,6 +131,7 @@
 	<string name="transaction_name_missing">Please write the name of transaction person</string>
 	<string name="save_transaction_success">Transaction with \"%s\" saved</string>
 	<string name="save_transaction_failed">Failed to save transaction. Please try again</string>
+	<string name="save_transaction_failed_duplicate">Failed to save transaction. Duplicate transaction name</string>
 	<string name="transaction_status">All transaction listed below. Total transaction: %s</string>
 	<string name="not_found_transaction">Transaction not found</string>
 	<string name="not_found_transaction_name">Name of transaction person not found</string>
@@ -137,10 +139,13 @@
 	<string name="delete_transaction_failed">Failed to delete Transaction with \"%s\"</string>
 	<string name="lend">Lend</string>
 	<string name="borrow">Borrow</string>
+	<string name="lend_plus">Lend (+)</string>
+	<string name="borrow_minus">Borrow (-)</string>
 	<string name="balance">Balance</string>
 	<string name="pay_amount">Pay amount</string>
 	<string name="take_amount">Take amount</string>
 	<string name="transaction_summary_status">Your current transaction status</string>
+	<string name="transaction_type">Transaction Type</string>
 	
 	<!-- Backup/Restore screen -->
 	<string name="title_backup_screen">Backup/Restore</string>

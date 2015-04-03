@@ -24,39 +24,79 @@
         android:inputType="text" >
         <requestFocus />
     </EditText>
-
+    
     <TextView
-        android:id="@+id/textView_transaction_lend_amount"
+        android:id="@+id/textView_transaction_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editText_transaction_name"
+        android:text="@string/transaction_type" />
+    
+    <RadioGroup
+        android:id="@+id/radioGroup_transaction_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView_transaction_type" >
+
+        <RadioButton
+            android:id="@+id/radio_lend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="@string/lend_plus" />
+
+        <RadioButton
+            android:id="@+id/radio_borrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/borrow_minus" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/textView_transaction_amount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/radioGroup_transaction_type"
         android:text="@string/transaction_lend_amount" />
     
     <EditText
-        android:id="@+id/editText_transaction_lend_amount"
+        android:id="@+id/editText_transaction_amount"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/textView_transaction_name"
-        android:layout_below="@+id/textView_transaction_lend_amount"
+        android:layout_below="@+id/textView_transaction_amount"
         android:ems="10"
         android:inputType="numberDecimal" >
     </EditText>
-
-	<TextView
-        android:id="@+id/textView_transaction_borrow_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/editText_transaction_lend_amount"
-        android:text="@string/transaction_borrow_amount" />
     
-    <EditText
-        android:id="@+id/editText_transaction_borrow_amount"
+    <TextView
+        android:id="@+id/textView_transaction_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView_transaction_name"
-        android:layout_below="@+id/textView_transaction_borrow_amount"
-        android:ems="10"
-        android:inputType="numberDecimal" >
-    </EditText>
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/editText_transaction_amount"
+        android:text="@string/transaction_date" />
+    
+    <TextView
+        android:id="@+id/textView_selected_transaction_date"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView_transaction_date"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:text="@string/transaction_date" />
+    
+    <TextView
+        android:id="@+id/textView_change_date"
+        android:layout_width="60dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@+id/textView_selected_transaction_date"
+        android:layout_alignTop="@+id/textView_selected_transaction_date"
+        style="@style/changeCostButtonStyle"
+        android:text="@string/change" />
     
 </RelativeLayout>

@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -24,11 +25,13 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.vagabondlab.costanalyzer.database.entity.Transaction;
 import com.vagabondlab.costanalyzer.database.service.TransactionService;
+import com.vagabondlab.costanalyzer.utilities.DatePickerFragment;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
@@ -40,8 +43,15 @@ public class TransactionActivity extends CActivity{
 	private TransactionService transactionService;
 	
 	private EditText mName;
-	private EditText mLendAmount;
-	private EditText mBorrowAmount;
+	private RadioButton mTypeLend;
+	private RadioButton mTypeBorrow;
+	private EditText mAmount;
+	private TextView mTransactionSelectedDate;
+	private TextView mChangeTransactionDateButton;
+	
+//	private EditText mLendAmount;
+//	private EditText mBorrowAmount;
+	
 	private TextView mTransactionStatus;
 	private Button mButtonholderAddTransaction;
 	private Button mButtonholderSearch;
@@ -51,6 +61,7 @@ public class TransactionActivity extends CActivity{
 	private String selectedTransactionName;
 	
 	private int action = 0;
+	private String mCurrentDate;
 	
 	private TextView mSummaryStatusView;
 	private TextView mBalanceAmountView;
@@ -70,10 +81,12 @@ public class TransactionActivity extends CActivity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
 		setContentView(R.layout.activity_transaction);
+		setTitle(getString(R.string.title_activity_transaction));
+		mTitle = getTitle();
 		
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_transaction);
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer_transaction,(DrawerLayout) findViewById(R.id.drawer_layout_transaction));
-		setTitle(getString(R.string.title_activity_transaction));
+		
 		try {
 			transactionService = new TransactionService(getHelper().getTransactionDao());
 			mTransactionStatus = (TextView)findViewById(R.id.textView_transaction_status);
@@ -98,8 +111,11 @@ public class TransactionActivity extends CActivity{
 			mButtonholderSearch = (Button)findViewById(R.id.buttonholder_search);
 			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
 			
+			// temporary
+			//getHelper().onTransactionUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
+			
+			mCurrentDate = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
 			loadTransactionList();
-			mTitle = getTitle();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -110,8 +126,14 @@ public class TransactionActivity extends CActivity{
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View transactionFormView = factory.inflate(R.layout.form_transaction, null);
 		mName = (EditText)transactionFormView.findViewById(R.id.editText_transaction_name);
-		mLendAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_lend_amount);
-		mBorrowAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_borrow_amount);
+		mTypeLend = (RadioButton)transactionFormView.findViewById(R.id.radio_lend);
+		mTypeBorrow = (RadioButton)transactionFormView.findViewById(R.id.radio_borrow);
+		mAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_amount);
+		
+		mTransactionSelectedDate = (TextView)transactionFormView.findViewById(R.id.textView_selected_transaction_date);
+		mTransactionSelectedDate.setText(mCurrentDate);
+		mChangeTransactionDateButton = (TextView)transactionFormView.findViewById(R.id.textView_change_date);
+		mChangeTransactionDateButton.setOnClickListener(changeDateButtonClickListener);
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.addnew)
@@ -124,39 +146,39 @@ public class TransactionActivity extends CActivity{
 	
 	@SuppressLint("InflateParams")
 	private void editCategoryDialougeBox(){
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View transactionFormView = factory.inflate(R.layout.form_transaction, null);
-		mName = (EditText)transactionFormView.findViewById(R.id.editText_transaction_name);
-		mLendAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_lend_amount);
-		mBorrowAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_borrow_amount);
-		
-		TextView mTLALabel = (TextView)transactionFormView.findViewById(R.id.textView_transaction_lend_amount);
-		TextView mTBALabel = (TextView)transactionFormView.findViewById(R.id.textView_transaction_borrow_amount);
-		
-		Transaction transaction = transactionService.getTransactionById(selectedTransactionId);
-		if(transaction == null){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_transaction));
-			return;
-		}
-		
-		mName.setText(transaction.getName());
-		if(transaction.getLend_amount() > 0){
-			mTBALabel.setText(getString(R.string.take_amount));
-			mLendAmount.setText(String.valueOf(transaction.getLend_amount()));
-		}
-		if(transaction.getBorrow_amount() > 0){
-			mTLALabel.setText(getString(R.string.pay_amount));
-			mBorrowAmount.setText(String.valueOf(transaction.getBorrow_amount()));
-		}
-		
-		
-		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.editnew)
-		     .setTitle(R.string.edit_transaction)
-		     .setView(transactionFormView)
-		     .setPositiveButton(R.string.save, saveCancelListener)
-		     .setNegativeButton(R.string.cancel, saveCancelListener);
-		alert.show();
+//		LayoutInflater factory = LayoutInflater.from(this);
+//		final View transactionFormView = factory.inflate(R.layout.form_transaction, null);
+//		mName = (EditText)transactionFormView.findViewById(R.id.editText_transaction_name);
+//		mLendAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_lend_amount);
+//		mBorrowAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_borrow_amount);
+//		
+//		TextView mTLALabel = (TextView)transactionFormView.findViewById(R.id.textView_transaction_lend_amount);
+//		TextView mTBALabel = (TextView)transactionFormView.findViewById(R.id.textView_transaction_borrow_amount);
+//		
+//		Transaction transaction = transactionService.getTransactionById(selectedTransactionId);
+//		if(transaction == null){
+//			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_transaction));
+//			return;
+//		}
+//		
+//		mName.setText(transaction.getName());
+//		if(transaction.getLend_amount() > 0){
+//			mTBALabel.setText(getString(R.string.take_amount));
+//			mLendAmount.setText(String.valueOf(transaction.getLend_amount()));
+//		}
+//		if(transaction.getBorrow_amount() > 0){
+//			mTLALabel.setText(getString(R.string.pay_amount));
+//			mBorrowAmount.setText(String.valueOf(transaction.getBorrow_amount()));
+//		}
+//		
+//		
+//		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+//		alert.setIcon(R.drawable.editnew)
+//		     .setTitle(R.string.edit_transaction)
+//		     .setView(transactionFormView)
+//		     .setPositiveButton(R.string.save, saveCancelListener)
+//		     .setNegativeButton(R.string.cancel, saveCancelListener);
+//		alert.show();
 	}
 	
 	private void deleteCategoryDialougeBox(){
@@ -169,59 +191,103 @@ public class TransactionActivity extends CActivity{
 		alert.show();
 	}
 	
+//	private int saveTransaction(){
+//		if(IUtil.isNotBlank(mName.getText())){
+//    		String name = mName.getText().toString().toLowerCase();
+//    		String lendAmount = mLendAmount.getText().toString();
+//    		String borrowAmount = mBorrowAmount.getText().toString();
+//    		
+//    		Transaction transaction = new Transaction();
+//    		if(action == IConstant.ACTION_EDIT){
+//    			transaction = transactionService.getTransactionById(selectedTransactionId);
+//    		}
+//    		transaction.setName(name);
+//    		if(IUtil.isNotBlank(lendAmount)){
+//    			transaction.setLend_amount(Double.parseDouble(lendAmount));
+//    		}else{
+//    			transaction.setLend_amount(0.0);
+//    		}
+//    		
+//    		if(IUtil.isNotBlank(borrowAmount)){
+//    			transaction.setBorrow_amount(Double.parseDouble(borrowAmount));
+//    		}else{
+//    			transaction.setBorrow_amount(0.0);
+//    		}
+//    		
+//    		if(transaction.getLend_amount() > 0 && transaction.getBorrow_amount()>0){
+//    			Double diff = transaction.getLend_amount() -  transaction.getBorrow_amount();
+//    			if(diff==0){
+//    				transaction.setLend_amount(0.0);
+//    				transaction.setBorrow_amount(0.0);
+//    			}else if(diff>0){
+//    				transaction.setLend_amount(diff);
+//    				transaction.setBorrow_amount(0.0);
+//    			}else{
+//    				transaction.setLend_amount(0.0);
+//    				transaction.setBorrow_amount(diff*(-1));
+//    			}
+//    		}
+//    		
+//    		transaction.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+//    		transaction.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+//    		
+//    		int sucess = 0;
+//    		if(action == IConstant.ACTION_ADD){
+//    			sucess = transactionService.createTransaction(transaction);
+//    		}else if(action == IConstant.ACTION_EDIT){
+//    			sucess = transactionService.updateTransaction(transaction);
+//    		}
+//    		
+//    		if(sucess > 0){
+//    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_success, name));
+//    			loadTransactionList();
+//    			return 1;
+//    		}else{
+//    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_failed));
+//    		}
+//    	}else{
+//    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.transaction_name_missing));
+//    	}
+//		return 0;
+//	}
+	
 	private int saveTransaction(){
 		if(IUtil.isNotBlank(mName.getText())){
     		String name = mName.getText().toString().toLowerCase();
-    		String lendAmount = mLendAmount.getText().toString();
-    		String borrowAmount = mBorrowAmount.getText().toString();
+    		Double lendAmount = 0.0;
+    		Double borrowAmount = 0.0;
+    		Double amount = 0.0;
+    		String transactionDate = mTransactionSelectedDate.getText().toString();
     		
-    		Transaction transaction = new Transaction();
-    		if(action == IConstant.ACTION_EDIT){
-    			transaction = transactionService.getTransactionById(selectedTransactionId);
+    		if(IUtil.isNotBlank(mAmount.getText().toString())){
+    			amount = Double.parseDouble(mAmount.getText().toString());
     		}
-    		transaction.setName(name);
-    		if(IUtil.isNotBlank(lendAmount)){
-    			transaction.setLend_amount(Double.parseDouble(lendAmount));
+    		
+    		if(mTypeLend.isChecked()){
+    			lendAmount = amount;
+    		}else if(mTypeBorrow.isChecked()){
+    			borrowAmount = amount;
+    		}
+    		
+    		Transaction transaction = transactionService.getTransactionByName(name);
+    		if(transaction != null){
+    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_failed_duplicate));
     		}else{
-    			transaction.setLend_amount(0.0);
-    		}
-    		
-    		if(IUtil.isNotBlank(borrowAmount)){
-    			transaction.setBorrow_amount(Double.parseDouble(borrowAmount));
-    		}else{
-    			transaction.setBorrow_amount(0.0);
-    		}
-    		
-    		if(transaction.getLend_amount() > 0 && transaction.getBorrow_amount()>0){
-    			Double diff = transaction.getLend_amount() -  transaction.getBorrow_amount();
-    			if(diff==0){
-    				transaction.setLend_amount(0.0);
-    				transaction.setBorrow_amount(0.0);
-    			}else if(diff>0){
-    				transaction.setLend_amount(diff);
-    				transaction.setBorrow_amount(0.0);
-    			}else{
-    				transaction.setLend_amount(0.0);
-    				transaction.setBorrow_amount(diff*(-1));
-    			}
-    		}
-    		
-    		transaction.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-    		transaction.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-    		
-    		int sucess = 0;
-    		if(action == IConstant.ACTION_ADD){
-    			sucess = transactionService.createTransaction(transaction);
-    		}else if(action == IConstant.ACTION_EDIT){
-    			sucess = transactionService.updateTransaction(transaction);
-    		}
-    		
-    		if(sucess > 0){
-    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_success, name));
-    			loadTransactionList();
-    			return 1;
-    		}else{
-    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_failed));
+	    		transaction = new Transaction();
+	    		transaction.setName(name);
+	    		transaction.setLend_amount(lendAmount);
+	    		transaction.setBorrow_amount(borrowAmount);
+	    		transaction.setDate(transactionDate);
+	    		transaction.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+	    		
+	    		int sucess = transactionService.createTransaction(transaction);
+	    		if(sucess > 0){
+	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_success, name));
+	    			loadTransactionList();
+	    			return 1;
+	    		}else{
+	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_failed));
+	    		}
     		}
     	}else{
     		ViewUtil.showMessage(getApplicationContext(), getString(R.string.transaction_name_missing));
@@ -378,6 +444,18 @@ public class TransactionActivity extends CActivity{
 		}
 	};
 	
+	OnClickListener changeDateButtonClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			try{
+				DialogFragment newFragment = new DatePickerFragment();
+			    newFragment.show(getSupportFragmentManager(), "datePicker");
+			}catch(Throwable t){
+				t.printStackTrace();
+			}
+		}
+	};
+	
 	// 2. Override methods
 	@Override
 	public ListView getListView() {
@@ -454,5 +532,12 @@ public class TransactionActivity extends CActivity{
 
 	@Override
 	public void prevView() {
+	}
+	
+	@Override
+	public void returnDate(String date) {
+		if(action == IConstant.ACTION_ADD || action == IConstant.ACTION_EDIT){
+			mTransactionSelectedDate.setText(date);
+		}
 	}
 }
