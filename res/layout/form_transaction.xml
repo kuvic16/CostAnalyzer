@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/radioGroup_transaction_type"
-        android:text="@string/transaction_lend_amount" />
+        android:text="@string/transaction_amount" />
     
     <EditText
         android:id="@+id/editText_transaction_amount"

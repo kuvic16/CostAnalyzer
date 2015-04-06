@@ -14,6 +14,8 @@ public final class IConstant {
 	public static final String CATEGORY_TYPE = "type";
 	public static final String TRANSACTION_NAME = "name";
 	
+	public static final String PARAM_TRANSACTION_NAME = "transaction_name";
+	
 	
 	public static final int ACTION_ADD = 1;
 	public static final int ACTION_EDIT = 2;

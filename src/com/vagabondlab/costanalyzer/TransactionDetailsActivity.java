@@ -11,13 +11,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,11 +36,12 @@ import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
 
 @SuppressLint("DefaultLocale")
-public class TransactionActivity extends CActivity{
+public class TransactionDetailsActivity extends CActivity{
 	
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private TransactionService transactionService;
 	
+	private TextView mNameLabel;
 	private EditText mName;
 	private RadioButton mTypeLend;
 	private RadioButton mTypeBorrow;
@@ -54,15 +53,14 @@ public class TransactionActivity extends CActivity{
 	
 	private TextView mTransactionStatus;
 	private Button mButtonholderAddTransaction;
-	private Button mButtonholderSearch;
-	private Button mButtonholderReload;
+	private Button mButtonholderDeleteTransaction;
 	
 	private List<Map<String, String>> mTransactionListdata = new ArrayList<Map<String, String>>();
 	private int selectedTransactionId;
-	private String selectedTransactionName;
 	
 	private int action = 0;
 	private String mCurrentDate;
+	private String mSelectedTransactionName;
 	
 	private TextView mSummaryStatusView;
 	private TextView mBalanceAmountView;
@@ -81,8 +79,11 @@ public class TransactionActivity extends CActivity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState); 
-		setContentView(R.layout.activity_transaction);
-		setTitle(getString(R.string.title_activity_transaction));
+		setContentView(R.layout.activity_transaction_details);
+		
+		
+		mSelectedTransactionName = getIntent().getExtras().getString(IConstant.PARAM_TRANSACTION_NAME);
+		setTitle(mSelectedTransactionName);
 		mTitle = getTitle();
 		
 		mNavigationDrawerFragment = (NavigationDrawerFragment) getSupportFragmentManager().findFragmentById(R.id.navigation_drawer_transaction);
@@ -93,7 +94,7 @@ public class TransactionActivity extends CActivity{
 			mTransactionStatus = (TextView)findViewById(R.id.textView_transaction_status);
 			
 			mSummaryStatusView = (TextView)findViewById(R.id.textView_summary_status);
-			mSummaryStatusView.setText(getString(R.string.transaction_summary_status));
+			mSummaryStatusView.setText(getString(R.string.transaction_details_summary_status, mSelectedTransactionName));
 			
 			mBorrowAmountView = (TextView)findViewById(R.id.textView_summary_total_cost);
 			mBorrowAmountViewLabel = (TextView)findViewById(R.id.textView_summary_total_cost_status);
@@ -109,13 +110,9 @@ public class TransactionActivity extends CActivity{
 			
 			mButtonholderAddTransaction = (Button)findViewById(R.id.buttonholder_add_transaction);
 			mButtonholderAddTransaction.setOnClickListener(buttonHolderAddTransactionButtonClickListener);
-			mButtonholderSearch = (Button)findViewById(R.id.buttonholder_search);
-			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
-			mButtonholderReload = (Button)findViewById(R.id.buttonholder_reload);
-			mButtonholderReload.setOnClickListener(buttonHolderReloadButtonClickListener);
 			
-			// temporary
-			//getHelper().onTransactionUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
+			mButtonholderDeleteTransaction = (Button)findViewById(R.id.buttonholder_delete_transaction);
+			mButtonholderDeleteTransaction.setOnClickListener(buttonHolderDeleteTransactionButtonClickListener);
 			
 			mCurrentDate = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
 			loadTransactionList();
@@ -128,10 +125,15 @@ public class TransactionActivity extends CActivity{
 	private void addNewTransactionDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View transactionFormView = factory.inflate(R.layout.form_transaction, null);
+		
+		mNameLabel = (TextView)transactionFormView.findViewById(R.id.textView_transaction_name);
 		mName = (EditText)transactionFormView.findViewById(R.id.editText_transaction_name);
 		mTypeLend = (RadioButton)transactionFormView.findViewById(R.id.radio_lend);
 		mTypeBorrow = (RadioButton)transactionFormView.findViewById(R.id.radio_borrow);
 		mAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_amount);
+		
+		mName.setVisibility(View.GONE);
+		mNameLabel.setText(getString(R.string.transaction_name_with, mSelectedTransactionName));
 		
 		mTransactionSelectedDate = (TextView)transactionFormView.findViewById(R.id.textView_selected_transaction_date);
 		mTransactionSelectedDate.setText(mCurrentDate);
@@ -140,7 +142,7 @@ public class TransactionActivity extends CActivity{
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.addnew)
-		     .setTitle(R.string.new_transaction)
+		     .setTitle(R.string.add_transaction)
 		     .setView(transactionFormView)
 		     .setPositiveButton(R.string.save, saveCancelListener)
 		     .setNegativeButton(R.string.cancel, saveCancelListener);
@@ -148,64 +150,106 @@ public class TransactionActivity extends CActivity{
 	}
 	
 	@SuppressLint("InflateParams")
-	private void searchTransactionDialougeBox(){
+	private void editTransactionDialougeBox(){
 		LayoutInflater factory = LayoutInflater.from(this);
-		final View transactionSearchFormView = factory.inflate(R.layout.search_transaction_form, null);
-		mSearchTransactionName = (EditText)transactionSearchFormView.findViewById(R.id.editText_search_transaction_name);
+		final View transactionFormView = factory.inflate(R.layout.form_transaction, null);
 		
+		mNameLabel = (TextView)transactionFormView.findViewById(R.id.textView_transaction_name);
+		mName = (EditText)transactionFormView.findViewById(R.id.editText_transaction_name);
+		mTypeLend = (RadioButton)transactionFormView.findViewById(R.id.radio_lend);
+		mTypeBorrow = (RadioButton)transactionFormView.findViewById(R.id.radio_borrow);
+		mAmount = (EditText)transactionFormView.findViewById(R.id.editText_transaction_amount);
+		
+		mName.setVisibility(View.GONE);
+		mNameLabel.setText(getString(R.string.transaction_name_with, mSelectedTransactionName));
+		
+		mTransactionSelectedDate = (TextView)transactionFormView.findViewById(R.id.textView_selected_transaction_date);
+		mTransactionSelectedDate.setText(mCurrentDate);
+		mChangeTransactionDateButton = (TextView)transactionFormView.findViewById(R.id.textView_change_date);
+		mChangeTransactionDateButton.setOnClickListener(changeDateButtonClickListener);
+		
+		Transaction transaction = transactionService.getTransactionById(selectedTransactionId);
+		if(transaction == null){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.not_found_transaction));
+			return;
+		}
+		
+		Double amount = 0.0;
+		if(transaction.getLend_amount() > 0){
+			mTypeLend.setChecked(true);
+			amount = transaction.getLend_amount();
+		}else if(transaction.getBorrow_amount() > 0){
+			mTypeBorrow.setChecked(true);
+			amount = transaction.getBorrow_amount();
+		}
+		mAmount.setText(String.valueOf(amount));
 		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-		alert.setIcon(R.drawable.search)
-		     .setTitle(R.string.search)
-		     .setView(transactionSearchFormView)
-		     .setPositiveButton(R.string.search, searchTransactionListener)
-		     .setNegativeButton(R.string.cancel, searchTransactionListener);
+		alert.setIcon(R.drawable.editnew)
+		     .setTitle(R.string.edit_transaction)
+		     .setView(transactionFormView)
+		     .setPositiveButton(R.string.save, saveCancelListener)
+		     .setNegativeButton(R.string.cancel, saveCancelListener);
 		alert.show();
 	}
 	
-	
-	
-	private void deleteCategoryDialougeBox(){
+	private void deleteTransactionDialougeBox(){
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.clean)
 		     .setTitle(R.string.delete_transaction)
-		     .setMessage(getString(R.string.delete_transaction_are_u_sure, selectedTransactionName))
+		     .setMessage(getString(R.string.delete_transaction_confirm))
 		     .setPositiveButton(R.string.delete, deleteCancelListener)
 		     .setNegativeButton(R.string.cancel, deleteCancelListener);
 		alert.show();
 	}
 	
+	private void deleteTransactionsByNameDialougeBox(){
+		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setIcon(R.drawable.clean)
+		     .setTitle(getString(R.string.delete_transaction_by_name, mSelectedTransactionName))
+		     .setMessage(getString(R.string.delete_all_transaction_confirm, mSelectedTransactionName))
+		     .setPositiveButton(R.string.delete, deleteAllCancelListener)
+		     .setNegativeButton(R.string.cancel, deleteAllCancelListener);
+		alert.show();
+	}
+	
 	private int saveTransaction(){
-		if(IUtil.isNotBlank(mName.getText())){
-    		String name = mName.getText().toString().toLowerCase();
-    		Double lendAmount = 0.0;
-    		Double borrowAmount = 0.0;
-    		Double amount = 0.0;
-    		String transactionDate = mTransactionSelectedDate.getText().toString();
-    		
-    		if(IUtil.isNotBlank(mAmount.getText().toString())){
-    			amount = Double.parseDouble(mAmount.getText().toString());
-    		}
-    		
-    		if(mTypeLend.isChecked()){
-    			lendAmount = amount;
-    		}else if(mTypeBorrow.isChecked()){
-    			borrowAmount = amount;
-    		}
-    		
-    		Transaction transaction = transactionService.getTransactionByName(name);
-    		if(transaction != null){
-    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_failed_duplicate));
-    		}else{
-	    		transaction = new Transaction();
+		try{
+			if(IUtil.isNotBlank(mAmount.getText().toString())){
+	    		String name = mSelectedTransactionName.toLowerCase();
+	    		Double lendAmount = 0.0;
+	    		Double borrowAmount = 0.0;
+	    		Double amount = 0.0;
+	    		String transactionDate = mTransactionSelectedDate.getText().toString();
+	    		
+	    		amount = Double.parseDouble(mAmount.getText().toString());
+	    		
+	    		if(mTypeLend.isChecked()){
+	    			lendAmount = amount;
+	    		}else if(mTypeBorrow.isChecked()){
+	    			borrowAmount = amount;
+	    		}
+	    		
+	    		Transaction transaction = new Transaction();
+	    		if(action == IConstant.ACTION_ADD){
+	    			transaction.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));	    			
+	    		}else if(action == IConstant.ACTION_EDIT){
+	    			transaction = transactionService.getTransactionById(selectedTransactionId);	    			
+	    		}
+	    		
 	    		transaction.setName(name);
 	    		transaction.setLend_amount(lendAmount);
 	    		transaction.setBorrow_amount(borrowAmount);
 	    		transaction.setDate(transactionDate);
-	    		transaction.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
 	    		transaction.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
 	    		
-	    		int sucess = transactionService.createTransaction(transaction);
+	    		int sucess = 0;
+	    		if(action == IConstant.ACTION_ADD){
+	    			sucess = transactionService.createTransaction(transaction);
+	    		}else if(action == IConstant.ACTION_EDIT){
+	    			sucess = transactionService.updateTransaction(transaction);
+	    		}
+	    		
 	    		if(sucess > 0){
 	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_success, name));
 	    			loadTransactionList();
@@ -213,10 +257,13 @@ public class TransactionActivity extends CActivity{
 	    		}else{
 	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_failed));
 	    		}
-    		}
-    	}else{
-    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.transaction_name_missing));
-    	}
+	    		
+	    	}else{
+	    		ViewUtil.showMessage(getApplicationContext(), getString(R.string.amount_missing));
+	    	}
+		}catch(Throwable t){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.please_try_again));
+		}
 		return 0;
 	}
 	
@@ -227,11 +274,11 @@ public class TransactionActivity extends CActivity{
 		}
 		
 		if(sucess > 0){
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_transaction_success, selectedTransactionName));
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_transaction_success_short));
 			loadTransactionList();
 			return 1;
 		}else{
-			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_transaction_failed, selectedTransactionName));
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_transaction_failed_short));
 		}
     	return 0;
 	}
@@ -246,23 +293,30 @@ public class TransactionActivity extends CActivity{
 	}
 	
 	private void loadListView(){
-		List<String[]> transactionList = transactionService.getAllTransactionGroupByName("");
-		loadUI(transactionList, transactionService.countTransactionGroupByName());
+		List<Transaction> transactionList = transactionService.getTransactionsByName(mSelectedTransactionName);
+		loadUI(transactionList, transactionList.size());
 	}
 
-	private void loadUI(List<String[]> transactionList, long total) {
+	private void loadUI(List<Transaction> transactionList, long total) {
 		try {
 			mTransactionStatus.setText(getString(R.string.transaction_status, total));
 			mTransactionListdata = new ArrayList<Map<String,String>>();
-			for (String[] transaction : transactionList) {
+			for (Transaction transaction : transactionList) {
 				Map<String, String> infoMap = new HashMap<String, String>(3);
-				infoMap.put("transaction_name", transaction[1]);
-				infoMap.put("transaction_row_id", transaction[0]);
-				infoMap.put("transaction_amount", transaction[2]);
+				infoMap.put("transaction_row_id", String.valueOf(transaction.getId()));
+				String transactionAmount = "";
+				if(transaction.getLend_amount()>0){
+					transactionAmount = String.valueOf(transaction.getLend_amount());
+					infoMap.put("transaction_name", getString(R.string.lend));					
+				}else if(transaction.getBorrow_amount()>0){
+					transactionAmount = "-" + String.valueOf(transaction.getBorrow_amount());
+					infoMap.put("transaction_name", getString(R.string.borrow));
+				}
+				infoMap.put("transaction_amount", transactionAmount);
 				
 				String datestring = "";
-				if(IUtil.isNotBlank(transaction[3])){
-					Date date = IUtil.getDate(transaction[3], IUtil.DATE_FORMAT);				
+				if(IUtil.isNotBlank(transaction.getCreated_date())){
+					Date date = IUtil.getDate(transaction.getCreated_date(), IUtil.DATE_FORMAT);				
 					datestring += date;
 				}
 				infoMap.put("transaction_time", datestring);
@@ -289,7 +343,7 @@ public class TransactionActivity extends CActivity{
 			lendAmount = 0.0;
 			borrowAmount = 0.0;
 			balanceAmount = 0.0;
-			List<String[]> summaryTransaction = transactionService.getSummaryTransaction();
+			List<String[]> summaryTransaction = transactionService.getSummaryTransactionByName(mSelectedTransactionName);
 			if(IUtil.isNotBlank(summaryTransaction)){
 				for(String[] trs : summaryTransaction){
 					try{
@@ -311,12 +365,25 @@ public class TransactionActivity extends CActivity{
 	
 	private void searchTransaction(){
 		try{
-    		String searchTransactionName = mSearchTransactionName.getText().toString().toLowerCase();
-    		List<String[]> transactionList = transactionService.getAllTransactionGroupByName(searchTransactionName);
+    		String transactionName = mSearchTransactionName.getText().toString().toLowerCase();
+    		
+    		List<Transaction> transactionList = transactionService.searchTransaction(transactionName);
     		loadUI(transactionList, transactionList.size());
     	}catch(Throwable t){
     		ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, t.getMessage()));
     	}
+	}
+	
+	private int deleteAllTransactionByName(){
+		int sucess = transactionService.deleteTransactionsByName(mSelectedTransactionName);
+		if(sucess > 0){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_all_transaction_success_short, mSelectedTransactionName));
+			loadTransactionList();
+			return 1;
+		}else{
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_all_transaction_failed_short, mSelectedTransactionName));
+		}
+    	return 0;
 	}
 
 	// 1. Listener
@@ -348,6 +415,21 @@ public class TransactionActivity extends CActivity{
 		}
 	};
 	
+	DialogInterface.OnClickListener deleteAllCancelListener = new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(DialogInterface dialog, int i) {
+			switch (i) {
+			case DialogInterface.BUTTON_POSITIVE:
+				if(deleteAllTransactionByName()==1){
+					finish();					
+				}
+				break;
+			case DialogInterface.BUTTON_NEGATIVE: 
+				break;
+			}
+		}
+	};
+	
 	OnClickListener buttonHolderAddTransactionButtonClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -360,23 +442,12 @@ public class TransactionActivity extends CActivity{
 		}
 	};
 	
-	OnClickListener buttonHolderSearchButtonClickListener = new OnClickListener() {
+	OnClickListener buttonHolderDeleteTransactionButtonClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			try{
-				action = IConstant.ACTION_SEARCH;
-				searchTransactionDialougeBox();
-			}catch(Throwable t){
-				t.printStackTrace();
-			}
-		}
-	};
-	
-	OnClickListener buttonHolderReloadButtonClickListener = new OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			try{
-				loadTransactionList();
+				action = IConstant.ACTION_DELETE;
+				deleteTransactionsByNameDialougeBox();
 			}catch(Throwable t){
 				t.printStackTrace();
 			}
@@ -419,13 +490,8 @@ public class TransactionActivity extends CActivity{
 					try{
 						View idChild = ((ViewGroup) v).getChildAt(0);
 						selectedTransactionId = Integer.valueOf(((TextView) idChild).getText().toString());
-						
-						View nameChild = ((ViewGroup) v).getChildAt(1);
-						selectedTransactionName = ((TextView) nameChild).getText().toString();
-						
-						Intent intent = new Intent(getApplicationContext(), TransactionDetailsActivity.class);
-						intent.putExtra(IConstant.PARAM_TRANSACTION_NAME, selectedTransactionName);
-						startActivityForResult(intent, IConstant.PARENT_ACTIVITY_REQUEST_CODE);							
+						registerForContextMenu(mListView);
+	                    openContextMenu(mListView);
 					}catch(Throwable t){
 						t.printStackTrace();
 					}
@@ -435,23 +501,24 @@ public class TransactionActivity extends CActivity{
 	    return mListView;
 	}
 	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.category, menu);
-		restoreActionBar();
-		return true;
-	}
+//	@Override
+//	public boolean onCreateOptionsMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.category, menu);
+//		restoreActionBar();
+//		return true;
+//	}
 	
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case IConstant.CONTEXT_MENU_EDIT: {
-			action = IConstant.ACTION_EDIT;			
+			action = IConstant.ACTION_EDIT;
+			editTransactionDialougeBox();
 		}
 			break;
 		case IConstant.CONTEXT_MENU_ARCHIVE: {
 			action = IConstant.ACTION_DELETE;
-			deleteCategoryDialougeBox();
+			deleteTransactionDialougeBox();
 		}
 			break;
 		}
@@ -491,14 +558,5 @@ public class TransactionActivity extends CActivity{
 		if(action == IConstant.ACTION_ADD || action == IConstant.ACTION_EDIT){
 			mTransactionSelectedDate.setText(date);
 		}
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	    if(requestCode==IConstant.PARENT_ACTIVITY_REQUEST_CODE){
-	    	firstTime = true;
-	    	onNavigationDrawerItemSelected(0);
-	    	loadTransactionList();
-	    }
 	}
 }

@@ -122,13 +122,21 @@
 	<!-- Transaction screen -->
 	<string name="title_activity_transaction">My Transaction</string>
     <string name="transaction_name">Transaction with whom?</string>
+    <string name="transaction_name_with">Transaction with %s</string>
     <string name="transaction_lend_amount">Lend amount</string>
     <string name="transaction_borrow_amount">Borrow amount</string>
+    <string name="transaction_amount">Amount</string>
     <string name="new_transaction">New Transaction</string>
+    <string name="add_transaction">Add Transaction</string>
     <string name="edit_transaction">Edit Transaction</string>
     <string name="delete_transaction">Delete Transaction</string>
+    <string name="delete_transaction_by_name">Delete %s transactions</string>
     <string name="delete_transaction_are_u_sure">Are you sure to delete transaction with \"%s\"</string>
+    <string name="delete_transaction_confirm">Are you sure to delete this transaction</string>
+    <string name="delete_all_transaction_confirm">Are you sure to delete all transactions with %s</string>
 	<string name="transaction_name_missing">Please write the name of transaction person</string>
+	<string name="amount_missing">Please enter transaction amount</string>
+	<string name="please_try_again">Please try again</string>
 	<string name="save_transaction_success">Transaction with \"%s\" saved</string>
 	<string name="save_transaction_failed">Failed to save transaction. Please try again</string>
 	<string name="save_transaction_failed_duplicate">Failed to save transaction. Duplicate transaction name</string>
@@ -136,7 +144,11 @@
 	<string name="not_found_transaction">Transaction not found</string>
 	<string name="not_found_transaction_name">Name of transaction person not found</string>
 	<string name="delete_transaction_success">Transaction deleted with \"%s\"</string>
+	<string name="delete_transaction_success_short">Transaction deleted</string>
+	<string name="delete_all_transaction_success_short">%s transactions deleted </string>
 	<string name="delete_transaction_failed">Failed to delete Transaction with \"%s\"</string>
+	<string name="delete_transaction_failed_short">Failed to delete Transaction</string>
+	<string name="delete_all_transaction_failed_short">Failed to delete %s transactions</string>
 	<string name="lend">Lend</string>
 	<string name="borrow">Borrow</string>
 	<string name="lend_plus">Lend (+)</string>
@@ -146,6 +158,9 @@
 	<string name="take_amount">Take amount</string>
 	<string name="transaction_summary_status">Your current transaction status</string>
 	<string name="transaction_type">Transaction Type</string>
+	
+	<!-- Transactio details screen -->
+	<string name="transaction_details_summary_status">Transaction status with %s</string>
 	
 	<!-- Backup/Restore screen -->
 	<string name="title_backup_screen">Backup/Restore</string>

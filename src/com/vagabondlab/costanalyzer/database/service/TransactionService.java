@@ -8,11 +8,13 @@ import android.database.sqlite.SQLiteConstraintException;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.GenericRawResults;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.Where;
 import com.vagabondlab.costanalyzer.database.entity.Transaction;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
+import com.vagabondlab.costanalyzer.utilities.IUtil;
 
 public class TransactionService{
 	
@@ -86,6 +88,38 @@ public class TransactionService{
 		return null;
 	}
 	
+	public List<Transaction> getTransactionsByName(String name){
+		try {
+			QueryBuilder<Transaction, Integer> builder = em.queryBuilder();
+			Where<Transaction, Integer> where = builder.where();
+			builder.orderBy(IConstant.LAST_MODIFIED_DATE, false);
+			SelectArg selectArg = new SelectArg();
+			where.eq(IConstant.TRANSACTION_NAME, selectArg);
+			selectArg.setValue(name);
+			List<Transaction> transactionList = em.query(builder.prepare());
+			return transactionList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List<Transaction> searchTransaction(String name){
+		try {
+			QueryBuilder<Transaction, Integer> builder = em.queryBuilder();
+			Where<Transaction, Integer> where = builder.where();
+			builder.orderBy(IConstant.LAST_MODIFIED_DATE, false);
+			SelectArg selectArg = new SelectArg();
+			where.like(IConstant.TRANSACTION_NAME, selectArg + "%");
+			selectArg.setValue(name);
+			List<Transaction> transactionList = em.query(builder.prepare());
+			return transactionList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public List<Transaction> getAllTransaction(){
 		try {
 			QueryBuilder<Transaction, Integer> builder = em.queryBuilder();
@@ -97,6 +131,46 @@ public class TransactionService{
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public List<String[]> getAllTransactionGroupByName(String name){
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("select id, name, sum(lend_amount - borrow_amount), date from mtransaction");
+			
+			if(IUtil.isNotBlank(name)){
+				jql.append(" where ");
+				jql.append(" name like '").append(name).append("%'");
+			}
+			jql.append(" group by name order by date desc limit 100");
+			
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			return results;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public long countTransactionGroupByName(){
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("select count(*) from mtransaction");
+			jql.append(" group by name");
+			
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			if(results != null && results.size()>0){
+				String c[] = results.get(0);
+				return Long.valueOf(c[0]);
+			}
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	
 	public long countTransaction(){
@@ -127,11 +201,39 @@ public class TransactionService{
 		return 0;
 	}
 	
+	public int deleteTransactionsByName(String name){
+		try {
+			DeleteBuilder<Transaction, Integer> builder = em.deleteBuilder();
+			Where<Transaction, Integer> where = builder.where();
+			SelectArg selectArg = new SelectArg();
+			where.eq(IConstant.TRANSACTION_NAME, selectArg);
+			selectArg.setValue(name);
+			return builder.delete();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+	
 	public List<String[]> getSummaryTransaction(){
 		GenericRawResults<String[]> rawResults;
 		try {
 			StringBuilder jql = new StringBuilder();
 			jql.append("select sum(lend_amount), sum(borrow_amount) from mtransaction");
+			rawResults = em.queryRaw(jql.toString());
+			List<String[]> results = rawResults.getResults();
+			return results;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public List<String[]> getSummaryTransactionByName(String name){
+		GenericRawResults<String[]> rawResults;
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("select sum(lend_amount), sum(borrow_amount) from mtransaction where name = '"+ name +"'");
 			rawResults = em.queryRaw(jql.toString());
 			List<String[]> results = rawResults.getResults();
 			return results;

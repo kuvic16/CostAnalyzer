@@ -246,12 +246,15 @@ public class HomeActivity extends CActivity {
 		Cost cost = new Cost();
 		if(action == IConstant.ACTION_EDIT){
 			cost = costService.getCostById(selectedCostId);
+			cost.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+			cost.setLast_modified_by_name("you");
+		}else if(action == IConstant.ACTION_ADD){
+			cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+			cost.setCreated_by_name("you");
 		}
 		cost.setCategory(category);
 		cost.setAmount(costAmount);
 		cost.setDate(costDate);
-		cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-		cost.setCreated_by_name("you");
 		
 		int sucess = 0;
 		if(action == IConstant.ACTION_ADD){
