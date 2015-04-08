@@ -1676,9 +1676,9 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f06002e;
         public static final int action_mode_bar_stub=0x7f06002d;
         public static final int action_mode_close_button=0x7f060020;
-        public static final int action_settings=0x7f0600bf;
+        public static final int action_settings=0x7f0600c0;
         public static final int activity_chooser_view_content=0x7f060021;
-        public static final int add_cost=0x7f0600be;
+        public static final int add_cost=0x7f0600bf;
         public static final int always=0x7f06000d;
         public static final int beginning=0x7f060012;
         public static final int button_backup=0x7f06004d;
@@ -1762,11 +1762,11 @@ containing a value of this type.
         public static final int relative_layout_short_summary_section=0x7f06005d;
         public static final int relative_layout_summary=0x7f060045;
         public static final int relative_layout_top=0x7f060042;
-        public static final int relative_layout_transaction_list=0x7f0600b2;
+        public static final int relative_layout_transaction_list=0x7f0600b3;
         public static final int relative_layout_week_details_section=0x7f060074;
         public static final int relative_layout_week_menu_section=0x7f060072;
         public static final int scrollview=0x7f060044;
-        public static final int search=0x7f0600bd;
+        public static final int search=0x7f0600be;
         public static final int search_badge=0x7f060035;
         public static final int search_bar=0x7f060034;
         public static final int search_button=0x7f060036;
@@ -1788,9 +1788,10 @@ containing a value of this type.
         public static final int split_action_bar=0x7f060019;
         public static final int submit_area=0x7f06003c;
         public static final int tabMode=0x7f060003;
-        public static final int text1=0x7f0600b7;
-        public static final int text2=0x7f0600b9;
-        public static final int text3=0x7f0600b8;
+        public static final int tdTable=0x7f0600b2;
+        public static final int text1=0x7f0600b8;
+        public static final int text2=0x7f0600ba;
+        public static final int text3=0x7f0600b9;
         public static final int textView_add_category=0x7f060083;
         public static final int textView_category_name=0x7f060078;
         public static final int textView_category_status=0x7f060051;
@@ -1843,16 +1844,16 @@ containing a value of this type.
         public static final int textView_transaction_type=0x7f060093;
         public static final int textView_week_status=0x7f060073;
         public static final int title=0x7f060027;
-        public static final int transaction_amount=0x7f0600b6;
-        public static final int transaction_name=0x7f0600b4;
-        public static final int transaction_row_id=0x7f0600b3;
-        public static final int transaction_time=0x7f0600b5;
+        public static final int transaction_amount=0x7f0600b7;
+        public static final int transaction_name=0x7f0600b5;
+        public static final int transaction_row_id=0x7f0600b4;
+        public static final int transaction_time=0x7f0600b6;
         public static final int up=0x7f060016;
         public static final int useLogo=0x7f060005;
         public static final int weekTable=0x7f060075;
-        public static final int week_name=0x7f0600ba;
-        public static final int week_number=0x7f0600bc;
-        public static final int week_start_end_date=0x7f0600bb;
+        public static final int week_name=0x7f0600bb;
+        public static final int week_number=0x7f0600bd;
+        public static final int week_start_end_date=0x7f0600bc;
         public static final int withText=0x7f06000e;
         public static final int wrap_content=0x7f060000;
     }
@@ -1944,10 +1945,11 @@ containing a value of this type.
         public static final int summary_total_amount_design=0x7f03003b;
         public static final int summary_wastage_amount_design=0x7f03003c;
         public static final int support_simple_spinner_dropdown_item=0x7f03003d;
-        public static final int transaction_list_view=0x7f03003e;
-        public static final int two_item=0x7f03003f;
-        public static final int week_list_view=0x7f030040;
-        public static final int weekly_short_status_layout=0x7f030041;
+        public static final int transaction_details_status_layout=0x7f03003e;
+        public static final int transaction_list_view=0x7f03003f;
+        public static final int two_item=0x7f030040;
+        public static final int week_list_view=0x7f030041;
+        public static final int weekly_short_status_layout=0x7f030042;
     }
     public static final class menu {
         public static final int category=0x7f0d0000;
@@ -2573,23 +2575,28 @@ containing a value of this type.
          */
         public static final int Widget_AppCompat_Toolbar=0x7f0c0034;
         public static final int Widget_AppCompat_Toolbar_Button_Navigation=0x7f0c0035;
-        public static final int backupButtonStyle=0x7f0c00f7;
+        public static final int backupButtonStyle=0x7f0c00f9;
         /**  1:end 
  2. Home screen 
          */
         public static final int changeCostButtonStyle=0x7f0c00f5;
-        /**  2. End 
+        /**  3. end 
          */
-        public static final int groupButtonStyle=0x7f0c00f6;
+        public static final int groupButtonStyle=0x7f0c00f8;
         /**  Shaiful Islam Palash 
  1:start Style for short summary 
          */
         public static final int relativeLayoutShortSummaryStyle=0x7f0c00ee;
+        /**  2. End 
+ 3. Transaction details screen 
+         */
+        public static final int relativeLayoutShortSummaryStyleTD=0x7f0c00f6;
         public static final int relativeLayoutSummaryStyle=0x7f0c00f0;
         public static final int spinnerItemStyle=0x7f0c00ed;
         public static final int textViewSummaryCostStatusStyle=0x7f0c00f2;
         public static final int textViewSummaryCostStyle=0x7f0c00f1;
         public static final int textViewSummaryStatusStyle=0x7f0c00ef;
+        public static final int textViewSummaryStatusStyleTD=0x7f0c00f7;
         public static final int textViewWeeklySummaryCostStatusStyle=0x7f0c00f4;
         public static final int textViewWeeklySummaryCostStyle=0x7f0c00f3;
     }

@@ -9,11 +9,11 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -26,6 +26,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.vagabondlab.costanalyzer.database.entity.Transaction;
@@ -63,17 +65,10 @@ public class TransactionDetailsActivity extends CActivity{
 	private String mSelectedTransactionName;
 	
 	private TextView mSummaryStatusView;
-	private TextView mBalanceAmountView;
-	private TextView mBalanceAmountViewLabel;
-	private TextView mLendAmountView;
-	private TextView mLendAmountViewLabel;
-	private TextView mBorrowAmountView;
-	private TextView mBorrowAmountViewLabel;
 	private Double lendAmount = 0.0;
 	private Double borrowAmount = 0.0;
 	private Double balanceAmount = 0.0;
-	private ProgressDialog mProgressDialog = null;
-
+	
 	
 	
 	@Override
@@ -95,18 +90,6 @@ public class TransactionDetailsActivity extends CActivity{
 			
 			mSummaryStatusView = (TextView)findViewById(R.id.textView_summary_status);
 			mSummaryStatusView.setText(getString(R.string.transaction_details_summary_status, mSelectedTransactionName));
-			
-			mBorrowAmountView = (TextView)findViewById(R.id.textView_summary_total_cost);
-			mBorrowAmountViewLabel = (TextView)findViewById(R.id.textView_summary_total_cost_status);
-			mBorrowAmountViewLabel.setText(getString(R.string.borrow));
-			
-			mLendAmountView = (TextView)findViewById(R.id.textView_summary_effective_cost);
-			mLendAmountViewLabel = (TextView)findViewById(R.id.textView_summary_effective_cost_status);
-			mLendAmountViewLabel.setText(getString(R.string.lend));
-			
-			mBalanceAmountView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
-			mBalanceAmountViewLabel = (TextView)findViewById(R.id.textView_summary_wastage_cost_status);
-			mBalanceAmountViewLabel.setText(getString(R.string.balance));
 			
 			mButtonholderAddTransaction = (Button)findViewById(R.id.buttonholder_add_transaction);
 			mButtonholderAddTransaction.setOnClickListener(buttonHolderAddTransactionButtonClickListener);
@@ -355,9 +338,17 @@ public class TransactionDetailsActivity extends CActivity{
 				}
 			}
 			balanceAmount = lendAmount - borrowAmount;
-			mBalanceAmountView.setText(String.valueOf(balanceAmount.intValue()));
-			mBorrowAmountView.setText(String.valueOf(borrowAmount.intValue()));
-			mLendAmountView.setText(String.valueOf(lendAmount.intValue()));
+			TableLayout table = (TableLayout)findViewById(R.id.tdTable);
+			table.removeAllViews();
+			table.addView(ViewUtil.getTransactionDetailsStatusTableHeader(this));
+			
+			TableRow tr = new TableRow(this);
+			tr.setPadding(5, 0, 0, 0);
+			tr.addView(ViewUtil.getTableColumn(this, String.valueOf(lendAmount.intValue()), Gravity.CENTER));
+			tr.addView(ViewUtil.getTableColumn(this, String.valueOf(borrowAmount.intValue()), Gravity.CENTER));
+			tr.addView(ViewUtil.getTableColumn(this, String.valueOf(balanceAmount.intValue()), Gravity.CENTER));
+			table.addView(tr);
+			table.addView(ViewUtil.getDividerView(getApplicationContext()));
 		}catch(Throwable t){
 			t.printStackTrace();
 		}

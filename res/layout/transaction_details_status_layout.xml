@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relative_layout_short_summary"
+    style="@style/relativeLayoutShortSummaryStyleTD" >
+
+    <TextView
+        android:id="@+id/textView_summary_status"
+        style="@style/textViewSummaryStatusStyleTD" />
+
+    <TableLayout
+        android:id="@+id/tdTable"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView_summary_status"
+        android:background="#ffffff"
+        android:stretchColumns="1" > 
+
+        <TableRow android:background="#33CCCC" >
+
+            <TextView
+                android:padding="3dip"
+                android:text="@string/lend" />
+
+            <TextView
+                android:gravity="center"
+                android:padding="3dip"
+                android:text="@string/borrow" />
+
+            <TextView
+                android:gravity="right"
+                android:padding="3dip"
+                android:text="@string/balance" />
+        </TableRow>
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="fill_parent"
+            android:layout_height="0.2dp"
+            android:background="@android:color/darker_gray"
+            android:visibility="visible" />
+    </TableLayout>
+
+</RelativeLayout>

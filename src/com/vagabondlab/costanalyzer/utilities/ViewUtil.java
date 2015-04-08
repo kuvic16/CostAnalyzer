@@ -79,6 +79,16 @@ public final class ViewUtil {
 		return header;
 	}
 	
+	public static TableRow getTransactionDetailsStatusTableHeader(Context context){
+		TableRow header = new TableRow(context);
+		header.setPadding(5, 0, 0, 0);
+		header.setBackgroundColor(Color.LTGRAY);
+		header.addView(getTableColumn(context, context.getString(R.string.lend), Gravity.CENTER));
+		header.addView(getTableColumn(context, context.getString(R.string.borrow), Gravity.CENTER));
+		header.addView(getTableColumn(context, context.getString(R.string.balance), Gravity.CENTER));
+		return header;
+	}
+	
 	@SuppressWarnings("deprecation")
 	public static void createDialogWithOKButton(Context context,  String title, String message) {
 		AlertDialog mAlertDialog = new AlertDialog.Builder(context).create();

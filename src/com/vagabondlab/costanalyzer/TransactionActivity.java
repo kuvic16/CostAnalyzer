@@ -111,8 +111,8 @@ public class TransactionActivity extends CActivity{
 			mButtonholderAddTransaction.setOnClickListener(buttonHolderAddTransactionButtonClickListener);
 			mButtonholderSearch = (Button)findViewById(R.id.buttonholder_search);
 			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
-			mButtonholderReload = (Button)findViewById(R.id.buttonholder_reload);
-			mButtonholderReload.setOnClickListener(buttonHolderReloadButtonClickListener);
+//			mButtonholderReload = (Button)findViewById(R.id.buttonholder_reload);
+//			mButtonholderReload.setOnClickListener(buttonHolderReloadButtonClickListener);
 			
 			// temporary
 			//getHelper().onTransactionUpgrade(getHelper().getWritableDatabase(),getHelper().getConnectionSource(), 1, 2);
