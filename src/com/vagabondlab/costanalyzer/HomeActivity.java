@@ -250,6 +250,7 @@ public class HomeActivity extends CActivity {
 			cost.setLast_modified_by_name("you");
 		}else if(action == IConstant.ACTION_ADD){
 			cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+			cost.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
 			cost.setCreated_by_name("you");
 		}
 		cost.setCategory(category);
@@ -564,6 +565,7 @@ public class HomeActivity extends CActivity {
 	public ListView getListView() {
 	    if (mListView == null) {
 	        mListView = (ListView) findViewById(android.R.id.list);
+	        mListView.setOnTouchListener(shortSummarySwipeListener);
 	        mListView.setOnItemLongClickListener(new android.widget.AdapterView.OnItemLongClickListener() {
 	            public boolean onItemLongClick(AdapterView<?> parent, View v,int position, long id) {
 		            	try{
@@ -686,6 +688,10 @@ public class HomeActivity extends CActivity {
 		if(action == IConstant.ACTION_ADD || action == IConstant.ACTION_EDIT){
 			mCostSelectedDate.setText(date);
 		}else if(action == IConstant.ACTION_SEARCH){
+			if(mProgressDialog != null){
+				mProgressDialog.dismiss();
+			}
+			
 			YoYo.with(Techniques.SlideInDown)
 			.duration(500)
 			.interpolate(new AccelerateDecelerateInterpolator())
