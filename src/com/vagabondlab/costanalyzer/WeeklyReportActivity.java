@@ -31,6 +31,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -52,10 +53,8 @@ public class WeeklyReportActivity extends CActivity {
 
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private CostService costService;
-	private TextView mCostStatus;
 	
 	private List<Map<String, String>> mWeekListdata = new ArrayList<Map<String, String>>();
-	private List<Map<String, String>> mCostListdata = new ArrayList<Map<String, String>>();
 	private List<List<String>> weeks = new ArrayList<List<String>>();
 	private int currentWeek;
 	
@@ -63,6 +62,12 @@ public class WeeklyReportActivity extends CActivity {
 	private RelativeLayout mRLShortSummary;
 	private DateTime mCurrentDate;
 	private ProgressDialog mProgressDialog = null;
+	
+	private ScrollView mSvTable;
+	private RelativeLayout mRLWeekDetailsSection;
+	private RelativeLayout mRLRoot;
+	
+	
 	
 	private TextView mWeekStatusView;
 	private TextView mSummaryStatusView;
@@ -88,8 +93,18 @@ public class WeeklyReportActivity extends CActivity {
 		try { 
 			costService = new CostService(getHelper().getCostDao());
 			mGestureDetector = new GestureDetector(this);
+			
+			mSvTable = (ScrollView)findViewById(R.id.scroll_view_table);
+			mSvTable.setOnTouchListener(shortSummarySwipeListener);
+			
+			mRLRoot = (RelativeLayout)findViewById(R.id.relative_layout_root);
+			mRLRoot.setOnTouchListener(shortSummarySwipeListener);
+			
 			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
 			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
+			
+			mRLWeekDetailsSection = (RelativeLayout)findViewById(R.id.relative_layout_week_details_section);
+			mRLWeekDetailsSection.setOnTouchListener(shortSummarySwipeListener);
 			
 			mSummaryStatusView = (TextView)findViewById(R.id.textView_summary_status);
 			

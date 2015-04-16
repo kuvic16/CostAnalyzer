@@ -43,7 +43,8 @@
 			android:layout_toLeftOf="@+id/cost_amount_percent"
 			android:background="@layout/list_cost_amount_design"
 			android:textColor="#ffffff"
-			android:textStyle="bold"
+			android:textStyle="normal"
+			android:textSize="12sp"
 			android:text="10000000"
 			android:layout_marginRight="3dip"
 			android:textAppearance="?android:attr/textAppearanceSmall"/>
@@ -57,7 +58,8 @@
 			android:layout_alignParentRight="true"
 			android:background="@layout/list_cost_amount_percant_design"
 			android:textColor="#ffffff"
-			android:textStyle="bold"
+			android:textStyle="normal"
+			android:textSize="12sp"
 			android:text="100%"
 			android:textAppearance="?android:attr/textAppearanceSmall"/>
 </RelativeLayout>

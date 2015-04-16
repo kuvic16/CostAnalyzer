@@ -23,6 +23,7 @@ import android.view.View.OnTouchListener;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -48,6 +49,8 @@ public class YearlyReportActivity extends CActivity{
 	private RelativeLayout mRLShortSummary;
 	private DateTime mCurrentDate;
 	private ProgressDialog mProgressDialog = null;
+	
+	private ScrollView mSvTable;
 	
 	private TextView mSummaryStatusView;
 	private TextView mTotalCostView;
@@ -79,6 +82,9 @@ public class YearlyReportActivity extends CActivity{
 			
 			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
 			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
+			
+			mSvTable = (ScrollView)findViewById(R.id.scroll_view_table);
+			mSvTable.setOnTouchListener(shortSummarySwipeListener);
 			
 			mSummaryStatusView = (TextView)findViewById(R.id.textView_summary_status);
 			

@@ -137,7 +137,7 @@ public class TransactionService{
 		GenericRawResults<String[]> rawResults;
 		try {
 			StringBuilder jql = new StringBuilder();
-			jql.append("select id, name, sum(lend_amount - borrow_amount), date from mtransaction");
+			jql.append("select id, name, sum(lend_amount - borrow_amount), count(*) from mtransaction");
 			
 			if(IUtil.isNotBlank(name)){
 				jql.append(" where ");

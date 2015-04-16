@@ -259,13 +259,7 @@ public class TransactionActivity extends CActivity{
 				infoMap.put("transaction_name", transaction[1]);
 				infoMap.put("transaction_row_id", transaction[0]);
 				infoMap.put("transaction_amount", transaction[2]);
-				
-				String datestring = "";
-				if(IUtil.isNotBlank(transaction[3])){
-					Date date = IUtil.getDate(transaction[3], IUtil.DATE_FORMAT);				
-					datestring += date;
-				}
-				infoMap.put("transaction_time", datestring);
+				infoMap.put("transaction_time", transaction[3] + " transaction happened");
 				mTransactionListdata.add(infoMap);
 			}
 			
