@@ -9,6 +9,7 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -174,11 +175,13 @@ public class CategoryActivity extends CActivity{
     		}
     		category.setName(categoryName);
     		category.setType(categoryType);
-    		category.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-    		category.setCreated_by_name("");
-    		
+    		category.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+			category.setLast_modified_by_name("you");
+			
     		int sucess = 0;
     		if(action == IConstant.ACTION_ADD){
+    			category.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+        		category.setCreated_by_name("you");
     			sucess = categoryService.createCategory(category);
     		}else if(action == IConstant.ACTION_EDIT){
     			sucess = categoryService.updateCategory(category);
@@ -269,7 +272,7 @@ public class CategoryActivity extends CActivity{
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.error, ex));
 		}
 	}
-
+	
 	// 1. Listener
 	DialogInterface.OnClickListener saveCancelListener = new DialogInterface.OnClickListener() {
 		@Override
@@ -304,7 +307,9 @@ public class CategoryActivity extends CActivity{
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
+				showProgressDialog();
 				searchCategory();
+				closeProgressDialog();
 				break;
 			case DialogInterface.BUTTON_NEGATIVE: 
 				break;
@@ -340,7 +345,9 @@ public class CategoryActivity extends CActivity{
 		@Override
 		public void onClick(View v) {
 			try{
+				showProgressDialog();
 				loadCategoryList();
+				closeProgressDialog();
 			}catch(Throwable t){
 				t.printStackTrace();
 			}

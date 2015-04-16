@@ -3,9 +3,14 @@ package com.vagabondlab.costanalyzer;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -18,7 +23,9 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.AdapterView;
@@ -54,7 +61,7 @@ public class WeeklyReportActivity extends CActivity {
 	
 	private GestureDetector mGestureDetector;
 	private RelativeLayout mRLShortSummary;
-	private String mCurrentDate;
+	private DateTime mCurrentDate;
 	private ProgressDialog mProgressDialog = null;
 	
 	private TextView mWeekStatusView;
@@ -82,35 +89,37 @@ public class WeeklyReportActivity extends CActivity {
 			costService = new CostService(getHelper().getCostDao());
 			mGestureDetector = new GestureDetector(this);
 			mRLShortSummary = (RelativeLayout)findViewById(R.id.relative_layout_summary);
-			//mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
+			mRLShortSummary.setOnTouchListener(shortSummarySwipeListener);
 			
 			mSummaryStatusView = (TextView)findViewById(R.id.textView_summary_status);
 			
 			mTotalCostView = (TextView)findViewById(R.id.textView_summary_total_cost);
-			//mTotalCostView.setOnTouchListener(shortSummarySwipeListener);
+			mTotalCostView.setOnTouchListener(shortSummarySwipeListener);
 			
 			mProductiveCostView = (TextView)findViewById(R.id.textView_summary_effective_cost);
-			//mProductiveCostView.setOnTouchListener(shortSummarySwipeListener);
+			mProductiveCostView.setOnTouchListener(shortSummarySwipeListener);
 			
 			mWastageCostView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
-			//mWastageCostView.setOnTouchListener(shortSummarySwipeListener);
+			mWastageCostView.setOnTouchListener(shortSummarySwipeListener);
 			
 			mWeekStatusView = (TextView)findViewById(R.id.textView_week_status);
 		
 			Calendar calendar = Calendar.getInstance();
-			loadWeekReport(calendar);
+			loadWeekReport(calendar, new DateTime());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private void loadWeekReport(Calendar calendar){
+	private void loadWeekReport(Calendar calendar, DateTime date){
 		try{
+			mCurrentDate =  date;
 			mWeekStatusView.setText(IUtil.theMonth(calendar.get(Calendar.MONTH) + 1));
 			weeks = IUtil.getNumberOfWeeks(calendar.get(Calendar.MONTH), calendar.get(Calendar.YEAR));
-			currentWeek = calendar.get(Calendar.WEEK_OF_MONTH);
-			//currentWeek = IUtil.getWeek(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD)); 
-			currentWeek = currentWeek -1;
+			
+			String dateString = IUtil.getDateFromCalender(calendar, IUtil.DATE_FORMAT_YYYY_MM_DD);
+			currentWeek =  IUtil.getCurrentWeek(weeks, dateString);
+			
 			loadWeekListViewUI();
 			loadCostList(currentWeek);
 		}catch(Throwable t){
@@ -274,16 +283,16 @@ public class WeeklyReportActivity extends CActivity {
 	
 	
 	// 1. Listener
-//	OnTouchListener shortSummarySwipeListener = new OnTouchListener() {
-//		@Override
-//		public boolean onTouch(View v, MotionEvent event) {
-//			if (mGestureDetector.onTouchEvent(event)) {
-//				return false;
-//			} else {
-//				return false;
-//			}
-//		}
-//	};
+	OnTouchListener shortSummarySwipeListener = new OnTouchListener() {
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			if (mGestureDetector.onTouchEvent(event)) {
+				return false;
+			} else {
+				return false;
+			}
+		}
+	};
 
 	AnimatorListener animatorListener = new AnimatorListener() {		
 		@Override
@@ -369,47 +378,46 @@ public class WeeklyReportActivity extends CActivity {
 
 	@Override
 	public void nextView(){
-//		YoYo.with(Techniques.SlideInRight)
-//			.duration(500)
-//			.interpolate(new AccelerateDecelerateInterpolator())
-//			.withListener(animatorListener)
-//			.playOn(findViewById(R.id.relative_layout_root));
-//		
-//		Date date = IUtil.getDate(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
-//		DateTime dateTime = new DateTime(date);
-//		dateTime = dateTime.plusDays(-1);
-//		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
-//		String newDate = fmt.print(dateTime);
-		//loadCostList(newDate);		
+		YoYo.with(Techniques.SlideInRight)
+			.duration(500)
+			.interpolate(new AccelerateDecelerateInterpolator())
+			.withListener(animatorListener)
+			.playOn(findViewById(R.id.relative_layout_root));
+		
+		DateTime prevDate = mCurrentDate.plusMonths(-1);
+		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
+		String newDate = fmt.print(prevDate);
+		Calendar calender = IUtil.getCalender(newDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
+		loadWeekReport(calender, prevDate);
 	}
 	
 	@Override
 	public void prevView(){
-//		YoYo.with(Techniques.SlideInLeft)
-//			.duration(500)
-//			.interpolate(new AccelerateDecelerateInterpolator())
-//			.withListener(animatorListener)
-//			.playOn(findViewById(R.id.relative_layout_root));
-//		
-//		Date date = IUtil.getDate(mCurrentDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
-//		DateTime dateTime = new DateTime(date);
-//		dateTime = dateTime.plusDays(1);
-//		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
-//		String newDate = fmt.print(dateTime);
-		//loadCostList(newDate);
+		YoYo.with(Techniques.SlideInLeft)
+			.duration(500)
+			.interpolate(new AccelerateDecelerateInterpolator())
+			.withListener(animatorListener)
+			.playOn(findViewById(R.id.relative_layout_root));
+		
+		DateTime nextDate = mCurrentDate.plusMonths(1);
+		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
+		String newDate = fmt.print(nextDate);
+		Calendar calender = IUtil.getCalender(newDate, IUtil.DATE_FORMAT_YYYY_MM_DD);
+		loadWeekReport(calender, nextDate);
 	}
 	
 	@Override
-	public void returnDate(String date) {
+	public void returnDate(String dateString) {
 		YoYo.with(Techniques.SlideInDown)
 		.duration(100)
 		.interpolate(new AccelerateDecelerateInterpolator())
 		.withListener(animatorListener)
 		.playOn(findViewById(R.id.relative_layout_root));
 	
-		//loadCostList(date);
-		Calendar calender = IUtil.getCalender(date, IUtil.DATE_FORMAT_YYYY_MM_DD);
-		loadWeekReport(calender);
+		Calendar calender = IUtil.getCalender(dateString, IUtil.DATE_FORMAT_YYYY_MM_DD);
+		Date date = IUtil.getDate(dateString, IUtil.DATE_FORMAT_YYYY_MM_DD);
+		DateTime dateTime = new DateTime(date);
+		loadWeekReport(calender, dateTime);
 	}
 	
 }

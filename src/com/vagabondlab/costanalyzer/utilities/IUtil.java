@@ -35,6 +35,19 @@ public final class IUtil {
 		return currentDate;
 	}
 	
+	@SuppressLint("SimpleDateFormat")
+	public static String getDateFromCalender(Calendar calendar, String format){
+		String dateString = "";
+		try{
+			DateFormat dateFormat = new SimpleDateFormat(format);
+			Date date =  calendar.getTime();
+			dateString = dateFormat.format(date);
+		}catch(Throwable t){
+			System.out.println("Error: " + t);
+		}
+		return dateString;
+	}
+	
 	
 	@SuppressLint("SimpleDateFormat")
 	public static Date getDate(String datestring, String format){
@@ -164,13 +177,21 @@ public final class IUtil {
         return weekdates;
     }
 	
-	public static int getCurrentWeek(){
-		Calendar calendar = Calendar.getInstance();
-		return calendar.get(Calendar.WEEK_OF_MONTH);
+	public static int getCurrentWeek(List<List<String>> weeks, String date){
+		int selected_week = 0;
+		int position = 0;
+		for(List<String> week : weeks){
+			if(week.get(0).compareTo(date) <= 0 && week.get(1).compareTo(date) >= 0){
+				selected_week = position + 1;
+				break;
+			}
+			position++;
+		}
+		return selected_week;
 	}
 	
 	@SuppressLint("SimpleDateFormat")
-	public static int getWeek(String date){
+	private static int getWeek(String date){
 		SimpleDateFormat format = new SimpleDateFormat(DATE_FORMAT_YYYY_MM_DD);
 		Calendar calendar = Calendar.getInstance();
 		try {

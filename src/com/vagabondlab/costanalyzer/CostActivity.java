@@ -10,6 +10,7 @@ import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -236,11 +237,13 @@ public class CostActivity extends CActivity {
 		cost.setCategory(category);
 		cost.setAmount(costAmount);
 		cost.setDate(costDate);
-		cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-		cost.setCreated_by_name("you");
+		cost.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+		cost.setLast_modified_by_name("you");
 		
 		int sucess = 0;
 		if(action == IConstant.ACTION_ADD){
+			cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+			cost.setCreated_by_name("you");
 			sucess = costService.createCost(cost);
 		}else if(action == IConstant.ACTION_EDIT){
 			sucess = costService.updateCost(cost);
@@ -405,7 +408,9 @@ public class CostActivity extends CActivity {
 		public void onClick(DialogInterface dialog, int i) {
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
+				showProgressDialog();
 				searchCost();
+				closeProgressDialog();
 				break;
 			case DialogInterface.BUTTON_NEGATIVE: 
 				break;
@@ -441,7 +446,9 @@ public class CostActivity extends CActivity {
 		@Override
 		public void onClick(View v) {
 			try{
+				showProgressDialog();
 				loadCostList();
+				closeProgressDialog();
 			}catch(Throwable t){
 				t.printStackTrace();
 			}

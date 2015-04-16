@@ -216,6 +216,17 @@ public abstract class CActivity extends ActionBarActivity implements OnGestureLi
 	abstract public void nextView();
 	abstract public void prevView();
 	
+	public void showProgressDialog() {
+		mProgressDialog = ProgressDialog.show(this, "Please wait ...", "Loading...", true);
+		mProgressDialog.setCancelable(true);
+	}
+	
+	public void closeProgressDialog() {
+		if(mProgressDialog != null){
+			mProgressDialog.dismiss();
+		}
+	}
+	
 	@Override
 	public void onAnimationEnd(Animator arg0) {
 		if(mProgressDialog != null){

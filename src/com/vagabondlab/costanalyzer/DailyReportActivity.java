@@ -293,6 +293,8 @@ AnimatorListener animatorListener = new AnimatorListener() {
 	
 	@Override
 	public void returnDate(String date) {
+		closeProgressDialog();
+		
 		YoYo.with(Techniques.SlideInDown)
 		.duration(500)
 		.interpolate(new AccelerateDecelerateInterpolator())

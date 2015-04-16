@@ -245,14 +245,13 @@ public class HomeActivity extends CActivity {
 		
 		Cost cost = new Cost();
 		if(action == IConstant.ACTION_EDIT){
-			cost = costService.getCostById(selectedCostId);
-			cost.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-			cost.setLast_modified_by_name("you");
+			cost = costService.getCostById(selectedCostId);			
 		}else if(action == IConstant.ACTION_ADD){
 			cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
-			cost.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
 			cost.setCreated_by_name("you");
 		}
+		cost.setLast_modified_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
+		cost.setLast_modified_by_name("you");
 		cost.setCategory(category);
 		cost.setAmount(costAmount);
 		cost.setDate(costDate);
@@ -445,9 +444,7 @@ public class HomeActivity extends CActivity {
 		@Override
 		public void onClick(View v) {
 			try{
-				if(mProgressDialog != null){
-					mProgressDialog.dismiss();
-				}
+				closeProgressDialog();
 				YoYo.with(Techniques.ZoomIn)
 					.duration(500)
 					.interpolate(new AccelerateDecelerateInterpolator())
@@ -465,9 +462,7 @@ public class HomeActivity extends CActivity {
 		@Override
 		public void onClick(View v) {
 			try{
-				if(mProgressDialog != null){
-					mProgressDialog.dismiss();
-				}
+				closeProgressDialog();
 				YoYo.with(Techniques.ZoomIn)
 					.duration(500)
 					.interpolate(new AccelerateDecelerateInterpolator())
@@ -484,9 +479,7 @@ public class HomeActivity extends CActivity {
 	OnClickListener wastageCostTouchListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			if(mProgressDialog != null){
-				mProgressDialog.dismiss();
-			}
+			closeProgressDialog();
 			YoYo.with(Techniques.ZoomIn)
 				.duration(500)
 				.interpolate(new AccelerateDecelerateInterpolator())
@@ -688,9 +681,7 @@ public class HomeActivity extends CActivity {
 		if(action == IConstant.ACTION_ADD || action == IConstant.ACTION_EDIT){
 			mCostSelectedDate.setText(date);
 		}else if(action == IConstant.ACTION_SEARCH){
-			if(mProgressDialog != null){
-				mProgressDialog.dismiss();
-			}
+			closeProgressDialog();
 			
 			YoYo.with(Techniques.SlideInDown)
 			.duration(500)
