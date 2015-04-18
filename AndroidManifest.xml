@@ -19,6 +19,7 @@
         <activity
             android:name=".HomeActivity"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,21 +29,25 @@
         <activity
             android:name=".CategoryActivity"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:label="@string/title_activity_category" >            
         </activity>
         <activity
             android:name=".CostActivity"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:label="@string/title_activity_cost" >
         </activity>
         <activity
             android:name=".DailyReportActivity"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:label="@string/title_daily_report" >
         </activity>
         <activity
             android:name=".WeeklyReportActivity"
             android:configChanges="orientation"
+            android:launchMode="singleTask"
             android:label="@string/title_weekly_report" >
         </activity>
         <activity

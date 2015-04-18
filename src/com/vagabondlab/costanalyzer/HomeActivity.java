@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -690,5 +691,14 @@ public class HomeActivity extends CActivity {
 			.playOn(findViewById(R.id.relative_layout_root));
 			loadCostList(date);
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			System.exit(0);
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

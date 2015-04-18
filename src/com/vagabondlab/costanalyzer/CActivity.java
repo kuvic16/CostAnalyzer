@@ -157,7 +157,9 @@ public abstract class CActivity extends ActionBarActivity implements OnGestureLi
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			this.finish();
+			Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+			startActivity(i);
+			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}

@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -602,15 +601,4 @@ public class CostActivity extends CActivity {
 	    	}
 	    }
 	}
-	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK:
-			Intent i = new Intent(getApplicationContext(),HomeActivity.class);
-			startActivity(i);
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-	
 }
