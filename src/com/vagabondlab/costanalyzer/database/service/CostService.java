@@ -396,4 +396,15 @@ public class CostService{
 		}
 		return null;
 	}
+	
+	public int deleteCostByCategory(int categoryId){
+		try {
+			StringBuilder jql = new StringBuilder();
+			jql.append("delete from cost where category_id=").append(categoryId);
+			return em.updateRaw(jql.toString());
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
 }

@@ -14,6 +14,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,10 +41,13 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import com.google.android.gms.analytics.GoogleAnalytics;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+//import com.google.android.gms.analytics.Tracker;
 import com.nineoldandroids.animation.Animator;
+import com.vagabondlab.costanalyzer.CostAnalyzer.TrackerName;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.entity.Cost;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
@@ -88,6 +92,8 @@ public class HomeActivity extends CActivity {
 	private Double wastageCost = 0.0;
 	private Double totalCost = 0.0;
 	
+	//private Tracker gaTracker;
+	
 	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +131,9 @@ public class HomeActivity extends CActivity {
 			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
 			
 			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+			CostAnalyzer costAnalyzer = (CostAnalyzer)(HomeActivity.this).getApplication();
+			costAnalyzer.getTracker(TrackerName.APP_TRACKER);
+			//((CostAnalyzer)getApplication()).getTracker(TrackerName.APP_TRACKER);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -631,6 +640,7 @@ public class HomeActivity extends CActivity {
 	    if(requestCode==IConstant.PARENT_ACTIVITY_REQUEST_CODE){
 	    	firstTime = true;
 	    	onNavigationDrawerItemSelected(0);
+	    	loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
 	    }else if(requestCode == IConstant.HOME_ACTIVITY_ADD_CATEGORYREQUEST_CODE){
 	    	if(mCategoryName != null){
 	    		loadCategorySpinner(mCategoryName);
@@ -701,4 +711,6 @@ public class HomeActivity extends CActivity {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
+	
+	
 }

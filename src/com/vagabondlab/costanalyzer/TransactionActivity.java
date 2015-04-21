@@ -2,20 +2,17 @@ package com.vagabondlab.costanalyzer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,7 +52,7 @@ public class TransactionActivity extends CActivity{
 	private TextView mTransactionStatus;
 	private Button mButtonholderAddTransaction;
 	private Button mButtonholderSearch;
-	private Button mButtonholderReload;
+	//private Button mButtonholderReload;
 	
 	private List<Map<String, String>> mTransactionListdata = new ArrayList<Map<String, String>>();
 	private int selectedTransactionId;
@@ -74,7 +71,7 @@ public class TransactionActivity extends CActivity{
 	private Double lendAmount = 0.0;
 	private Double borrowAmount = 0.0;
 	private Double balanceAmount = 0.0;
-	private ProgressDialog mProgressDialog = null;
+	//private ProgressDialog mProgressDialog = null;
 
 	
 	
@@ -463,15 +460,6 @@ public class TransactionActivity extends CActivity{
 		return super.onOptionsItemSelected(item);
 	}
 	
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK:
-			this.finish();
-		}
-		return super.onKeyDown(keyCode, event);
-	}
-
 	@Override
 	public void nextView() {
 	}

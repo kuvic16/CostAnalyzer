@@ -198,7 +198,8 @@
 	<string name="title_about_screen">About Team</string>
 	<string name="developed_by_label">Idea, Design and Developed by</string>
 	<string name="developed_by">Shaiful Islam Palash</string>
-	<string name="developed_org">Founder of Okrur Ltd. Email: kuvic16@gmail.com</string>
+	<string name="developed_org">Founder of Okrur Ltd.</string>
+	<string name="developed_org_email">Email: kuvic16@gmail.com</string>
 	<string name="special_thanks_label">Special thanks for suggestion and inspiration</string>
 	
 	
@@ -206,13 +207,13 @@
 	<string name="title_help_screen">Help</string>
 	<string name="help_1_title">What is Cost analyzer?</string>
 	<string name="help_1_details">
-	    Cost analyzer is tiny, simple application for keep tracking personal daily effective and wastage cost information.
-	    Very easy to review cost and daily, weekly, monthly, yearly 
+	    Cost analyzer is tiny, simple application for keep tracking personal daily productive and wastage cost information.
+	    Very easy to review daily, weekly, monthly, yearly 
 	    cost information. Which will help to planning day to day cost activities. 
 	</string>
 	<string name="help_2_title">What is Cost category?</string>
 	<string name="help_2_details">
-	    Cost category is  cost tag which can be effective or wastage. Example: Transport, Breakfast, Lunch, Bazar etc. 
+	    Cost category is  cost tag which can be productive or wastage. Example: Transport, Breakfast, Lunch, Bazar etc. 
 	    It is required before adding cost amount
 	</string>
 	<string name="help_3_title">Add Cost amount</string>
@@ -240,4 +241,8 @@
 	<string name="help_8_details">
 	    It will give you an option to restore the database by selecting backup database.
 	</string>
+	
+	<!-- google analytics -->
+	<string name="track_event">Track Event</string>
+	<string name="track_crash">Track Crash</string>
 </resources>

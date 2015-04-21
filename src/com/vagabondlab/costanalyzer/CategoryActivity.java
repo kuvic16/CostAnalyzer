@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
+import com.vagabondlab.costanalyzer.database.service.CostService;
 import com.vagabondlab.costanalyzer.utilities.IConstant;
 import com.vagabondlab.costanalyzer.utilities.IUtil;
 import com.vagabondlab.costanalyzer.utilities.ViewUtil;
@@ -37,6 +38,7 @@ public class CategoryActivity extends CActivity{
 	
 	private NavigationDrawerFragment mNavigationDrawerFragment;
 	private CategoryService categoryService;
+	private CostService costService;
 	
 	private EditText mCategoryName;
 	private RadioButton mProductive;
@@ -69,6 +71,8 @@ public class CategoryActivity extends CActivity{
 		
 		try {
 			categoryService = new CategoryService(getHelper().getCategoryDao());
+			costService = new CostService(getHelper().getCostDao());
+			
 			mCategoryStatus = (TextView)findViewById(R.id.textView_category_status);
 			mButtonholderAddCategory = (Button)findViewById(R.id.buttonholder_add_category);
 			mButtonholderAddCategory.setOnClickListener(buttonHolderAddCategoryButtonClickListener);
@@ -203,6 +207,7 @@ public class CategoryActivity extends CActivity{
 		int sucess = 0;
 		if(action == IConstant.ACTION_DELETE){
 			sucess = categoryService.deleteCategoryById(selectedCategoryId);
+			sucess = costService.deleteCostByCategory(selectedCategoryId);
 		} 
 		
 		if(sucess > 0){

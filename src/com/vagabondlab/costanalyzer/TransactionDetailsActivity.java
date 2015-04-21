@@ -10,6 +10,7 @@ import java.util.Map;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
@@ -531,7 +532,9 @@ public class TransactionDetailsActivity extends CActivity{
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			this.finish();
+			Intent i = new Intent(getApplicationContext(),TransactionActivity.class);
+			startActivity(i);
+			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
