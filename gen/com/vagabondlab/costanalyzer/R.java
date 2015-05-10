@@ -2125,7 +2125,6 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f090043;
         public static final int action_mode_bar_stub=0x7f090042;
         public static final int action_mode_close_button=0x7f090035;
-        public static final int action_settings=0x7f0900d6;
         public static final int activity_chooser_view_content=0x7f090036;
         public static final int add_cost=0x7f0900d5;
         public static final int adjust_height=0x7f090002;
@@ -2496,37 +2495,38 @@ containing a value of this type.
         public static final int action_settings=0x7f080046;
         public static final int add_new=0x7f08005c;
         public static final int add_new_category=0x7f08005b;
-        public static final int add_new_cost=0x7f08006f;
-        public static final int add_transaction=0x7f0800a0;
-        public static final int amount=0x7f080088;
-        public static final int amount_missing=0x7f0800a8;
+        public static final int add_new_cost=0x7f080070;
+        public static final int add_transaction=0x7f0800a3;
+        public static final int amount=0x7f08008a;
+        public static final int amount_missing=0x7f0800ab;
         public static final int app_name=0x7f080036;
         public static final int backup=0x7f080050;
-        public static final int backup_failed=0x7f0800d8;
-        public static final int backup_screen_backup_button_label=0x7f0800c7;
-        public static final int backup_screen_backup_details=0x7f0800cd;
-        public static final int backup_screen_backup_title=0x7f0800ca;
-        public static final int backup_screen_clear_button_label=0x7f0800c6;
-        public static final int backup_screen_clear_details=0x7f0800cc;
-        public static final int backup_screen_clear_title=0x7f0800c9;
-        public static final int backup_screen_restore_button_label=0x7f0800c8;
-        public static final int backup_screen_restore_details=0x7f0800ce;
-        public static final int backup_screen_restore_title=0x7f0800cb;
-        public static final int backup_screen_top_text=0x7f0800c1;
-        public static final int backup_screen_total_category_enry_label=0x7f0800c3;
-        public static final int backup_screen_total_cost_enry_label=0x7f0800c2;
-        public static final int backup_screen_total_transaction_enry_label=0x7f0800c4;
-        public static final int backup_successful_message_details=0x7f0800d7;
-        public static final int backup_successful_message_title=0x7f0800d6;
-        public static final int balance=0x7f0800ba;
-        public static final int borrow=0x7f0800b7;
-        public static final int borrow_minus=0x7f0800b9;
+        public static final int backup_failed=0x7f0800dd;
+        public static final int backup_screen_backup_button_label=0x7f0800cc;
+        public static final int backup_screen_backup_details=0x7f0800d2;
+        public static final int backup_screen_backup_title=0x7f0800cf;
+        public static final int backup_screen_clear_button_label=0x7f0800cb;
+        public static final int backup_screen_clear_details=0x7f0800d1;
+        public static final int backup_screen_clear_title=0x7f0800ce;
+        public static final int backup_screen_restore_button_label=0x7f0800cd;
+        public static final int backup_screen_restore_details=0x7f0800d3;
+        public static final int backup_screen_restore_title=0x7f0800d0;
+        public static final int backup_screen_top_text=0x7f0800c6;
+        public static final int backup_screen_total_category_enry_label=0x7f0800c8;
+        public static final int backup_screen_total_cost_enry_label=0x7f0800c7;
+        public static final int backup_screen_total_transaction_enry_label=0x7f0800c9;
+        public static final int backup_successful_message_details=0x7f0800dc;
+        public static final int backup_successful_message_title=0x7f0800db;
+        public static final int balance=0x7f0800bd;
+        public static final int borrow=0x7f0800ba;
+        public static final int borrow_minus=0x7f0800bc;
         public static final int cancel=0x7f08005a;
+        public static final int category_filter=0x7f08006b;
         public static final int category_name=0x7f080056;
         public static final int category_name_missing=0x7f080063;
         public static final int category_status=0x7f080066;
         public static final int category_type=0x7f080057;
-        public static final int category_wise_cost_status=0x7f080084;
+        public static final int category_wise_cost_status=0x7f080086;
         public static final int change=0x7f08004d;
         public static final int clean=0x7f08004f;
         /**   Text for notification shown when the Android Wear apps needs to be updated. Only shown on the wearable. [CHAR LIMIT=NONE] 
@@ -2637,67 +2637,68 @@ containing a value of this type.
         /**  Message in confirmation dialog informing the user that one of the APIs they attepmt to access is not available. [CHAR LIMIT=NONE] 
          */
         public static final int commono_google_play_services_api_unavailable_text=0x7f080022;
-        public static final int cost_amount=0x7f08006d;
-        public static final int cost_amount_missing=0x7f080074;
+        public static final int cost_amount=0x7f08006e;
+        public static final int cost_amount_missing=0x7f080075;
+        public static final int cost_amount_zero=0x7f080076;
         public static final int cost_category=0x7f080055;
-        public static final int cost_category_missing=0x7f080073;
-        public static final int cost_date=0x7f08006e;
-        public static final int cost_end_date=0x7f08007d;
-        public static final int cost_start_date=0x7f08007c;
-        public static final int cost_status=0x7f080077;
+        public static final int cost_category_missing=0x7f080074;
+        public static final int cost_date=0x7f08006f;
+        public static final int cost_end_date=0x7f08007f;
+        public static final int cost_start_date=0x7f08007e;
+        public static final int cost_status=0x7f080079;
         public static final int create_calendar_message=0x7f080005;
         public static final int create_calendar_title=0x7f080004;
-        public static final int day=0x7f080089;
-        public static final int day_wise_cost_status=0x7f080095;
+        public static final int day=0x7f08008b;
+        public static final int day_wise_cost_status=0x7f080098;
         public static final int decline=0x7f080003;
         public static final int delete=0x7f08004b;
-        public static final int delete_all_transaction_confirm=0x7f0800a6;
-        public static final int delete_all_transaction_failed_short=0x7f0800b5;
-        public static final int delete_all_transaction_success_short=0x7f0800b2;
+        public static final int delete_all_transaction_confirm=0x7f0800a9;
+        public static final int delete_all_transaction_failed_short=0x7f0800b8;
+        public static final int delete_all_transaction_success_short=0x7f0800b5;
         public static final int delete_category=0x7f08005f;
         public static final int delete_category_are_u_sure=0x7f080060;
         public static final int delete_category_failed=0x7f080069;
         public static final int delete_category_success=0x7f080068;
-        public static final int delete_cost=0x7f080071;
-        public static final int delete_cost_are_u_sure=0x7f080072;
-        public static final int delete_cost_failed=0x7f08007a;
-        public static final int delete_cost_success=0x7f080079;
-        public static final int delete_transaction=0x7f0800a2;
-        public static final int delete_transaction_are_u_sure=0x7f0800a4;
-        public static final int delete_transaction_by_name=0x7f0800a3;
-        public static final int delete_transaction_confirm=0x7f0800a5;
-        public static final int delete_transaction_failed=0x7f0800b3;
-        public static final int delete_transaction_failed_short=0x7f0800b4;
-        public static final int delete_transaction_success=0x7f0800b0;
-        public static final int delete_transaction_success_short=0x7f0800b1;
-        public static final int developed_by=0x7f0800de;
-        public static final int developed_by_label=0x7f0800dd;
-        public static final int developed_org=0x7f0800df;
-        public static final int developed_org_email=0x7f0800e0;
+        public static final int delete_cost=0x7f080072;
+        public static final int delete_cost_are_u_sure=0x7f080073;
+        public static final int delete_cost_failed=0x7f08007c;
+        public static final int delete_cost_success=0x7f08007b;
+        public static final int delete_transaction=0x7f0800a5;
+        public static final int delete_transaction_are_u_sure=0x7f0800a7;
+        public static final int delete_transaction_by_name=0x7f0800a6;
+        public static final int delete_transaction_confirm=0x7f0800a8;
+        public static final int delete_transaction_failed=0x7f0800b6;
+        public static final int delete_transaction_failed_short=0x7f0800b7;
+        public static final int delete_transaction_success=0x7f0800b3;
+        public static final int delete_transaction_success_short=0x7f0800b4;
+        public static final int developed_by=0x7f0800e3;
+        public static final int developed_by_label=0x7f0800e2;
+        public static final int developed_org=0x7f0800e4;
+        public static final int developed_org_email=0x7f0800e5;
         public static final int edit=0x7f08004a;
         public static final int edit_category=0x7f08005e;
-        public static final int edit_cost=0x7f080070;
-        public static final int edit_transaction=0x7f0800a1;
+        public static final int edit_cost=0x7f080071;
+        public static final int edit_transaction=0x7f0800a4;
         public static final int error=0x7f080049;
         public static final int hello_world=0x7f080048;
-        public static final int help_1_details=0x7f0800e4;
-        public static final int help_1_title=0x7f0800e3;
-        public static final int help_2_details=0x7f0800e6;
-        public static final int help_2_title=0x7f0800e5;
-        public static final int help_3_details=0x7f0800e8;
-        public static final int help_3_title=0x7f0800e7;
-        public static final int help_4_details=0x7f0800ea;
-        public static final int help_4_title=0x7f0800e9;
-        public static final int help_5_details=0x7f0800ec;
-        public static final int help_5_title=0x7f0800eb;
-        public static final int help_6_details=0x7f0800ee;
-        public static final int help_6_title=0x7f0800ed;
-        public static final int help_7_details=0x7f0800f0;
-        public static final int help_7_title=0x7f0800ef;
-        public static final int help_8_details=0x7f0800f2;
-        public static final int help_8_title=0x7f0800f1;
-        public static final int lend=0x7f0800b6;
-        public static final int lend_plus=0x7f0800b8;
+        public static final int help_1_details=0x7f0800e9;
+        public static final int help_1_title=0x7f0800e8;
+        public static final int help_2_details=0x7f0800eb;
+        public static final int help_2_title=0x7f0800ea;
+        public static final int help_3_details=0x7f0800ed;
+        public static final int help_3_title=0x7f0800ec;
+        public static final int help_4_details=0x7f0800ef;
+        public static final int help_4_title=0x7f0800ee;
+        public static final int help_5_details=0x7f0800f1;
+        public static final int help_5_title=0x7f0800f0;
+        public static final int help_6_details=0x7f0800f3;
+        public static final int help_6_title=0x7f0800f2;
+        public static final int help_7_details=0x7f0800f5;
+        public static final int help_7_title=0x7f0800f4;
+        public static final int help_8_details=0x7f0800f7;
+        public static final int help_8_title=0x7f0800f6;
+        public static final int lend=0x7f0800b9;
+        public static final int lend_plus=0x7f0800bb;
         public static final int main_menu1=0x7f080037;
         public static final int main_menu10=0x7f080040;
         public static final int main_menu11=0x7f080041;
@@ -2710,124 +2711,127 @@ containing a value of this type.
         public static final int main_menu7=0x7f08003d;
         public static final int main_menu8=0x7f08003e;
         public static final int main_menu9=0x7f08003f;
-        public static final int month_wise_cost_status=0x7f080097;
+        public static final int month=0x7f08008c;
+        public static final int month_wise_cost_status=0x7f08009a;
         public static final int navigation_drawer_close=0x7f080044;
         public static final int navigation_drawer_open=0x7f080043;
         public static final int new_category=0x7f080058;
-        public static final int new_cost=0x7f08006c;
-        public static final int new_transaction=0x7f08009f;
+        public static final int new_cost=0x7f08006d;
+        public static final int new_transaction=0x7f0800a2;
         public static final int not_found_category=0x7f080067;
-        public static final int not_found_cost=0x7f080078;
-        public static final int not_found_transaction=0x7f0800ae;
-        public static final int not_found_transaction_name=0x7f0800af;
-        public static final int number=0x7f08008c;
+        public static final int not_found_cost=0x7f08007a;
+        public static final int not_found_transaction=0x7f0800b1;
+        public static final int not_found_transaction_name=0x7f0800b2;
+        public static final int number=0x7f08008f;
         public static final int ok=0x7f080052;
-        public static final int page_top_date_text=0x7f08007f;
-        public static final int parcantage=0x7f08008a;
-        public static final int parent_folder=0x7f0800d4;
-        public static final int pay_amount=0x7f0800bb;
-        public static final int pick_date=0x7f08007b;
-        public static final int please_try_again=0x7f0800a9;
+        public static final int page_top_date_text=0x7f080081;
+        public static final int parcantage=0x7f08008d;
+        public static final int parent_folder=0x7f0800d9;
+        public static final int pay_amount=0x7f0800be;
+        public static final int pick_date=0x7f08007d;
+        public static final int please_try_again=0x7f0800ac;
         public static final int productive=0x7f080061;
-        public static final int productive_cost_status=0x7f080081;
+        public static final int productive_cost_status=0x7f080083;
         public static final int reload=0x7f08004e;
-        public static final int report_category=0x7f080090;
-        public static final int report_day=0x7f08008d;
-        public static final int report_percentage=0x7f080092;
-        public static final int report_productive=0x7f08008e;
-        public static final int report_total=0x7f080093;
-        public static final int report_total_cost=0x7f080091;
-        public static final int report_wastage=0x7f08008f;
+        public static final int report_category=0x7f080093;
+        public static final int report_day=0x7f080090;
+        public static final int report_percentage=0x7f080095;
+        public static final int report_productive=0x7f080091;
+        public static final int report_total=0x7f080096;
+        public static final int report_total_cost=0x7f080094;
+        public static final int report_wastage=0x7f080092;
         public static final int restore=0x7f080051;
-        public static final int restore_failed=0x7f0800db;
-        public static final int restore_successful_message_details=0x7f0800da;
-        public static final int restore_successful_message_title=0x7f0800d9;
-        public static final int root=0x7f0800d1;
+        public static final int restore_failed=0x7f0800e0;
+        public static final int restore_successful_message_details=0x7f0800df;
+        public static final int restore_successful_message_title=0x7f0800de;
+        public static final int root=0x7f0800d6;
         public static final int save=0x7f080059;
         public static final int save_category_failed=0x7f080065;
         public static final int save_category_success=0x7f080064;
-        public static final int save_cost_failed=0x7f080076;
-        public static final int save_cost_success=0x7f080075;
-        public static final int save_transaction_failed=0x7f0800ab;
-        public static final int save_transaction_failed_duplicate=0x7f0800ac;
-        public static final int save_transaction_success=0x7f0800aa;
+        public static final int save_cost_failed=0x7f080078;
+        public static final int save_cost_success=0x7f080077;
+        public static final int save_transaction_failed=0x7f0800ae;
+        public static final int save_transaction_failed_duplicate=0x7f0800af;
+        public static final int save_transaction_success=0x7f0800ad;
         public static final int search=0x7f08004c;
         public static final int select=0x7f080053;
         public static final int select_category=0x7f08006a;
-        public static final int select_db_file=0x7f0800d2;
-        public static final int select_folder=0x7f0800d3;
-        public static final int selected_db_not_found=0x7f0800d0;
-        public static final int special_thanks_label=0x7f0800e1;
+        public static final int select_db_file=0x7f0800d7;
+        public static final int select_folder=0x7f0800d8;
+        public static final int selected_db_not_found=0x7f0800d5;
+        public static final int special_thanks_label=0x7f0800e6;
         public static final int store_picture_message=0x7f080001;
         public static final int store_picture_title=0x7f080000;
-        public static final int system_db_not_found=0x7f0800cf;
-        public static final int take_amount=0x7f0800bc;
+        public static final int system_db_not_found=0x7f0800d4;
+        public static final int take_amount=0x7f0800bf;
         public static final int test=0x7f080047;
         /**  About screen 
          */
-        public static final int title_about_screen=0x7f0800dc;
+        public static final int title_about_screen=0x7f0800e1;
         /**  Category screen 
          */
         public static final int title_activity_category=0x7f080054;
         /**  Cost screen 
          */
-        public static final int title_activity_cost=0x7f08006b;
+        public static final int title_activity_cost=0x7f08006c;
         /**  Transaction screen 
          */
-        public static final int title_activity_transaction=0x7f080099;
+        public static final int title_activity_transaction=0x7f08009c;
         /**  Backup/Restore screen 
          */
-        public static final int title_backup_screen=0x7f0800c0;
+        public static final int title_backup_screen=0x7f0800c5;
         /**  Daily Report 
          */
-        public static final int title_daily_report=0x7f080083;
+        public static final int title_daily_report=0x7f080085;
         /**  Help screen 
          */
-        public static final int title_help_screen=0x7f0800e2;
+        public static final int title_help_screen=0x7f0800e7;
         /**  Home screen 
          */
-        public static final int title_home_screen=0x7f08007e;
+        public static final int title_home_screen=0x7f080080;
         /**  Monthly Report 
          */
-        public static final int title_monthly_report=0x7f080094;
+        public static final int title_monthly_report=0x7f080097;
         /**  Total Report 
          */
-        public static final int title_total_report=0x7f080098;
+        public static final int title_total_report=0x7f08009b;
         /**  Weekly Report 
          */
-        public static final int title_weekly_report=0x7f080085;
+        public static final int title_weekly_report=0x7f080087;
         /**  Yearly Report 
          */
-        public static final int title_yearly_report=0x7f080096;
-        public static final int total_cost=0x7f080080;
-        public static final int track_crash=0x7f0800f4;
+        public static final int title_yearly_report=0x7f080099;
+        public static final int total_cost=0x7f080082;
+        public static final int track_crash=0x7f0800f9;
         /**  google analytics 
          */
-        public static final int track_event=0x7f0800f3;
-        public static final int transaction_amount=0x7f08009e;
-        public static final int transaction_borrow_amount=0x7f08009d;
+        public static final int track_event=0x7f0800f8;
+        public static final int transaction_amount=0x7f0800a1;
+        public static final int transaction_amount_zero=0x7f0800c3;
+        public static final int transaction_borrow_amount=0x7f0800a0;
         public static final int transaction_date=0x7f08005d;
         /**  Transactio details screen 
          */
-        public static final int transaction_details_summary_status=0x7f0800bf;
-        public static final int transaction_lend_amount=0x7f08009c;
-        public static final int transaction_name=0x7f08009a;
-        public static final int transaction_name_missing=0x7f0800a7;
-        public static final int transaction_name_with=0x7f08009b;
-        public static final int transaction_status=0x7f0800ad;
-        public static final int transaction_summary_status=0x7f0800bd;
-        public static final int transaction_type=0x7f0800be;
-        public static final int type=0x7f08008b;
+        public static final int transaction_details_summary_status=0x7f0800c4;
+        public static final int transaction_lend_amount=0x7f08009f;
+        public static final int transaction_name=0x7f08009d;
+        public static final int transaction_name_filter=0x7f0800c2;
+        public static final int transaction_name_missing=0x7f0800aa;
+        public static final int transaction_name_with=0x7f08009e;
+        public static final int transaction_status=0x7f0800b0;
+        public static final int transaction_summary_status=0x7f0800c0;
+        public static final int transaction_type=0x7f0800c1;
+        public static final int type=0x7f08008e;
         /**  Text on a placeholder buy button when Google Play services is not
          available or up-to-date 
          */
         public static final int wallet_buy_button_place_holder=0x7f080025;
         public static final int wastage=0x7f080062;
-        public static final int wastage_cost_status=0x7f080082;
-        public static final int week=0x7f080087;
-        public static final int weeks=0x7f080086;
-        public static final int wrong_file=0x7f0800d5;
-        public static final int zero=0x7f0800c5;
+        public static final int wastage_cost_status=0x7f080084;
+        public static final int week=0x7f080089;
+        public static final int weeks=0x7f080088;
+        public static final int wrong_file=0x7f0800da;
+        public static final int zero=0x7f0800ca;
     }
     public static final class style {
         /** 

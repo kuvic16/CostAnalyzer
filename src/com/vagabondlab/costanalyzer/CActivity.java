@@ -15,6 +15,7 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import com.google.android.gms.analytics.GoogleAnalytics;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.Animator.AnimatorListener;
@@ -80,7 +81,14 @@ public abstract class CActivity extends ActionBarActivity implements OnGestureLi
 	}
 	
 	@Override
+	protected void onStart() {
+		GoogleAnalytics.getInstance(this).reportActivityStart(this);
+	    super.onStart();
+	}
+	
+	@Override
 	protected void onStop() {
+		GoogleAnalytics.getInstance(this).reportActivityStop(this);
 	    setResult(IConstant.PARENT_ACTIVITY_REQUEST_CODE);
 	    super.onStop();
 	}

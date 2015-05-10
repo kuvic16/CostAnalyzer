@@ -15,8 +15,11 @@ public final class IConstant {
 	public static final String TRANSACTION_NAME = "name";
 	
 	public static final String PARAM_TRANSACTION_NAME = "transaction_name";
+	public static final String FORM_ACTION = "form_action";
+	public static final String ADD_CTG_ON_REQUEST = "add_ctg_on_request";
 	
 	
+	public static final int ACTION_NONE = -1;
 	public static final int ACTION_ADD = 1;
 	public static final int ACTION_EDIT = 2;
 	public static final int ACTION_DELETE = 3;

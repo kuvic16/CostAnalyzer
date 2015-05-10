@@ -14,7 +14,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -41,13 +40,12 @@ import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import com.google.android.gms.analytics.GoogleAnalytics;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-//import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.nineoldandroids.animation.Animator;
-import com.vagabondlab.costanalyzer.CostAnalyzer.TrackerName;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.entity.Cost;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
@@ -92,7 +90,7 @@ public class HomeActivity extends CActivity {
 	private Double wastageCost = 0.0;
 	private Double totalCost = 0.0;
 	
-	//private Tracker gaTracker;
+	private Tracker gaTracker;
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -131,9 +129,10 @@ public class HomeActivity extends CActivity {
 			mButtonholderSearch.setOnClickListener(buttonHolderSearchButtonClickListener);
 			
 			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
-			CostAnalyzer costAnalyzer = (CostAnalyzer)(HomeActivity.this).getApplication();
-			costAnalyzer.getTracker(TrackerName.APP_TRACKER);
-			//((CostAnalyzer)getApplication()).getTracker(TrackerName.APP_TRACKER);
+			
+			//google analytics
+			gaTracker = ((CostAnalyzer) getApplication()).getTracker(CostAnalyzer.TrackerName.APP_TRACKER);
+			gaTracker.setScreenName(mTitle.toString());
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -155,7 +154,7 @@ public class HomeActivity extends CActivity {
 		mAddCostCategoryButton.setOnClickListener(addCategoryButtonClickListener);
 		
 		loadCategorySpinner(mCategoryName);
-	
+		
 		final AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setIcon(R.drawable.addnew)
 		     .setTitle(R.string.add_new_cost)
@@ -249,7 +248,12 @@ public class HomeActivity extends CActivity {
 			return 0;
 		} 
 		
-		Double costAmount = Double.valueOf(mCostAmount.getText().toString());
+		Double costAmount = Double.valueOf(mCostAmount.getText().toString());		
+		if(costAmount <= 0){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_amount_zero));
+			return 0;
+		}
+		
 		String costDate = mCostSelectedDate.getText().toString();
 		mCurrentDate = costDate;
 		
@@ -269,6 +273,12 @@ public class HomeActivity extends CActivity {
 		int sucess = 0;
 		if(action == IConstant.ACTION_ADD){
 			sucess = costService.createCost(cost);
+			
+			gaTracker.send(new HitBuilders.EventBuilder()
+            .setCategory("Cost")
+            .setAction("New")
+            .setLabel("Added")
+            .build());
 		}else if(action == IConstant.ACTION_EDIT){
 			sucess = costService.updateCost(cost);
 		} 
@@ -542,6 +552,7 @@ public class HomeActivity extends CActivity {
 		public void onClick(View v) {
 			try{
 				Intent i = new Intent(getApplicationContext(),CategoryActivity.class);
+				i.putExtra(IConstant.FORM_ACTION, IConstant.ADD_CTG_ON_REQUEST);
 				startActivityForResult(i, IConstant.HOME_ACTIVITY_ADD_CATEGORYREQUEST_CODE);
 			}catch(Throwable t){
 				t.printStackTrace();
@@ -644,6 +655,7 @@ public class HomeActivity extends CActivity {
 	    }else if(requestCode == IConstant.HOME_ACTIVITY_ADD_CATEGORYREQUEST_CODE){
 	    	if(mCategoryName != null){
 	    		loadCategorySpinner(mCategoryName);
+	    		mCategoryName.setSelection(spinnerAdapter.getPosition(spinnerArray[1]));
 	    	}
 	    }
 	}
@@ -661,8 +673,7 @@ public class HomeActivity extends CActivity {
 		dateTime = dateTime.plusDays(-1);
 		DateTimeFormatter fmt = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
 		String newDate = fmt.print(dateTime);
-		loadCostList(newDate);
-		
+		loadCostList(newDate);		
 	}
 	
 	@Override
@@ -705,9 +716,14 @@ public class HomeActivity extends CActivity {
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		switch (keyCode) {
-		case KeyEvent.KEYCODE_BACK:
-			System.exit(0);
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			if(action == IConstant.ACTION_SEARCH){
+				loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+				action = IConstant.ACTION_NONE;
+				return true;
+			}else{
+				System.exit(0);
+			}
 		}
 		return super.onKeyDown(keyCode, event);
 	}

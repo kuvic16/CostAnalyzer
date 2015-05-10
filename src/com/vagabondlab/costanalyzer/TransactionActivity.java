@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -13,6 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +30,8 @@ import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.vagabondlab.costanalyzer.database.entity.Transaction;
 import com.vagabondlab.costanalyzer.database.service.TransactionService;
 import com.vagabondlab.costanalyzer.utilities.DatePickerFragment;
@@ -72,7 +77,7 @@ public class TransactionActivity extends CActivity{
 	private Double borrowAmount = 0.0;
 	private Double balanceAmount = 0.0;
 	//private ProgressDialog mProgressDialog = null;
-
+	private Tracker gaTracker;
 	
 	
 	@Override
@@ -116,6 +121,9 @@ public class TransactionActivity extends CActivity{
 			
 			mCurrentDate = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
 			loadTransactionList();
+			
+			//google analytics
+			gaTracker = ((CostAnalyzer) getApplication()).getTracker(CostAnalyzer.TrackerName.APP_TRACKER);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -184,6 +192,11 @@ public class TransactionActivity extends CActivity{
     			amount = Double.parseDouble(mAmount.getText().toString());
     		}
     		
+    		if(amount <= 0){
+    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.transaction_amount_zero));
+    			return 0;
+    		}
+    		
     		if(mTypeLend.isChecked()){
     			lendAmount = amount;
     		}else if(mTypeBorrow.isChecked()){
@@ -206,6 +219,11 @@ public class TransactionActivity extends CActivity{
 	    		if(sucess > 0){
 	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_success, name));
 	    			loadTransactionList();
+	    			gaTracker.send(new HitBuilders.EventBuilder()
+	                .setCategory("Transaction")
+	                .setAction("New")
+	                .setLabel("Added")
+	                .build());
 	    			return 1;
 	    		}else{
 	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_failed));
@@ -454,7 +472,7 @@ public class TransactionActivity extends CActivity{
 		int id = item.getItemId();
 		if (id == R.id.search) {
 			action = IConstant.ACTION_SEARCH;
-			
+			searchTransactionDialougeBox();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -482,5 +500,22 @@ public class TransactionActivity extends CActivity{
 	    	onNavigationDrawerItemSelected(0);
 	    	loadTransactionList();
 	    }
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			if(action == IConstant.ACTION_SEARCH){
+				showProgressDialog();
+				loadTransactionList();
+				action = IConstant.ACTION_NONE;
+				closeProgressDialog();
+			}else{
+				Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+				startActivity(i);				
+			}
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

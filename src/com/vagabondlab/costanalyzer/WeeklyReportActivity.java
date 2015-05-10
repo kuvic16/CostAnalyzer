@@ -21,6 +21,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -77,6 +78,7 @@ public class WeeklyReportActivity extends CActivity {
 	private Double productiveCost = 0.0;
 	private Double wastageCost = 0.0;
 	private Double totalCost = 0.0;
+	private int action = 0;
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -121,6 +123,9 @@ public class WeeklyReportActivity extends CActivity {
 		
 			Calendar calendar = Calendar.getInstance();
 			loadWeekReport(calendar, new DateTime());
+			
+			//google analytics
+			((CostAnalyzer) getApplication()).getTracker(CostAnalyzer.TrackerName.APP_TRACKER);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -183,9 +188,9 @@ public class WeeklyReportActivity extends CActivity {
 				TableRow tr = new TableRow(this);
 				String day = IUtil.changeDateFormat(cost[0], IUtil.DATE_FORMAT_YYYY_MM_DD, "E");
 				tr.addView(getTableColumn(day, Gravity.LEFT));
-				tr.addView(getTableColumn(cost[3], Gravity.CENTER));
-				tr.addView(getTableColumn(cost[1], Gravity.CENTER));
-				tr.addView(getTableColumn(cost[2], Gravity.CENTER));
+				tr.addView(getTableColumn(String.format("%.1f", Double.valueOf(cost[3])), Gravity.CENTER));
+				tr.addView(getTableColumn(String.format("%.1f", Double.valueOf(cost[1])), Gravity.CENTER));
+				tr.addView(getTableColumn(String.format("%.1f", Double.valueOf(cost[2])), Gravity.CENTER));
 				table.addView(tr);
 				table.addView(ViewUtil.getDividerView(getApplicationContext()));
 			}
@@ -202,9 +207,11 @@ public class WeeklyReportActivity extends CActivity {
 			for(String[] cost : costList){
 				TableRow tr = new TableRow(this);
 				tr.addView(getTableColumn(cost[0] + "(" + cost[1] + ")", Gravity.LEFT));
-				tr.addView(getTableColumn(cost[2], Gravity.CENTER));
+//				tr.addView(getTableColumn(cost[2], Gravity.CENTER));
 				
 				Double ccost = Double.valueOf(cost[2]);
+				tr.addView(getTableColumn(String.format("%.1f", ccost), Gravity.CENTER));
+				
 				Double costPercantage = 0.0;
 				if (totalCost != 0 && ccost != 0) {
 					costPercantage = (ccost * 100)/ totalCost;					
@@ -423,6 +430,9 @@ public class WeeklyReportActivity extends CActivity {
 	
 	@Override
 	public void returnDate(String dateString) {
+		action = IConstant.ACTION_SEARCH;
+		closeProgressDialog();
+		
 		YoYo.with(Techniques.SlideInDown)
 		.duration(100)
 		.interpolate(new AccelerateDecelerateInterpolator())
@@ -433,6 +443,22 @@ public class WeeklyReportActivity extends CActivity {
 		Date date = IUtil.getDate(dateString, IUtil.DATE_FORMAT_YYYY_MM_DD);
 		DateTime dateTime = new DateTime(date);
 		loadWeekReport(calender, dateTime);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			if(action == IConstant.ACTION_SEARCH){
+				Calendar calendar = Calendar.getInstance();
+				loadWeekReport(calendar, new DateTime());
+				action = IConstant.ACTION_NONE;				
+			}else{
+				Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+				startActivity(i);				
+			}
+			return true;
+		}		
+		return super.onKeyDown(keyCode, event);
 	}
 	
 }

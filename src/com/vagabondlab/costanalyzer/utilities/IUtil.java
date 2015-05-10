@@ -119,11 +119,11 @@ public final class IUtil {
 	}
 	
 	public static boolean isNotBlank(String value){
-    	return (value != null && value.length()>0)? true : false; 
+    	return (value != null && value.trim().length()>0)? true : false; 
     }
 	
 	public static boolean isNotBlank(Object value){
-    	return (value != null && value.toString().length()>0)? true : false; 
+    	return (value != null && value.toString().trim().length()>0)? true : false; 
     }
 	
 	public static boolean isNotBlank(List<Object> list){

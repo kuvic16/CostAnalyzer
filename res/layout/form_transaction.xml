@@ -21,6 +21,8 @@
         android:layout_alignLeft="@+id/textView_transaction_name"
         android:layout_below="@+id/textView_transaction_name"
         android:ems="10"
+        android:maxLength="25"
+        android:digits="@string/transaction_name_filter"
         android:inputType="text" >
         <requestFocus />
     </EditText>

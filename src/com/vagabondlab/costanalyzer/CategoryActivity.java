@@ -10,8 +10,10 @@ import java.util.Map;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +28,8 @@ import android.widget.RadioButton;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
 import com.vagabondlab.costanalyzer.database.service.CostService;
@@ -57,7 +61,8 @@ public class CategoryActivity extends CActivity{
 	private int selectedCategoryId;
 	private String selectedCategoryName;
 	private int action = 0;
-	
+	private Tracker gaTracker;
+	private String request = "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +87,15 @@ public class CategoryActivity extends CActivity{
 			mButtonholderReload.setOnClickListener(buttonHolderReloadButtonClickListener);
 			
 			loadCategoryList();
+			
+			request = ViewUtil.getIntantExtra(getIntent(), IConstant.FORM_ACTION);
+			if(request.equalsIgnoreCase(IConstant.ADD_CTG_ON_REQUEST)){
+				action = IConstant.ACTION_ADD;
+				addNewCategoryDialougeBox();
+			}
+			
+			//google analytics
+			gaTracker = ((CostAnalyzer) getApplication()).getTracker(CostAnalyzer.TrackerName.APP_TRACKER);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -164,7 +178,7 @@ public class CategoryActivity extends CActivity{
 	
 	private int saveCategory(){
 		if(IUtil.isNotBlank(mCategoryName.getText())){
-    		String categoryName = mCategoryName.getText().toString().toLowerCase();
+    		String categoryName = mCategoryName.getText().toString().trim().toLowerCase();
     		String categoryType = getString(R.string.productive);
     		if(mWastage.isChecked()){
     			categoryType = getString(R.string.wastage);
@@ -186,6 +200,12 @@ public class CategoryActivity extends CActivity{
     			category.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
         		category.setCreated_by_name("you");
     			sucess = categoryService.createCategory(category);
+    			
+    			gaTracker.send(new HitBuilders.EventBuilder()
+                .setCategory("Cost Category")
+                .setAction("New")
+                .setLabel("Added")
+                .build());
     		}else if(action == IConstant.ACTION_EDIT){
     			sucess = categoryService.updateCategory(category);
     		} 
@@ -207,12 +227,13 @@ public class CategoryActivity extends CActivity{
 		int sucess = 0;
 		if(action == IConstant.ACTION_DELETE){
 			sucess = categoryService.deleteCategoryById(selectedCategoryId);
-			sucess = costService.deleteCostByCategory(selectedCategoryId);
+			costService.deleteCostByCategory(selectedCategoryId);
 		} 
 		
 		if(sucess > 0){
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_category_success, selectedCategoryName));
 			loadCategoryList();
+			
 			return 1;
 		}else{
 			ViewUtil.showMessage(getApplicationContext(), getString(R.string.delete_category_failed));
@@ -284,6 +305,9 @@ public class CategoryActivity extends CActivity{
 			switch (i) {
 			case DialogInterface.BUTTON_POSITIVE:
 				if(saveCategory()==1){
+					if(request.equalsIgnoreCase(IConstant.ADD_CTG_ON_REQUEST)){
+						finish();
+					}
 					break;
 				}
 			case DialogInterface.BUTTON_NEGATIVE: 
@@ -386,7 +410,7 @@ public class CategoryActivity extends CActivity{
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
+	public boolean onCreateOptionsMenu(Menu menu) { 
 		getMenuInflater().inflate(R.menu.category, menu);
 		restoreActionBar();
 		return true;
@@ -412,11 +436,6 @@ public class CategoryActivity extends CActivity{
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-//		if (id == R.id.add_category) {
-//			action = IConstant.ACTION_ADD;
-//			addNewCategoryDialougeBox();
-//			return true;
-//		}else 
 		if(id == R.id.search){
 			action = IConstant.ACTION_SEARCH;
 			searchCategoryDialougeBox();
@@ -430,6 +449,21 @@ public class CategoryActivity extends CActivity{
 
 	@Override
 	public void prevView() {
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			if(action == IConstant.ACTION_SEARCH){
+				loadCategoryList();
+				action = IConstant.ACTION_NONE;				
+			}else{
+				Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+				startActivity(i);
+			}
+			return true;
+		}		
+		return super.onKeyDown(keyCode, event);
 	}
 	
 

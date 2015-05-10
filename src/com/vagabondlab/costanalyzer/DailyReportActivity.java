@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -59,6 +60,7 @@ public class DailyReportActivity extends CActivity{
 	private Double productiveCost = 0.0;
 	private Double wastageCost = 0.0;
 	private Double totalCost = 0.0;
+	private int action = 0;
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -86,6 +88,9 @@ public class DailyReportActivity extends CActivity{
 			mList.setOnTouchListener(shortSummarySwipeListener);
 			
 			loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+			
+			//google analytics
+			((CostAnalyzer) getApplication()).getTracker(CostAnalyzer.TrackerName.APP_TRACKER);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -113,8 +118,9 @@ public class DailyReportActivity extends CActivity{
 				String info = costs[3] + "\n" + costs[1] + " time happened";
 				infoMap.put("cost_category_type_and_time", info);
 //				infoMap.put("cost_amount", String.format("%.1f", costs[2]));
-				infoMap.put("cost_amount", costs[2]);
+//				infoMap.put("cost_amount", costs[2]);
 				Double cost = Double.valueOf(costs[2]);
+				infoMap.put("cost_amount", String.format("%.1f", cost));
 				Double costPercantage = 0.0;
 				if (totalCost != 0 && cost != 0) {
 					costPercantage = (cost * 100)/ totalCost;					
@@ -293,6 +299,7 @@ AnimatorListener animatorListener = new AnimatorListener() {
 	
 	@Override
 	public void returnDate(String date) {
+		action = IConstant.ACTION_SEARCH;
 		closeProgressDialog();
 		
 		YoYo.with(Techniques.SlideInDown)
@@ -302,5 +309,20 @@ AnimatorListener animatorListener = new AnimatorListener() {
 		.playOn(findViewById(R.id.relative_layout_root));
 	
 		loadCostList(date);
-	}	
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			if(action == IConstant.ACTION_SEARCH){
+				loadCostList(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD));
+				action = IConstant.ACTION_NONE;				
+			}else{
+				Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+				startActivity(i);				
+			}
+			return true;
+		}		
+		return super.onKeyDown(keyCode, event);
+	}
 }

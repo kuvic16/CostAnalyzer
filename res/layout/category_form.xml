@@ -23,6 +23,7 @@
         android:layout_below="@+id/textView_category_name"
         android:ems="10"
         android:maxLength="25"
+        android:digits="@string/category_filter"
         android:inputType="text" >
 
         <requestFocus />

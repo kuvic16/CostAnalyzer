@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,8 @@ import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.vagabondlab.costanalyzer.database.entity.Category;
 import com.vagabondlab.costanalyzer.database.entity.Cost;
 import com.vagabondlab.costanalyzer.database.service.CategoryService;
@@ -76,6 +79,8 @@ public class CostActivity extends CActivity {
 	
 	private int action = 0;
 	private String mCurrentDate;
+	
+	private Tracker gaTracker;
 
 	
 	@Override
@@ -102,6 +107,9 @@ public class CostActivity extends CActivity {
 			
 			loadCostList();
 			mCurrentDate = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
+			
+			//google analytics
+			gaTracker = ((CostAnalyzer) getApplication()).getTracker(CostAnalyzer.TrackerName.APP_TRACKER);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -226,6 +234,11 @@ public class CostActivity extends CActivity {
 		} 
 		
 		Double costAmount = Double.valueOf(mCostAmount.getText().toString());
+		if(costAmount <= 0){
+			ViewUtil.showMessage(getApplicationContext(), getString(R.string.cost_amount_zero));
+			return 0;
+		}
+		
 		String costDate = mCostSelectedDate.getText().toString();
 		mCurrentDate = costDate;
 		
@@ -244,6 +257,12 @@ public class CostActivity extends CActivity {
 			cost.setCreated_date(IUtil.getCurrentDateTime(IUtil.DATE_FORMAT));
 			cost.setCreated_by_name("you");
 			sucess = costService.createCost(cost);
+			
+			gaTracker.send(new HitBuilders.EventBuilder()
+            .setCategory("Cost")
+            .setAction("New")
+            .setLabel("Added")
+            .build());
 		}else if(action == IConstant.ACTION_EDIT){
 			sucess = costService.updateCost(cost);
 		} 
@@ -303,8 +322,13 @@ public class CostActivity extends CActivity {
 					info += "\nadded on " + date;
 				}
 				infoMap.put("cost_category_type_and_time", info);
-				infoMap.put("cost_amount", String.valueOf(cost[3]));
-//				infoMap.put("cost_amount", String.format("%.1f", cost[3]));
+				//infoMap.put("cost_amount", String.valueOf(cost[3]));
+				
+				double _cost = 0.0;
+				try{
+					_cost = Double.valueOf(cost[3]);
+				}catch(Throwable t){}
+				infoMap.put("cost_amount", String.format("%.1f", _cost));
 
 				mCostListdata.add(infoMap);
 			}
@@ -497,6 +521,7 @@ public class CostActivity extends CActivity {
 		public void onClick(View v) {
 			try{
 				Intent i = new Intent(getApplicationContext(),CategoryActivity.class);
+				i.putExtra(IConstant.FORM_ACTION, IConstant.ADD_CTG_ON_REQUEST);
 				startActivityForResult(i, IConstant.HOME_ACTIVITY_ADD_CATEGORYREQUEST_CODE);
 			}catch(Throwable t){
 				t.printStackTrace();
@@ -598,7 +623,23 @@ public class CostActivity extends CActivity {
 	    }else if(requestCode == IConstant.HOME_ACTIVITY_ADD_CATEGORYREQUEST_CODE){
 	    	if(mCategoryName != null){
 	    		loadCategorySpinner(mCategoryName);
+	    		mCategoryName.setSelection(spinnerAdapter.getPosition(spinnerArray[1]));
 	    	}
 	    }
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			if(action == IConstant.ACTION_SEARCH){
+				loadCostList();
+				action = IConstant.ACTION_NONE;				
+			}else{
+				Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+				startActivity(i);				
+			}
+			return true;
+		}		
+		return super.onKeyDown(keyCode, event);
 	}
 }

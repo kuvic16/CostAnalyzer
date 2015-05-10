@@ -83,6 +83,8 @@ public class BackupActivity extends CActivity{
 			mButtonRestore.setOnClickListener(buttonRestoreClickListener);
 			
 			init();
+			//google analytics
+			((CostAnalyzer) getApplication()).getTracker(CostAnalyzer.TrackerName.APP_TRACKER);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

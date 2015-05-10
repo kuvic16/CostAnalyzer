@@ -5,6 +5,7 @@ import com.vagabondlab.costanalyzer.R;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -70,6 +71,16 @@ public final class ViewUtil {
 		return header;
 	}
 	
+	public static TableRow getMonthTableHeader(Context context){
+		TableRow header = new TableRow(context);
+		header.setBackgroundColor(Color.LTGRAY);
+		header.addView(getTableColumn(context, context.getString(R.string.month), Gravity.LEFT));
+		header.addView(getTableColumn(context, context.getString(R.string.total_cost), Gravity.CENTER));
+		header.addView(getTableColumn(context, context.getString(R.string.productive), Gravity.CENTER));
+		header.addView(getTableColumn(context, context.getString(R.string.wastage), Gravity.CENTER));
+		return header;
+	}
+	
 	public static TableRow getCategoryWiseCostTableHeader(Context context){
 		TableRow header = new TableRow(context);
 		header.setBackgroundColor(Color.LTGRAY);
@@ -106,6 +117,19 @@ public final class ViewUtil {
 		mAlertDialog.setCancelable(false);
 		mAlertDialog.setButton(context.getString(R.string.ok) , dialogYesNoListener);
 		mAlertDialog.show();
+	}
+	
+	public static String getIntantExtra(Intent intent, String key){
+		String value = "";
+		try{
+			String result = intent.getExtras().getString(key);
+			if(IUtil.isNotBlank(result)){
+				value = result;
+			}
+		}catch(Throwable t){
+			t.printStackTrace();
+		}
+		return value;
 	}
 
 }

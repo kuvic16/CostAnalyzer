@@ -56,6 +56,7 @@
 	<string name="delete_category_success">\"%s\" category deleted</string>
 	<string name="delete_category_failed">Failed to delete category. Please try again</string>
 	<string name="select_category">Select Category</string>
+	<string name="category_filter">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789@</string>
 	
 	<!-- Cost screen -->
 	<string name="title_activity_cost">Cost history</string>
@@ -68,6 +69,7 @@
     <string name="delete_cost_are_u_sure">Are you sure to delete \"%s\" cost</string>
     <string name="cost_category_missing">Please select cost category</string>
 	<string name="cost_amount_missing">Please write cost amount</string>
+	<string name="cost_amount_zero">Zero is not accepted for cost amount</string>
 	<string name="save_cost_success">\"%s\" cost saved</string>
 	<string name="save_cost_failed">Failed to save cost. Please try again</string>
 	<string name="cost_status">All cost listed below. Total cost entry: %s</string>
@@ -95,6 +97,7 @@
 	<string name="week">week</string>
 	<string name="amount">amount</string>
 	<string name="day">day</string>
+	<string name="month">month</string>
 	<string name="parcantage">percent</string>
 	<string name="type">Type</string>
 	<string name="number">no.</string>
@@ -158,6 +161,9 @@
 	<string name="take_amount">Take amount</string>
 	<string name="transaction_summary_status">Your current transaction status</string>
 	<string name="transaction_type">Transaction Type</string>
+	<string name="transaction_name_filter">abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_0123456789@ </string>
+	<string name="transaction_amount_zero">Zero is not accepted for transaction amount</string>
+	
 	
 	<!-- Transactio details screen -->
 	<string name="transaction_details_summary_status">Transaction with %s</string>

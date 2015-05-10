@@ -31,6 +31,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.vagabondlab.costanalyzer.database.entity.Transaction;
 import com.vagabondlab.costanalyzer.database.service.TransactionService;
 import com.vagabondlab.costanalyzer.utilities.DatePickerFragment;
@@ -70,7 +72,7 @@ public class TransactionDetailsActivity extends CActivity{
 	private Double borrowAmount = 0.0;
 	private Double balanceAmount = 0.0;
 	
-	
+	private Tracker gaTracker;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +102,9 @@ public class TransactionDetailsActivity extends CActivity{
 			
 			mCurrentDate = IUtil.getCurrentDateTime(IUtil.DATE_FORMAT_YYYY_MM_DD);
 			loadTransactionList();
+			
+			//google analytics
+			gaTracker = ((CostAnalyzer) getApplication()).getTracker(CostAnalyzer.TrackerName.APP_TRACKER);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -207,6 +212,10 @@ public class TransactionDetailsActivity extends CActivity{
 	    		String transactionDate = mTransactionSelectedDate.getText().toString();
 	    		
 	    		amount = Double.parseDouble(mAmount.getText().toString());
+	    		if(amount <= 0){
+	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.transaction_amount_zero));
+	    			return 0;
+	    		}
 	    		
 	    		if(mTypeLend.isChecked()){
 	    			lendAmount = amount;
@@ -237,6 +246,12 @@ public class TransactionDetailsActivity extends CActivity{
 	    		if(sucess > 0){
 	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_success, name));
 	    			loadTransactionList();
+	    			
+	    			gaTracker.send(new HitBuilders.EventBuilder()
+	                .setCategory("Transaction")
+	                .setAction("New")
+	                .setLabel("Added")
+	                .build());
 	    			return 1;
 	    		}else{
 	    			ViewUtil.showMessage(getApplicationContext(), getString(R.string.save_transaction_failed));
@@ -299,9 +314,10 @@ public class TransactionDetailsActivity extends CActivity{
 				infoMap.put("transaction_amount", transactionAmount);
 				
 				String datestring = "";
-				if(IUtil.isNotBlank(transaction.getCreated_date())){
-					Date date = IUtil.getDate(transaction.getCreated_date(), IUtil.DATE_FORMAT);				
-					datestring += date;
+				if(IUtil.isNotBlank(transaction.getDate())){
+					datestring = transaction.getDate();
+					datestring = IUtil.changeDateFormat(datestring, IUtil.DATE_FORMAT_YYYY_MM_DD, IUtil.DATE_FORMAT_EEE_D_MMM_YYYY);
+					
 				}
 				infoMap.put("transaction_time", datestring);
 				mTransactionListdata.add(infoMap);

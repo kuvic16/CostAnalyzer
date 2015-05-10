@@ -15,6 +15,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.DrawerLayout;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -60,6 +61,7 @@ public class YearlyReportActivity extends CActivity{
 	private Double wastageCost = 0.0;
 	private Double totalCost = 0.0;
 	private DateTimeFormatter dateFormatter = DateTimeFormat.forPattern(IUtil.DATE_FORMAT_YYYY_MM_DD);
+	private int action = 0;
 	
 	
 	@SuppressWarnings("deprecation")
@@ -99,6 +101,9 @@ public class YearlyReportActivity extends CActivity{
 		
 			DateTime date = new DateTime();
 			loadCostList(date);
+			
+			//google analytics
+			((CostAnalyzer) getApplication()).getTracker(CostAnalyzer.TrackerName.APP_TRACKER);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -160,9 +165,11 @@ public class YearlyReportActivity extends CActivity{
 				TableRow tr = new TableRow(this);
 				tr.setPadding(5, 1, 5, 1);
 				tr.addView(ViewUtil.getTableColumn(this, cost[0] + "(" + cost[1] + ")", Gravity.LEFT));
-				tr.addView(ViewUtil.getTableColumn(this, cost[2], Gravity.CENTER));
+//				tr.addView(ViewUtil.getTableColumn(this, cost[2], Gravity.CENTER));
 				
 				Double ccost = Double.valueOf(cost[2]);
+				tr.addView(ViewUtil.getTableColumn(this, String.format("%.1f", ccost), Gravity.CENTER));
+				
 				Double costPercantage = 0.0;
 				if (totalCost != 0 && ccost != 0) {
 					costPercantage = (ccost * 100)/ totalCost;					
@@ -181,14 +188,14 @@ public class YearlyReportActivity extends CActivity{
 		try {
 			TableLayout table = (TableLayout)findViewById(R.id.dayWiseCostTable);
 			table.removeAllViews();
-			table.addView(ViewUtil.getWeekDayTableHeader(this));
+			table.addView(ViewUtil.getMonthTableHeader(this));
 			for(String[] cost : costList){
 				TableRow tr = new TableRow(this);
 				int month = Integer.valueOf(cost[0]);
 				tr.addView(ViewUtil.getTableColumn(this, IUtil.theMonth(month), Gravity.LEFT));
-				tr.addView(ViewUtil.getTableColumn(this, cost[3], Gravity.CENTER));
-				tr.addView(ViewUtil.getTableColumn(this, cost[1], Gravity.CENTER));
-				tr.addView(ViewUtil.getTableColumn(this, cost[2], Gravity.CENTER));
+				tr.addView(ViewUtil.getTableColumn(this, String.format("%.1f", Double.valueOf(cost[3])), Gravity.CENTER));
+				tr.addView(ViewUtil.getTableColumn(this, String.format("%.1f", Double.valueOf(cost[1])), Gravity.CENTER));
+				tr.addView(ViewUtil.getTableColumn(this, String.format("%.1f", Double.valueOf(cost[2])), Gravity.CENTER));
 				table.addView(tr);
 				table.addView(ViewUtil.getDividerView(getApplicationContext()));
 			}
@@ -290,6 +297,9 @@ public class YearlyReportActivity extends CActivity{
 	
 	@Override
 	public void returnDate(String date) {
+		action = IConstant.ACTION_SEARCH;
+		closeProgressDialog();
+		
 		YoYo.with(Techniques.SlideInDown)
 		.duration(500)
 		.interpolate(new AccelerateDecelerateInterpolator())
@@ -302,5 +312,23 @@ public class YearlyReportActivity extends CActivity{
 	@Override
 	public ListView getListView() {
 		return null;
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK){
+			if(action == IConstant.ACTION_SEARCH){
+				showProgressDialog();
+				DateTime date = new DateTime();
+				loadCostList(date);
+				action = IConstant.ACTION_NONE;
+				closeProgressDialog();
+			}else{
+				Intent i = new Intent(getApplicationContext(),HomeActivity.class);
+				startActivity(i);				
+			}
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

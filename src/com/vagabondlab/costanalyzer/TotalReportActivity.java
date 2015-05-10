@@ -56,6 +56,9 @@ public class TotalReportActivity  extends CActivity{
 			mWastageCostView = (TextView)findViewById(R.id.textView_summary_wastage_cost);
 			
 			loadCostList(null, null);
+			
+			//google analytics
+			((CostAnalyzer) getApplication()).getTracker(CostAnalyzer.TrackerName.APP_TRACKER);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -81,8 +84,10 @@ public class TotalReportActivity  extends CActivity{
 				
 				String info = costs[3] + "\n" + costs[1] + " time happened";
 				infoMap.put("cost_category_type_and_time", info);
-				infoMap.put("cost_amount", costs[2]);
+				//infoMap.put("cost_amount", costs[2]);
 				Double cost = Double.valueOf(costs[2]);
+				infoMap.put("cost_amount", String.format("%.1f", cost));
+				
 				Double costPercantage = 0.0;
 				if (totalCost != 0 && cost != 0) {
 					costPercantage = (cost * 100)/ totalCost;					
